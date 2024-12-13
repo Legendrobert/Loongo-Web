@@ -21,14 +21,14 @@ import svgOff from '@/components/svg-icons/svg-off.vue'
 
 <style lang="less" scope>
 .Itinerary {
-  height: calc(100vh - 88px);
+  height: calc(100vh - 144px);
+  overflow: scroll;
   box-sizing: border-box;
-  padding-top: 52px;
-
-
+  padding-top: 80px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  
   .header {
     height: 87px;
     line-height: 87px;
@@ -38,6 +38,7 @@ import svgOff from '@/components/svg-icons/svg-off.vue'
     margin-bottom: 80px;
   }
   .selectionArea{
+    
     .confirm{
       display: flex;
       justify-content: center;
@@ -53,6 +54,7 @@ import svgOff from '@/components/svg-icons/svg-off.vue'
   }
   .footer{
     margin-top: 80px;  
+    margin-bottom: 30px;
     width: auto;
     height: 97px;
     color: #FF401A;

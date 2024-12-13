@@ -24,27 +24,32 @@
       <div class="main-pic">
         <!-- 第一排4个固定重点城市 -->
         <ul class="picList">
-          <li v-for="(item,index) in importantCityList" :key="index">
+          <li 
+            v-for="(item,index) in importantCityList" 
+            :key="index"     
+          >
             <img :src="shanghai">
-            <span >{{item.city}}</span>
-            <svgLove class="picList-like"></svgLove>
+            <span class="toShow">{{item.city}}</span>
+            <svgLove class="picList-like toShow"></svgLove>
           </li>
         </ul>
         <!-- 其他城市 -->
         <ul class="picList">
-          <li v-for="(item,index) in otherCityList" :key="index">
-            <img :src="shanghai">
-            
-            <svgLove class="picList-like"></svgLove>
-            <div class="picList-bottom">
-              <span class="span-city">{{item.city}}</span>
-              <svgLocation class="span-svg"></svgLocation>
-              <span class="span-province">{{item.province}}</span>
+          <li 
+            v-for="(item,index) in otherCityList" 
+            :key="index"
+            class="otherCityLi"
+          >
+            <img :src="shanghai">         
+            <svgLove class="picList-like toShow"></svgLove>
+            <div class="picList-bottom toShow">
+              <span class="span-city toShow">{{item.city}}</span>
+              <svgLocation class="span-svg toShow"></svgLocation>
+              <span class="span-province toShow">{{item.province}}</span>
             </div>
           </li>
         </ul>
-      </div>
-        
+      </div>      
       <div class="main-map">
 
       </div>
@@ -103,6 +108,15 @@ const otherCityList = ref([
     province: 'Zhejiang'
   }
 ])
+const toShow = ref(false)
+
+const mouseenterFn = () =>{
+  console.log('hover')
+  toShow.value = true
+}
+const mouseleaveFn = () =>{
+  toShow.value = false
+}
 </script>
 
 <style lang="less" scope>
@@ -112,7 +126,7 @@ const otherCityList = ref([
     height: 47px;
     display: flex;
     justify-content: space-between;
-    // margin-bottom: 28px;
+    margin-bottom: 28px;
 
     .header-nav-left{
       width: 697px;
@@ -156,7 +170,8 @@ const otherCityList = ref([
   }
   .main{
     display: flex;
-    overflow-x: scroll;
+    height: calc(100vh - 219px);
+    overflow: scroll;
     .main-pic{
       width: 100%;
       .picList{
@@ -164,8 +179,6 @@ const otherCityList = ref([
         grid-template-columns: repeat(4, 328px); /* 一行固定 4 列，每列宽度 328px */
         // grid-gap: 18px; /* 照片间的间距 */
         width: 100%;
-        // display: flex;
-        // flex-wrap: nowrap;
         justify-content: space-between;
 
         li{
@@ -177,7 +190,15 @@ const otherCityList = ref([
           justify-content: center; /* 水平居中 */
           object-fit: cover; /* 确保图片内容按比例缩放以适应尺寸 */
           flex-shrink: 0; /* 防止图片因容器宽度不足而缩小 */
-          margin-top: 28px !important;
+          
+          // margin-top: 28px !important;
+
+          &:hover{
+            
+            .toShow {
+              display: inline
+            }
+          }
 
           img{
             width: 328px;
@@ -185,20 +206,22 @@ const otherCityList = ref([
             border-radius: 16px;
           }
           span{
+            display: none;
             position: absolute;
-            // top: 0px;
             font-size: 28px;
             font-family: Bold;
             color: #FFF;
             z-index: 999;
           }
           .picList-like{
+            display: none;
             position: absolute;
             top: 19px;
             right: 18px;
             z-index: 999;
           }
           .picList-bottom {
+            display: none;
             width: 100%;
             height: 67px;
             background: #fff;
@@ -232,6 +255,9 @@ const otherCityList = ref([
               top: 28%;
             }
           }
+        }
+        .otherCityLi{
+          margin-top: 28px !important;
         }
       }
     }

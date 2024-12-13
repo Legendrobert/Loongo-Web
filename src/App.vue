@@ -91,6 +91,7 @@ const updateActive = (val) => {
 #app {
   cursor: default;
   background: #F7F7F7;
+ 
   ul {
     list-style: none;
     margin: 0;
@@ -100,8 +101,7 @@ const updateActive = (val) => {
       margin: 0;
       padding: 0;
     }
-  }
-  
+  } 
 }
 
 body {
@@ -114,7 +114,6 @@ header {
   align-items: center;
   justify-content: space-between;
   height: 88px;
-  // background: #F7F7F7;
   padding: 0 24px;
 
   .header-left {
@@ -201,10 +200,11 @@ header {
   }
 }
 main {
-  // height: calc(100vh - 88px);
+  height: calc(100vh - 88px);
   background-color: #fff;
-  // box-sizing: border-box;
+  box-sizing: border-box;
   padding: 28px;
   border-radius: 24px 24px 0 0 ;
+  overflow: hidden;
 }
 </style>
