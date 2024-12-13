@@ -21,14 +21,31 @@
       </ul>
     </div>
     <div class="main">
-      <ul class="picList">
-        <li v-for="(item,index) in cityList" :key="index">
-          <img :src="shanghai">
-          <span>{{item.city}}</span>
-          <svgLove class="picList-like"></svgLove>
-        </li>
-      </ul>
-      <div class="map">
+      <div class="main-pic">
+        <!-- 第一排4个固定重点城市 -->
+        <ul class="picList">
+          <li v-for="(item,index) in importantCityList" :key="index">
+            <img :src="shanghai">
+            <span >{{item.city}}</span>
+            <svgLove class="picList-like"></svgLove>
+          </li>
+        </ul>
+        <!-- 其他城市 -->
+        <ul class="picList">
+          <li v-for="(item,index) in otherCityList" :key="index">
+            <img :src="shanghai">
+            
+            <svgLove class="picList-like"></svgLove>
+            <div class="picList-bottom">
+              <span class="span-city">{{item.city}}</span>
+              <svgLocation class="span-svg"></svgLocation>
+              <span class="span-province">{{item.province}}</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+        
+      <div class="main-map">
 
       </div>
     </div>
@@ -40,10 +57,11 @@ import svgAI from '@/components/svg-icons/svg-AI.vue'
 import svgMap from '@/components/svg-icons/svg-map.vue'
 import svgSearch from '@/components/svg-icons/svg-search.vue'
 import svgLove from '@/components/svg-icons/svg-love.vue'
+import svgLocation from '@/components/svg-icons/svg-location.vue'
 import { ref } from 'vue';
 
 const shanghai = ref( require('@/assets/imgs/shanghai.png') );
-const cityList = ref([
+const importantCityList = ref([
   {
     id: 1,
     city: 'SHANGHAI'
@@ -56,29 +74,35 @@ const cityList = ref([
   },{
     id: 4,
     city: 'SHANGHAI'
+  }
+])
+const otherCityList = ref([
+  {
+    id: 1,
+    city: 'JIAXING',
+    province: 'Zhejiang'
+  },{
+    id: 2,
+    city: 'SHANGHAI',
+    province: 'Zhejiang'
+  },{
+    id: 3,
+    city: 'SHANGHAI',
+    province: 'Zhejiang'
+  },{
+    id: 4,
+    city: 'SHANGHAI',
+    province: 'Zhejiang'
   },{
     id: 5,
-    city: 'SHANGHAI'
+    city: 'SHANGHAI',
+    province: 'Zhejiang'
   },{
     id: 6,
-    city: 'SHANGHAI'
-  },{
-    id: 7,
-    city: 'SHANGHAI'
-  },{
-    id: 8,
-    city: 'SHANGHAI'
-  },{
-    id: 9,
-    city: 'SHANGHAI'
-  },{
-    id: 10,
-    city: 'SHANGHAI'
+    city: 'SHANGHAI',
+    province: 'Zhejiang'
   }
-
-  
 ])
-
 </script>
 
 <style lang="less" scope>
@@ -88,7 +112,7 @@ const cityList = ref([
     height: 47px;
     display: flex;
     justify-content: space-between;
-    margin-bottom: 28px;
+    // margin-bottom: 28px;
 
     .header-nav-left{
       width: 697px;
@@ -132,42 +156,82 @@ const cityList = ref([
   }
   .main{
     display: flex;
+    overflow-x: scroll;
+    .main-pic{
+      width: 100%;
+      .picList{
+        display: grid;
+        grid-template-columns: repeat(4, 328px); /* 一行固定 4 列，每列宽度 328px */
+        // grid-gap: 18px; /* 照片间的间距 */
+        width: 100%;
+        // display: flex;
+        // flex-wrap: nowrap;
+        justify-content: space-between;
 
-    .picList{
-      width: calc(328px * 4 + 18px * 3);
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 18px;
-
-      li{
-        width: 328px;
-        height: 200px;
-        position: relative;
-        display: inline-flex; /* 将子元素布局为 flex */
-        align-items: center; /* 垂直居中 */
-        justify-content: center; /* 水平居中 */
-        object-fit: cover; /* 确保图片内容按比例缩放以适应尺寸 */
-        flex-shrink: 0; /* 防止图片因容器宽度不足而缩小 */
-
-        img{
+        li{
           width: 328px;
           height: 200px;
-          border-radius: 16px;
-        }
-        span{
-          position: absolute;
-          // top: 0px;
-          font-size: 28px;
-          font-family: Bold;
-          color: #FFF;
-          z-index: 999;
-        }
-        .picList-like{
-          position: absolute;
-          top: 19px;
-          right: 18px;
-          z-index: 999;
+          position: relative;
+          display: inline-flex; /* 将子元素布局为 flex */
+          align-items: center; /* 垂直居中 */
+          justify-content: center; /* 水平居中 */
+          object-fit: cover; /* 确保图片内容按比例缩放以适应尺寸 */
+          flex-shrink: 0; /* 防止图片因容器宽度不足而缩小 */
+          margin-top: 28px !important;
+
+          img{
+            width: 328px;
+            height: 200px;
+            border-radius: 16px;
+          }
+          span{
+            position: absolute;
+            // top: 0px;
+            font-size: 28px;
+            font-family: Bold;
+            color: #FFF;
+            z-index: 999;
+          }
+          .picList-like{
+            position: absolute;
+            top: 19px;
+            right: 18px;
+            z-index: 999;
+          }
+          .picList-bottom {
+            width: 100%;
+            height: 67px;
+            background: #fff;
+            position: absolute;
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+            border-right: 1px solid #F3F3F3;
+            border-bottom: 1px solid #F3F3F3;
+            border-left: 1px solid #F3F3F3;
+            bottom: 0;
+            left: 0;
+            z-index: 999;
+
+            .span-province {
+              color:#BFBFBF;
+              font-size: 16px;
+              font-family: Regular;
+              right: 18px;
+              top: 28%;
+            }
+            .span-city {
+              color:#121212;
+              font-size: 20px;
+              font-family: Bold;
+              left: 18px;
+              top: 28%;
+            }
+            .span-svg{
+              position: absolute;
+              right: 85px;
+              top: 28%;
+            }
+          }
         }
       }
     }

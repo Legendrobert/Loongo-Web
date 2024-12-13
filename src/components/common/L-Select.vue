@@ -111,24 +111,24 @@ const selectValue = ref([])
 const list = ref(
   [
     {
-      'Province':'shanghai City',
-      'City':'shanghai',
-      'feature':'Metropolitan'
+      Province:'shanghai City',
+      City:'shanghai',
+      feature:'Metropolitan'
     },
     {
-      'Province':'Jiangsu Province',
-      'City':'SuZhou',
-      'feature':'Jiangnan Landscape'
+      Province:'Jiangsu Province',
+      City:'SuZhou',
+      feature:'Jiangnan Landscape'
     },
     {
-      'Province':'Guangdong Province',
-      'City':'ShenZhen',
-      'feature':'Modern City'
+      Province:'Guangdong Province',
+      City:'ShenZhen',
+      feature:'Modern City'
     },
     {
-      'Province':'Liaoning Province',
-      'City':'ShenYang',
-      'feature':'Historical City'
+      Province:'Liaoning Province',
+      City:'ShenYang',
+      feature:'Historical City'
     }
   ]
 );
