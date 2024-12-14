@@ -158,8 +158,12 @@ const handleClick = () => {
 const handleBlur = () => {
     setTimeout(() => {
       selectResultShow.value = selectValue.value.length === 0 ? false : true
-        showOption.value = false
-        inputValue.value = '' 
+      showOption.value = false
+      inputValue.value = '' 
+      if(selectValue.value.length === 0 && inputValue.value === ''){
+        isFocus.value = false
+        spanDisplay.value = 'inline'
+      }
   }, 300); // 延迟一点时间让点击下拉框不会立即隐藏 
 }
 // 输入框输入状态时
@@ -185,6 +189,7 @@ const handleCancel = (value)=> {
   selectValue.value = selectValue.value.filter(item => item !== value);
   if(selectValue.value.length === 0){
     inputShow.value = true
+    selectResultShow.value = false
     setTimeout(() => {
       inputDisplay.value = 'block'
       nextTick(()=>{
