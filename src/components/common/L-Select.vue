@@ -1,10 +1,10 @@
 <!-- 选择框 -->
 <template>
-  <div :class="isFocus ? 'L-Select--expanded L-Select' : 'L-Select'">
+  <div class="L-Select">
     <div class="select-up">
       <p 
         class="select-up-label"
-        :style="{color: inputState ? '#121212' : '#FF401A'}"
+        :style="{color: selectValue.length === 0 ? '#121212' : '#FF401A'}"
       >Cities</p>
       <div class="select-wrapper" @click="handleClick">
         <span 
@@ -14,56 +14,54 @@
         </span>
       </div>
     </div>
-    <!-- 输入框 -->
-    <input 
-      ref="inputRef" 
-      v-if="inputState"
-      type="text" 
-      :style="{ display: inputDisplay}" 
-      class="select-wrapper-input" 
-      placeholder="Add cities in China you like"
-      v-model="inputValue"
-      @blur="handleBlur"
-      @input="handleInput"
-    >
-    <!-- 选择框选中结果 -->
-    <div 
-      v-else 
-      class="selectResult"
-    >
-      <ul 
-        class="result-left"
-      >
-        <li 
-        class="result-left-text"
+    <div v-if="isFocus" class="selectResult">
+       <!-- 选择框选中结果 -->
+      <div class="result-left">
+        <div 
+          class="result-left-text"
           v-for="(item,index) in selectValue"
           :key="index"
         >
           <span>{{item}}</span>
-          <svgCancel 
-            class="cancel"
-            @click="handleCancel(item)"
-          >
-          </svgCancel>
-        </li>
-      </ul>
-      <div class="result-right">
-        <div 
-          v-if="selectValue.length === 3"
-          class="result-right-error"
-        >
-          <svgError ></svgError>
-          <span>Maximum.</span>
+            <svgCancel 
+              class="cancel"
+              @click="handleCancel(item)"
+            >
+            </svgCancel>
         </div>
-        <div 
-          v-else 
-          class="result-right-add"
+        <!-- 输入框 -->
+     
+        <input 
+          v-if="inputShow && selectValue.length < 3"
+          ref="inputRef" 
+          type="text" 
+          :style="{ display: inputDisplay}" 
+          class="select-wrapper-input" 
+          :placeholder="selectValue.length === 0 ? 'Add cities in China you like': ''"
+          v-model="inputValue"
+          @blur="handleBlur"
+          @input="handleInput"
         >
-          <svgAdd ></svgAdd>
-        </div>
-        
       </div>
+      <div v-if="selectResultShow"  class="result-right">
+          <div 
+            v-if="selectValue.length === 3"
+            class="result-right-error"
+          >
+            <svgError ></svgError>
+            <span>Maximum.</span>
+          </div>
+          <div 
+            v-else 
+            class="result-right-add"
+          >
+            <svgAdd @click="handleAdd"></svgAdd>
+          </div>
+          
+        </div>
     </div>
+    
+    <!-- 下拉框 -->
     <transition name="fade">
       <div
       v-show="showOption" 
@@ -95,7 +93,7 @@
 </template>
 
 <script setup>
-import { ref,nextTick } from 'vue';
+import { ref,nextTick,watch } from 'vue';
 import svgAdd from '@/components/svg-icons/svg-add.vue'
 import svgCancel from '@/components/svg-icons/svg-cancel.vue'
 import svgError from '@/components/svg-icons/svg-error.vue'
@@ -106,8 +104,9 @@ const inputDisplay = ref('none')
 const isFocus = ref(false) // 用于判断状态来实现select高度切换
 const showOption = ref(false) // 用于判断是否展示下拉框
 const inputValue = ref('')
-const inputState = ref(true) // 输入框状态：true,已选择状态：false
-const selectValue = ref([])
+const inputShow = ref(true) // 是否展示输入框
+const selectResultShow = ref(false)
+const selectValue = ref([]) // 已选中项
 const list = ref(
   [
     {
@@ -133,31 +132,34 @@ const list = ref(
   ]
 );
 
-// 点击输入框
+
+watch(
+  () => inputValue.value,
+  (newInputValue) => {
+    if(newInputValue === '') {
+      handleBlur()
+    }
+  }
+)
+// 点击初始化时的输入框
 const handleClick = () => { 
   isFocus.value = true; 
-    spanDisplay.value = 'none'
+  spanDisplay.value = 'none'
   setTimeout(() => {
-    
     inputDisplay.value = 'block'
     nextTick(()=>{
-    if(inputRef.value){
-      inputRef.value.focus(); // 聚焦 input
-    }
-  })
+      if(inputRef.value){
+        inputRef.value.focus(); // 聚焦 input
+      }
+    })
   }, 300); // 延迟一点时间让点击下拉框不会立即隐藏
 }
 // 失去焦点
 const handleBlur = () => {
     setTimeout(() => {
-      console.log('blur')
-      if(inputState.value){
-         isFocus.value = false;  
+      selectResultShow.value = selectValue.value.length === 0 ? false : true
         showOption.value = false
-        inputValue.value = ''
-        spanDisplay.value = 'inline'
-        inputDisplay.value = 'none'
-      } 
+        inputValue.value = '' 
   }, 300); // 延迟一点时间让点击下拉框不会立即隐藏 
 }
 // 输入框输入状态时
@@ -168,16 +170,46 @@ const handleInput = (event) => {
 // 点击下拉框选项
 const handleClickOption = (event) => {
   if(event){
-    inputState.value = false
+    inputValue.value = ''
+    inputShow.value = false
+    showOption.value = false
+    selectResultShow.value = true
     if (!selectValue.value.includes(event) && selectValue.value.length < 3) {
       selectValue.value.push(event)
     }
-   console.log(event,'val')
   }
 }
 // 取消选中项
 const handleCancel = (value)=> {
+  inputValue.value = ''
   selectValue.value = selectValue.value.filter(item => item !== value);
+  if(selectValue.value.length === 0){
+    inputShow.value = true
+    setTimeout(() => {
+      inputDisplay.value = 'block'
+      nextTick(()=>{
+        if(inputRef.value){
+          inputRef.value.focus(); // 聚焦 input
+        }
+      })
+    }, 300); 
+  }
+}
+// 添加选项
+const handleAdd = () =>{
+  selectResultShow.value = false
+  showOption.value = false
+  inputShow.value = true
+  setTimeout(()=>{
+    nextTick(()=>{
+      
+      if(inputRef.value){
+        inputRef.value.focus(); // 聚焦 input
+      }
+      
+    })
+  },300)
+  
 }
 </script>
 
@@ -188,14 +220,14 @@ const handleCancel = (value)=> {
   border: 1px solid transparent; /* 先设置为透明边框 */
   outline: 1px solid #BFBFBF;  /* 使用 outline 模拟边框 */
   border-radius: 16px;
-  padding:0 24px;
+  padding:24px;
   position: relative;
-  height: 75px;
+  // height: 75px;
   transition: height 0.3s ease-in-out;  /* 设置过渡动画 */
   
 
   .select-up{
-    height: 75px;
+    // height: 75px;
     display: flex;
     align-items: center;
 
@@ -206,6 +238,8 @@ const handleCancel = (value)=> {
       margin-right: 15px;
       cursor: default;
       font-family: Semibold;
+      margin: 0;
+      padding: 0;
     }
   }
 
@@ -219,7 +253,7 @@ const handleCancel = (value)=> {
   .select-wrapper-input {
     width: 100%;
     height: 27px;
-    margin-bottom: 24px;
+    // margin-bottom: 24px;
     color: #BFBFBF;
     font-size: 20px;
     font-family: Regular;
@@ -236,26 +270,30 @@ const handleCancel = (value)=> {
     }
 
   }
-  .selectResult{
-      display: flex;
-      justify-content: space-between;
+  .selectResult {
+    margin-top: 28px;
+    height: 29px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
       .result-left{
         display: flex;
+        align-items: center;
 
         .result-left-text{
-          width: 146px;
           height: 43px;
           border: 1px solid #CCC;
           border-radius: 8px;
           text-align: center;
-          line-height: 43px;
           color: #121212;
           display: flex;
           justify-content: center;
           font-size: 20px;
           font-family: Semibold;
           margin-right: 15px !important;
+          box-sizing: border-box;
+          padding: 8px 12px;
 
           span{
             margin-right: 7px;
@@ -305,7 +343,7 @@ const handleCancel = (value)=> {
     box-shadow: 0px 16px 32px rgba(189, 189, 189, 0.2);
     background:#fff;
     position: absolute;
-    top: 163px;
+    top: 144px;
     left: 0px;
     transform-origin: center top;
     z-index: 2001;
@@ -372,9 +410,9 @@ const handleCancel = (value)=> {
  
 }
 
-.L-Select--expanded {
-  height: 146px;     
-}
+// .L-Select--expanded {
+//   height: 126px;     
+// }
 // 下拉框过渡动画
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.5s ease; 
