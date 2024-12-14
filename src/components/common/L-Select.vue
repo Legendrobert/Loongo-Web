@@ -222,9 +222,6 @@ const handleAdd = () =>{
   border-radius: 16px;
   padding:24px;
   position: relative;
-  // height: 75px;
-  transition: height 0.3s ease-in-out;  /* 设置过渡动画 */
-  
 
   .select-up{
     // height: 75px;
@@ -271,8 +268,8 @@ const handleAdd = () =>{
 
   }
   .selectResult {
-    margin-top: 28px;
-    height: 29px;
+    margin-top: 22px;
+    height: 27px;
     display: flex;
     justify-content: space-between;
     align-items: center;
