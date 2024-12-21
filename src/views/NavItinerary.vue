@@ -3,6 +3,7 @@
     <div class="header">Plan a New China Trip </div>
     <div class="selectionArea">
       <LSearch></LSearch>
+      <LCalendar style="margin-top: 40px"></LCalendar>
       <div class="confirm">Confirm</div>
     </div>
     <div class="footer">
@@ -14,7 +15,8 @@
 
 <script setup>
 // import { ref } from 'vue';
-import LSearch from '@/components/common/L-Select.vue';
+import LSearch from '@/components/common/L-Select.vue'
+import LCalendar from '@/components/common/L-Calendar.vue'
 import svgOff from '@/components/svg-icons/svg-off.vue'
 
 </script>
@@ -28,7 +30,7 @@ import svgOff from '@/components/svg-icons/svg-off.vue'
   display: flex;
   flex-direction: column;
   align-items: center;
-  
+
   .header {
     height: 87px;
     line-height: 87px;

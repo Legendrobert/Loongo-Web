@@ -26,7 +26,9 @@
         <ul class="picList">
           <li 
             v-for="(item,index) in importantCityList" 
-            :key="index"     
+            :key="index"    
+            @mouseenter="mouseenterFn"
+            @mouseleave="mouseleaveFn" 
           >
             <img :src="shanghai">
             <span class="toShow">{{item.city}}</span>
@@ -39,6 +41,8 @@
             v-for="(item,index) in otherCityList" 
             :key="index"
             class="otherCityLi"
+            @mouseenter="mouseenterFn"
+            @mouseleave="mouseleaveFn"
           >
             <img :src="shanghai">         
             <svgLove class="picList-like toShow"></svgLove>

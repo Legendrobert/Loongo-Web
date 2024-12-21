@@ -2,10 +2,10 @@
 <template>
   <div class="L-Select">
     <div class="select-up">
-      <p 
+      <div 
         class="select-up-label"
         :style="{color: selectValue.length === 0 ? '#121212' : '#FF401A'}"
-      >Cities</p>
+      >Cities</div>
       <div class="select-wrapper" @click="handleClick">
         <span 
           :style="{ display: spanDisplay }"
@@ -240,14 +240,14 @@ const handleAdd = () =>{
       margin-right: 15px;
       cursor: default;
       font-family: Semibold;
-      margin: 0;
-      padding: 0;
+      // margin: 0;
+      // padding: 0;
     }
   }
 
   
   .select-wrapper {
-    width: 100%;
+    // width: 100%;
     font-size: 20px;
     color: #BFBFBF;
     font-family: Regular;
@@ -255,7 +255,7 @@ const handleAdd = () =>{
   .select-wrapper-input {
     width: 100%;
     height: 27px;
-    // margin-bottom: 24px;
+    caret-color: #121212;
     color: #BFBFBF;
     font-size: 20px;
     font-family: Regular;
@@ -411,10 +411,6 @@ const handleAdd = () =>{
   }
  
 }
-
-// .L-Select--expanded {
-//   height: 126px;     
-// }
 // 下拉框过渡动画
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.5s ease; 
