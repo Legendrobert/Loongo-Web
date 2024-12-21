@@ -37,7 +37,13 @@
                         <span v-for="space in item.firstDayOffset" :key="'space-' + space" class="empty"></span>
                         
                         <!-- 当前月的每一天 -->
-                        <span v-for="day in item.daysInMonth" :key="'day-' + day" :style="dayStyle(day,calendarIndex)">{{ day }}</span>
+                        <span 
+                            v-for="(day,dayIndex) in item.daysInMonth" 
+                            :key="'day-' + day" 
+                            :style="dayStyle(day,calendarIndex)"
+                            :class="activeClassFn(day,calendarIndex,dayIndex)"
+                            @click="handleDateClick(day,dayIndex,calendarIndex)"
+                        >{{ day }}</span>
 
                         <span v-for="space in item.firstDayOffset" :key="'space-' + space" class="empty"></span>
                     </div>
@@ -54,6 +60,11 @@
 <script setup>
     import { ref } from 'vue';
     import svgCancel from '@/components/svg-icons/svg-cancel.vue'
+
+    // 选中的日期
+    // const activeDay = ref(-1)
+    // 选中月为当前月还是下月
+    // const activeMonth = ref(-1)
     
     // 获取当前月的天数
     const now = new Date();
@@ -88,16 +99,31 @@
         {
             date: monthList.value[month] + ' ' + year,
             daysInMonth: new Date(year, month + 1, 0).getDate(),
-            firstDayOffset: (firstDay === 0 ? 6 : firstDay - 1)
-            
+            firstDayOffset: (firstDay === 0 ? 6 : firstDay - 1),
+            year: year,
+            month: month + 1
         },{
             date: monthList.value[nextMonth] + ' ' + nextYear,
             daysInMonth: new Date(nextYear, nextMonth + 1, 0).getDate(),
-            firstDayOffset: (nextFirstDay === 0 ? 6 : nextFirstDay - 1)
+            firstDayOffset: (nextFirstDay === 0 ? 6 : nextFirstDay - 1),
+            year: nextYear,
+            month: nextMonth + 1
         }
     ])
     const weekList = ref(['Mon','Tue','Wed','Thu','Fri','Sat','Sun'])
-  
+    // const rangeDate = ref({startDate: '', endDate: ''}) // 选择的日期区间
+    const rangeDate = ref([
+        {
+            activeDay: -1,
+            activeMonth: -1,
+            date: ''
+        },
+        {
+            activeDay: -1,
+            activeMonth: -1,
+            date: ''
+        }
+    ]) // activeDay 选中的日期;activeMonth 选中月为当前月还是下月
 
     // 点击输入框
     const handleClick = () =>{
@@ -106,6 +132,30 @@
     // 关闭弹窗
     const handleClose = () =>{
         isMaskVisible.value = false
+    }
+    // 选择日期
+    const handleDateClick = (day, dayIndex,i) =>{
+        // activeDay.value = day-1
+        // activeMonth.value = i
+
+        if(rangeDate.value[0].date === ''){
+            rangeDate.value[0].activeDay = day-1
+            rangeDate.value[0].activeMonth = i
+            rangeDate.value[0].date = calendarList.value[i].year + '-' + calendarList.value[i].month + '-' + day
+        }else if(rangeDate.value[0].date !== '' && rangeDate.value[1].date === ''){
+            rangeDate.value[1].activeDay = day-1
+            rangeDate.value[1].activeMonth = i
+            rangeDate.value[1].date = calendarList.value[i].year + '-' + calendarList.value[i].month + '-' + day
+        }else{
+            rangeDate.value[0].activeDay = day-1
+            rangeDate.value[0].activeMonth = i
+            rangeDate.value[0].date = calendarList.value[i].year + '-' + calendarList.value[i].month + '-' + day
+            rangeDate.value[1].activeDay = -1
+            rangeDate.value[1].activeMonth = -1
+            rangeDate.value[1].date = ''
+        }
+
+        activeClassFn(day,i,dayIndex)
     }
     // 区分过去和未来的日期字体颜色
     const dayStyle = (day,i) =>{
@@ -119,7 +169,41 @@
             }
         }
     }
-
+    // 动态实现选中日历样式
+    const activeClassFn = (day,calendarIndex,dayIndex) =>{
+        // 第一天日期为黑色
+        if(rangeDate.value[0].activeMonth === calendarIndex && rangeDate.value[0].activeDay === dayIndex){
+            return 'active'
+        }
+        // 最后一天日期为黑色
+        if(rangeDate.value[1].activeMonth === calendarIndex && rangeDate.value[1].activeDay === dayIndex){
+            return 'active'
+        }
+        
+        // 期间日期为灰色，当结束的时间有值时
+        if(rangeDate.value[1].date !== ''){
+            // 开始时间与结束时间为同月
+            if(rangeDate.value[0].activeMonth === calendarIndex && rangeDate.value[1].activeMonth === calendarIndex){
+                
+                if(rangeDate.value[0].activeDay+1 < day && day < rangeDate.value[1].activeDay+1){
+                    return 'include'
+                }
+            }
+            // 开始时间与结束时间不同月（开始时间在本月，结束时间在下月）
+            if(rangeDate.value[0].activeMonth === 0 && rangeDate.value[1].activeMonth === 1){
+                // 当月开始时间之后的
+                if(calendarIndex === 0 && rangeDate.value[0].activeDay+1 < day){
+                    return 'include'
+                }
+                // 下月结束时间之前的
+                if(calendarIndex === 1 && rangeDate.value[1].activeDay+1 > day){
+                    return 'include'
+                }
+               
+            }
+        }
+        
+    }
 </script>
 
 <style lang="less" scope>
@@ -201,7 +285,7 @@
                         display: flex;
                         justify-content: space-between;
                         margin-top: 32px;
-                        margin-bottom: 24px;
+                        margin-bottom: 18px;
 
                         span {
                             font-family: Regular;
@@ -215,17 +299,18 @@
                         display: flex;
                         justify-content: space-between;
                         flex-wrap: wrap;
-                        gap: 24px;
+                        gap: 18px;
 
 
                         span{
                             font-size: 14px;
                             width: 34px;
                             text-align: center;
-                            height: 19px;
-                            line-height: 19px; 
+                            height: 27px;
+                            line-height: 27px; 
                             font-family: SemiBold;
                             color: #121212;
+                            
                         }
                         .empty {
                             background: transparent;
@@ -255,5 +340,16 @@
     // 选择框hover
     .L-Calendar:hover {
         outline: 2px solid #FF401A;  /* 使用 outline 模拟边框 */
+    }
+    // 日期选中样式
+    .active{
+        background: #121212;
+        border-radius: 4px;
+        color: #FFFFFF !important;
+    }
+    .include{
+        background: #F3F3F3;
+        border-radius: 4px;
+        color: #121212 !important;
     }
 </style>
