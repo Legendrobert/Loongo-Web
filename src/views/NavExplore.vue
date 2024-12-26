@@ -27,12 +27,22 @@
           <li 
             v-for="(item,index) in importantCityList" 
             :key="index"    
-            @mouseenter="mouseenterFn"
-            @mouseleave="mouseleaveFn" 
+            @mouseenter="mouseenterFn(index)"
+            @mouseleave="mouseleaveFn(index)" 
           >
             <img :src="shanghai">
-            <span class="toShow">{{item.city}}</span>
-            <svgLove class="picList-like toShow"></svgLove>
+            <video 
+              v-show="toShowIndex === index"
+              ref="videoRef"
+              :src="beijingVideo" 
+              type="video/mp4"
+              muted
+              loop
+              @mouseenter="playVideo(index)"
+              @mouseleave="pauseVideo(index)"
+            ></video>
+            <span >{{item.city}}</span>
+            <svgLove class="picList-like"></svgLove>
           </li>
         </ul>
         <!-- 其他城市 -->
@@ -41,15 +51,25 @@
             v-for="(item,index) in otherCityList" 
             :key="index"
             class="otherCityLi"
-            @mouseenter="mouseenterFn"
-            @mouseleave="mouseleaveFn"
+           @mouseenter="mouseenterFn(index, 'other')"
+            @mouseleave="mouseleaveFn(index,'other')"
           >
-            <img :src="shanghai">         
-            <svgLove class="picList-like toShow"></svgLove>
-            <div class="picList-bottom toShow">
-              <span class="span-city toShow">{{item.city}}</span>
-              <svgLocation class="span-svg toShow"></svgLocation>
-              <span class="span-province toShow">{{item.province}}</span>
+            <img :src="shanghai">    
+            <video 
+              v-show="toShowOtherIndex === index"
+              ref="otherVideoRef"
+              :src="beijingVideo" 
+              type="video/mp4"
+              muted
+              loop
+              @mouseenter="playVideo(index,'other')"
+              @mouseleave="pauseVideo(index,'other')"
+            ></video>     
+            <svgLove class="picList-like"></svgLove>
+            <div class="picList-bottom">
+              <span class="span-city">{{item.city}}</span>
+              <svgLocation class="span-svg"></svgLocation>
+              <span class="span-province">{{item.province}}</span>
             </div>
           </li>
         </ul>
@@ -62,65 +82,116 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import svgAI from '@/components/svg-icons/svg-AI.vue'
 import svgMap from '@/components/svg-icons/svg-map.vue'
 import svgSearch from '@/components/svg-icons/svg-search.vue'
 import svgLove from '@/components/svg-icons/svg-love.vue'
 import svgLocation from '@/components/svg-icons/svg-location.vue'
-import { ref } from 'vue';
+import video1 from "@/assets/video/beijing.mp4";
+const beijingVideo = ref(video1);
+
+
 
 const shanghai = ref( require('@/assets/imgs/shanghai.png') );
+const videoRef = ref(null)
+const otherVideoRef = ref(null)
+
+
 const importantCityList = ref([
   {
     id: 1,
-    city: 'SHANGHAI'
+    city: 'SHANGHAI',
+    video: beijingVideo
   },{
     id: 2,
-    city: 'SHANGHAI'
+    city: 'SHANGHAI',
+    video: beijingVideo
   },{
     id: 3,
-    city: 'SHANGHAI'
+    city: 'SHANGHAI',
+    video: beijingVideo
   },{
     id: 4,
-    city: 'SHANGHAI'
+    city: 'SHANGHAI',
+    video: beijingVideo
   }
 ])
 const otherCityList = ref([
   {
     id: 1,
     city: 'JIAXING',
-    province: 'Zhejiang'
+    province: 'Zhejiang',
+    video: beijingVideo
   },{
     id: 2,
     city: 'SHANGHAI',
-    province: 'Zhejiang'
+    province: 'Zhejiang',
+    video: beijingVideo
   },{
     id: 3,
     city: 'SHANGHAI',
-    province: 'Zhejiang'
+    province: 'Zhejiang',
+    video: beijingVideo
   },{
     id: 4,
     city: 'SHANGHAI',
-    province: 'Zhejiang'
+    province: 'Zhejiang',
+    video: beijingVideo
   },{
     id: 5,
     city: 'SHANGHAI',
-    province: 'Zhejiang'
+    province: 'Zhejiang',
+    video: beijingVideo
   },{
     id: 6,
     city: 'SHANGHAI',
-    province: 'Zhejiang'
+    province: 'Zhejiang',
+    video: beijingVideo
   }
 ])
-const toShow = ref(false)
+const toShowIndex = ref(null)
+const toShowOtherIndex = ref(null)
 
-const mouseenterFn = () =>{
-  console.log('hover')
-  toShow.value = true
+const mouseenterFn = (i,type) =>{
+  if(type === 'other'){
+    toShowOtherIndex.value = i
+  }else{
+    toShowIndex.value = i
+  }
 }
 const mouseleaveFn = () =>{
-  toShow.value = false
+  toShowIndex.value = null
+  toShowOtherIndex.value = null
 }
+// 播放视频
+const playVideo = (i,type) => {
+  if(type === 'other'){
+    if (otherVideoRef.value[i]) {
+      otherVideoRef.value[i].play();
+    }
+
+  }else{
+    if (videoRef.value[i]) {
+      videoRef.value[i].play();
+    }
+  }
+};
+
+// 暂停视频
+const pauseVideo = (i,type) => {
+
+  if(type === 'other'){
+    if (otherVideoRef.value[i]) {
+      otherVideoRef.value[i].pause();
+    }
+  }else{
+    if (videoRef.value[i]) {
+      videoRef.value[i].pause();
+    }
+  }
+};
+
 </script>
 
 <style lang="less" scope>
@@ -197,20 +268,29 @@ const mouseleaveFn = () =>{
           
           // margin-top: 28px !important;
 
-          &:hover{
+          // &:hover{
             
-            .toShow {
-              display: inline
-            }
-          }
+          //   .toShow {
+          //     display: inline
+          //   }
+          // }
 
           img{
             width: 328px;
             height: 200px;
             border-radius: 16px;
           }
+          video{
+            width: 328px;
+            height: 200px;
+            border-radius: 16px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+          }
           span{
-            display: none;
+            // display: none;
             position: absolute;
             font-size: 28px;
             font-family: Bold;
@@ -225,7 +305,7 @@ const mouseleaveFn = () =>{
             z-index: 999;
           }
           .picList-bottom {
-            display: none;
+            // display: none;
             width: 100%;
             height: 67px;
             background: #fff;

@@ -143,10 +143,10 @@ header {
 
     .active {
         background: #FFEEE6;
-        color: #FF401A;
+        color: #FF401A !important;
 
         path{
-          fill: #FF401A;
+          fill: #FF401A !important;
         }
       }
 
