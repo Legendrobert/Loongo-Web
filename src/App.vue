@@ -61,17 +61,24 @@ import svgProfile from '@/components/svg-icons/svg-profile.vue'
 const router = useRouter()
 const route = useRoute()
 
+const topLevelRoutes = router.options.routes.filter(route => !route.parent)
+
+topLevelRoutes.forEach((item,index)=>{
+  if(item.name === "notfound"){
+    topLevelRoutes.splice(index,1)
+  }
+})
+
 
 const logo = ref( require('@/assets/imgs/logo.png') );
 const activeName = ref('Itinerary') // 默认Itinerary
 
 // 路由变化时更新activeName
 watch(
-  () => route.name,
+  () => route.matched[0],
   (newName) => {
-    activeName.value = newName // 根据路由的 name 更新 activeName
-  },
-  { immediate: true } // 立即触发一次，确保初始化时的正确显示
+    activeName.value = newName.name // 根据路由的 name 更新 activeName
+  }
 )
 
 // 选中的导航

@@ -2,9 +2,15 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 // 懒加载页面组件
 const Itinerary = () => import('@/views/NavItinerary.vue');
-const Explore = () => import('@/views/NavExplore.vue');
+const Explore = () => import('@/views/NavExplore/index.vue');
+const All = () => import('@/views/NavExplore/All.vue')
+const Eastern = () => import('@/views/NavExplore/Eastern.vue')
+const WestSouth = () => import('@/views/NavExplore/Western&Southern.vue')
+const Northern = () => import('@/views/NavExplore/Northern.vue')
+const Central = () => import('@/views/NavExplore/Central.vue')
 const Profile = () => import('@/views/NavProfile.vue');
 const NotFound = () => import('@/views/NotFound.vue');
+
 
 
 // 定义路由
@@ -20,6 +26,35 @@ const routes = [
     name: 'Explore',
     component: Explore,
     meta: { title: 'Explore Page' },
+    redirect: '/Explore/All',
+    children: [
+      {
+        path: 'All',
+        name: 'All',
+        component: All,
+        meta: { title: 'All Page'}
+      },{
+        path: 'Eastern',
+        name: 'Eastern',
+        component: Eastern,
+        meta: { title: 'Eastern Page'}
+      },{
+        path: 'WestSouth',
+        name: 'Western & Southern',
+        component: WestSouth,
+        meta: { title: 'Western & Southern Page'}
+      },{
+        path: 'Northern',
+        name: 'Northern',
+        component: Northern,
+        meta: { title: 'Northern Page'}
+      },{
+        path: 'Central',
+        name: 'Central',
+        component: Central,
+        meta: { title: 'Central Page'}
+      }
+    ]
   },
   {
     path: '/Profile',
