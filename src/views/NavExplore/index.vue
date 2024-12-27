@@ -2,6 +2,9 @@
   <div class="explore">
     <div class="header-nav">
       <ul class="header-nav-left">
+        <li v-if="showMap" class="toLeft">
+          <toLeft @click="handleClickMap"></toLeft>
+        </li>
         <li 
           v-for="(item,index) in parentRoute.children"
           :key="index"
@@ -13,31 +16,40 @@
         <li>
           <svgSearch></svgSearch>
         </li>
-        <li>
-          <svgMap></svgMap>
+        <li 
+          v-if="!showMap"
+          @click="handleClickMap"
+        >
+          <svgMap :showMap="showMap"></svgMap>
         </li>
-        <li>
+        <!-- <li>
           <svgAI></svgAI>
-        </li>
+        </li> -->
       </ul>
     </div>
   </div>
-  <main>
+  <div class="main">
     <router-view></router-view> 
-  </main>
+  </div>
 </template>
 
 <script setup>
 import { ref,watch } from 'vue';
+import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
-import svgAI from '@/components/svg-icons/svg-AI.vue'
+// import svgAI from '@/components/svg-icons/svg-AI.vue'
+import toLeft from '@/components/svg-icons/svg-toLeft.vue'
 import svgMap from '@/components/svg-icons/svg-map.vue'
 import svgSearch from '@/components/svg-icons/svg-search.vue'
 
 const route = useRoute()
 const router = useRouter(); // 获取 router 实例
+const store = useStore()
 const parentRoute = router.getRoutes().find((route) => route.path === "/Explore")
 const activeName = ref('All')
+const showMap = ref(false)
+
+
 
 // 路由变化时更新activeName
 watch(
@@ -49,6 +61,7 @@ watch(
     immediate:true
   }
 )
+
 const updateActive = (val) => {
   activeName.value = val
   router.push({ name: val })
@@ -57,6 +70,15 @@ const updateActive = (val) => {
 const isActive = (name) => {
   return name === activeName.value
 }
+const handleClickMap = ()=>{
+  showMap.value = !showMap.value
+  store.commit('all/setShowMap', showMap.value)
+}
+// // 收起地图
+// const handleCloseMap = ()=>{
+//   showMap.value = !showMap.value
+//   store.commit('all/setShowMap', showMap.value)
+// }
 </script>
 
 <style lang="less" scope>
@@ -69,7 +91,7 @@ const isActive = (name) => {
     margin-bottom: 28px;
 
     .header-nav-left{
-      width: 697px;
+      // width: 697px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -77,10 +99,19 @@ const isActive = (name) => {
       font-size: 20px;
       font-family: Regular;
 
+      .toLeft{
+        width: 32px;
+        height: 32px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 !important;
+      }
+
       li{
         height: 27px;
         border-bottom: 2px solid transparent;
-        margin: 0 16px !important;
+        margin: 0 28px !important;
         
       }
       .activeNav{
@@ -91,9 +122,9 @@ const isActive = (name) => {
     }
     .header-nav-right{
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 200px;
+      // justify-content: space-between;
+      // align-items: center;
+      // width: 104px;
 
       li{
         width: 40px;
@@ -101,6 +132,7 @@ const isActive = (name) => {
         display: flex;
         align-items: center;
         justify-content: center;
+        margin-left: 56px;
 
         svg{
           vertical-align: middle;
@@ -108,7 +140,7 @@ const isActive = (name) => {
       }
     }
   }
-  main{
+  .main{
     display: flex;
     height: calc(100vh - 219px);
     overflow: scroll;

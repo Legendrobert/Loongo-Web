@@ -17,11 +17,11 @@ import { defineProps } from 'vue';
 const props = defineProps({
   width: {
     type: [String, Number],
-    default: 18
+    default: 24
   },
   height: {
     type: [String, Number],
-    default: 18
+    default: 24
   }
 });
 </script>

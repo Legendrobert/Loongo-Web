@@ -1,12 +1,15 @@
 <template>
   <div class="All">
    
-      <div class="main-pic">
+      <div class="main-pic" :style="{ width: showMap ? '684px' : '100%' }">
         <!-- 第一排4个固定重点城市 -->
-        <ul class="picList">
+        <ul class="picList" :style="{gridTemplateColumns:showMap ? 'repeat(2, 328px)' : 'repeat(4, 328px)'}">
           <li 
             v-for="(item,index) in importantCityList" 
             :key="index"    
+            :style="{
+              marginTop: showMap && index > 1 ? '28px' : ''
+            }"
             @mouseenter="mouseenterFn(index)"
             @mouseleave="mouseleaveFn(index)" 
           >
@@ -54,7 +57,9 @@
           </li>
         </ul>
       </div>      
-      <div class="main-map">
+      <div 
+        v-if="showMap"
+        class="main-map">
 
       </div>
     
@@ -62,16 +67,17 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref,computed } from 'vue';
 import svgLove from '@/components/svg-icons/svg-love.vue'
 import svgLocation from '@/components/svg-icons/svg-location.vue'
 import video1 from "@/assets/video/beijing.mp4";
+import { useStore } from 'vuex'
 
 const beijingVideo = ref(video1);
 const shanghai = ref( require('@/assets/imgs/shanghai.png') );
 const videoRef = ref(null)
 const otherVideoRef = ref(null)
-
+const store = useStore()
 const importantCityList = ref([
   {
     id: 1,
@@ -127,6 +133,8 @@ const otherCityList = ref([
 const toShowIndex = ref(null)
 const toShowOtherIndex = ref(null)
 
+
+const showMap = computed(() => store.state.all.showMap)
 const mouseenterFn = (i,type) =>{
   if(type === 'other'){
     toShowOtherIndex.value = i
@@ -170,13 +178,18 @@ const pauseVideo = (i,type) => {
 
 <style lang="less" scoped>
 .All{
+    display: flex;
+    justify-content: space-between;
     
     .main-pic{
-      width: 100%;
+      // width: 100%;
+      padding-right: 20px;
+      height: calc(100vh - 219px);
+      overflow: scroll;
       .picList{
         display: grid;
-        grid-template-columns: repeat(4, 328px); /* 一行固定 4 列，每列宽度 328px */
-        // grid-gap: 18px; /* 照片间的间距 */
+        // grid-template-columns: repeat(4, 328px); /* 一行固定 4 列，每列宽度 328px */
+        
         width: 100%;
         justify-content: space-between;
 
@@ -189,15 +202,6 @@ const pauseVideo = (i,type) => {
           justify-content: center; /* 水平居中 */
           object-fit: cover; /* 确保图片内容按比例缩放以适应尺寸 */
           flex-shrink: 0; /* 防止图片因容器宽度不足而缩小 */
-          
-          // margin-top: 28px !important;
-
-          // &:hover{
-            
-          //   .toShow {
-          //     display: inline
-          //   }
-          // }
 
           img{
             width: 328px;
@@ -214,7 +218,7 @@ const pauseVideo = (i,type) => {
             z-index: 1000;
           }
           span{
-            // display: none;
+           
             position: absolute;
             font-size: 28px;
             font-family: Bold;
@@ -222,14 +226,14 @@ const pauseVideo = (i,type) => {
             z-index: 999;
           }
           .picList-like{
-            display: none;
+           
             position: absolute;
             top: 19px;
             right: 18px;
             z-index: 999;
           }
           .picList-bottom {
-            // display: none;
+            
             width: 100%;
             height: 67px;
             background: #fff;
@@ -268,6 +272,10 @@ const pauseVideo = (i,type) => {
           margin-top: 28px !important;
         }
       }
+    }
+    .main-map{
+        // width: 672px;
+        width: 53%;
     }
   }
 </style>
