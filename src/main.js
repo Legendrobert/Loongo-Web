@@ -1,6 +1,7 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import ElementPlus from 'element-plus'
+// import AMapLoader from '@amap/amap-jsapi-loader';
 import 'element-plus/dist/index.css'
 import router from './router'; // 引入路由配置
 import store from './store'
@@ -15,6 +16,7 @@ const app = createApp(App);
 
 app.use(router); // 使用路由
 app.use(store)
+// app.use(AMapLoader) // 高德地图
 app.use(ElementPlus); // 使用路由
 app.mount('#app');
 

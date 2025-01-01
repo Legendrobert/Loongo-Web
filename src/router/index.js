@@ -1,32 +1,37 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 // 懒加载页面组件
-const Itinerary = () => import('@/views/NavItinerary.vue');
-const Explore = () => import('@/views/NavExplore/index.vue');
-const All = () => import('@/views/NavExplore/All.vue')
-const Eastern = () => import('@/views/NavExplore/Eastern.vue')
-const WestSouth = () => import('@/views/NavExplore/Western&Southern.vue')
-const Northern = () => import('@/views/NavExplore/Northern.vue')
-const Central = () => import('@/views/NavExplore/Central.vue')
-const Profile = () => import('@/views/NavProfile.vue');
+// const Itinerary = () => import('@/views/NavItinerary.vue');
+const Main = () => import('@/views/NavMain/index.vue');
+const All = () => import('@/views/NavMain/All.vue')
+const Eastern = () => import('@/views/NavMain/Eastern.vue')
+const WestSouth = () => import('@/views/NavMain/Western&Southern.vue')
+const Northern = () => import('@/views/NavMain/Northern.vue')
+const Central = () => import('@/views/NavMain/Central.vue')
+const Explore = () => import('@/views/NavExplore.vue');
+// const Profile = () => import('@/views/NavProfile.vue');
 const NotFound = () => import('@/views/NotFound.vue');
 
 
 
 // 定义路由
 const routes = [
+  // {
+  //   path: '/',
+  //   name: 'Itinerary',
+  //   component: Itinerary,
+  //   meta: { title: 'Itinerary Page' }, // 可以定义一些额外的meta信息
+  // },
   {
     path: '/',
-    name: 'Itinerary',
-    component: Itinerary,
-    meta: { title: 'Itinerary Page' }, // 可以定义一些额外的meta信息
+    redirect: '/main/all', // 访问 '/' 时重定向到 '/main/all'
   },
   {
-    path: '/Explore',
-    name: 'Explore',
-    component: Explore,
-    meta: { title: 'Explore Page' },
-    redirect: '/Explore/All',
+    path: '/Main',
+    name: 'Main',
+    component: Main,
+    meta: { title: 'Main Page' },
+    redirect: '/Main/All',
     children: [
       {
         path: 'All',
@@ -57,11 +62,17 @@ const routes = [
     ]
   },
   {
-    path: '/Profile',
-    name: 'Profile',
-    component: Profile,
-    meta: { title: 'Profile Page' },
+    path: '/Explore',
+    name: 'Explore',
+    component: Explore,
+    meta: { title: 'Explore Page' },
   },
+  // {
+  //   path: '/Profile',
+  //   name: 'Profile',
+  //   component: Profile,
+  //   meta: { title: 'Profile Page' },
+  // },
   {
     path: '/:catchAll(.*)', // 404页面
     name: 'notfound',

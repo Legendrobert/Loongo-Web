@@ -6,7 +6,7 @@
         <span class='ProjectName'>LoonGo</span>
       </div>
       <div class="header-middle">
-        <div 
+        <!-- <div 
           :class="{
             'active': isActive('Itinerary'),
             'header-middle-item': true,
@@ -16,19 +16,29 @@
         >
           <svgItinerary class="svg" ></svgItinerary>
           <span class="exploeText">Itinerary</span>
+        </div> -->
+        <div 
+          :class="{
+            'active': isActive('Main'),
+            'header-middle-item': true
+          }"
+          style="margin-right:40px"
+          @click="updateActive('Main')"
+        >
+          <svgMain class="svg" ></svgMain>
+          <span class="exploeText">Main</span>
         </div>
         <div 
           :class="{
             'active': isActive('Explore'),
-            'header-middle-item': true,
-            'explore': true
+            'header-middle-item': true
           }"
           @click="updateActive('Explore')"
         >
             <svgExplore class="svg"></svgExplore>
             <span class="exploeText">Explore</span>      
         </div>
-        <div
+        <!-- <div
           :class="{
             'active': isActive('Profile'),
             'header-middle-item': true,
@@ -38,11 +48,14 @@
         >
           <svgProfile class="svg"></svgProfile>
             <span class="exploeText">Profile</span> 
-        </div>
+        </div> -->
     </div>
     <div class="header-right">
-      <span class="header-right-title">Travel Plan</span>
-      <span class="header-right-num">0</span>
+      <svgFlag></svgFlag>
+      <span>Add</span>
+
+      <!-- <span class="header-right-title">Travel Plan</span>
+      <span class="header-right-num">0</span> -->
     </div>
     </header>
     <main>
@@ -55,8 +68,9 @@
 import { ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router'
 import svgExplore from '@/components/svg-icons/svg-explore.vue'
-import svgItinerary from '@/components/svg-icons/svg-itinerary.vue'
-import svgProfile from '@/components/svg-icons/svg-profile.vue'
+import svgMain from '@/components/svg-icons/svg-main.vue'
+// import svgProfile from '@/components/svg-icons/svg-profile.vue'
+import svgFlag from '@/components/svg-icons/svg-flag.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -71,24 +85,34 @@ topLevelRoutes.forEach((item,index)=>{
 
 
 const logo = ref( require('@/assets/imgs/logo.png') );
-const activeName = ref('Itinerary') // 默认Itinerary
+const activeName = ref('Main') // 默认Main
 
 // 路由变化时更新activeName
+// watch(
+//   () => route.matched[0],
+//   (newName) => {
+//     console.log(newName,'-----')
+//     activeName.value = newName.name // 根据路由的 name 更新 activeName
+//   }
+// )
 watch(
-  () => route.matched[0],
+   () => route.matched[0],
   (newName) => {
+    console.log(newName,'-----')
     activeName.value = newName.name // 根据路由的 name 更新 activeName
   }
 )
 
+
 // 选中的导航
 const isActive = (name) => {
+  console.log(name,activeName.value,'选中的导航')
   return name === activeName.value
 }
 const updateActive = (val) => {
   activeName.value = val
+  console.log(val,router,'vallll')
   router.push({ name: val })
-  
 }
 
 </script>
@@ -141,8 +165,8 @@ header {
   }
   .header-middle {
     display: flex;
-    justify-content: space-between;
-    width: 473px;
+    // justify-content: space-between;
+    // width: 473px;
     height: 40px;
     font-size: 16px;
     color: #BFBFBF;
@@ -181,28 +205,22 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 146px;
-    height: 40px;
     box-sizing: border-box;
     padding: 0px 16px;
-    background-color: #FFF;
+    width: 86px;
+    height: 40px;
+    background: #fff;
     border-radius: 8px;
-    .header-right-title {
-      color: #121212;
-      font-size: 16px;
-      font-weight: 600;
+    font-size: 16px;
+    color: #FF401A;
+    font-family: Regular;
+
+    span{
+      vertical-align: middle;
     }
-    .header-right-num {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background-color: #FFEEE6;
-      font-size: 14px;
-      font-weight: 600;
-      color: #FF401A;
+    svg{
+      vertical-align: middle;
+      padding-bottom: 2px;
     }
   }
 }

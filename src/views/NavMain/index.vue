@@ -45,7 +45,8 @@ import svgSearch from '@/components/svg-icons/svg-search.vue'
 const route = useRoute()
 const router = useRouter(); // 获取 router 实例
 const store = useStore()
-const parentRoute = router.getRoutes().find((route) => route.path === "/Explore")
+console.log(router.getRoutes(),'========')
+const parentRoute = router.getRoutes().find((route) => route.path === "/Main")
 const activeName = ref('All')
 const showMap = ref(false)
 
