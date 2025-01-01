@@ -14,11 +14,27 @@
       </ul>
       <ul class="header-nav-right">
         <li>
-          <svgSearch></svgSearch>
+          <svgSearch 
+            v-show="showSearchSvg"
+            @click="handleClickSearch()"
+          ></svgSearch>
+          <el-input
+            ref="inputRef"
+            v-show="!showSearchSvg"
+            
+            v-model="searchInput"
+            placeholder="Search city, region, province.."
+            @blur="inputBlur"
+          >
+            <template #prefix>
+              <svgSearch class="el-input__icon" :width="16" :height="16"></svgSearch>
+            </template>
+          </el-input>
         </li>
         <li 
           v-if="!showMap"
-          @click="handleClickMap"
+          @click="handleClickMap()"
+ 
         >
           <svgMap :showMap="showMap"></svgMap>
         </li>
@@ -34,10 +50,11 @@
 </template>
 
 <script setup>
-import { ref,watch } from 'vue';
+import { ref,watch,nextTick } from 'vue';
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
 // import svgAI from '@/components/svg-icons/svg-AI.vue'
+
 import toLeft from '@/components/svg-icons/svg-toLeft.vue'
 import svgMap from '@/components/svg-icons/svg-map.vue'
 import svgSearch from '@/components/svg-icons/svg-search.vue'
@@ -45,10 +62,14 @@ import svgSearch from '@/components/svg-icons/svg-search.vue'
 const route = useRoute()
 const router = useRouter(); // 获取 router 实例
 const store = useStore()
-console.log(router.getRoutes(),'========')
+
 const parentRoute = router.getRoutes().find((route) => route.path === "/Main")
 const activeName = ref('All')
 const showMap = ref(false)
+
+const searchInput = ref('')
+const showSearchSvg = ref(true)
+const inputRef = ref()
 
 
 
@@ -75,11 +96,21 @@ const handleClickMap = ()=>{
   showMap.value = !showMap.value
   store.commit('all/setShowMap', showMap.value)
 }
-// // 收起地图
-// const handleCloseMap = ()=>{
-//   showMap.value = !showMap.value
-//   store.commit('all/setShowMap', showMap.value)
-// }
+// 显示搜索
+const handleClickSearch = ()=>{
+  showSearchSvg.value = !showSearchSvg.value
+  if(!showSearchSvg.value){
+    nextTick(()=>{
+      if(inputRef.value && typeof inputRef.value.focus === 'function'){
+        inputRef.value.focus()
+      }
+    })
+  }
+}
+const inputBlur = ()=>{
+  
+  showSearchSvg.value = !showSearchSvg.value
+}
 </script>
 
 <style lang="less" scope>
@@ -123,21 +154,48 @@ const handleClickMap = ()=>{
     }
     .header-nav-right{
       display: flex;
-      // justify-content: space-between;
-      // align-items: center;
-      // width: 104px;
 
       li{
-        width: 40px;
+        // width: 40px;
         height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-left: 56px;
+        margin-left: 30px !important;
 
+        &:hover{
+          path{
+            stroke: #121212 !important;
+          }
+        }
+       
         svg{
           vertical-align: middle;
         }
+        path{
+          stroke: #ccc !important;
+        }
+        .el-input {
+          width: 286px;
+          height: 40px;
+          --el-input-focus-border-color: #ccc;
+          &:hover{
+
+            path{
+              stroke: #121212 !important;
+            }
+            .el-input__wrapper{
+              box-shadow: 0 0 0 1px #121212;
+            }
+          }
+        
+
+          .el-input__wrapper{
+            border-radius: 100px;
+            font-size: 16px;
+          }
+        }
+        
       }
     }
   }

@@ -29,7 +29,7 @@
           </li>
         </ul>
         <!-- 其他城市 -->
-        <ul class="picList">
+        <ul class="picList" :style="{gridTemplateColumns:showMap ? 'repeat(2, 328px)' : 'repeat(4, 328px)'}">
           <li 
             v-for="(item,index) in otherCityList" 
             :key="index"
@@ -305,7 +305,7 @@ const pauseVideo = (i,type) => {
     
     .main-pic{
       // width: 100%;
-      padding-right: 20px;
+      // padding-right: 20px;
       height: calc(100vh - 219px);
       overflow: scroll;
       .picList{
