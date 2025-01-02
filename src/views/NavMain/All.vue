@@ -19,10 +19,11 @@
               ref="videoRef"
               :src="beijingVideo" 
               type="video/mp4"
-              muted
+              controls
+              :muted="isMuted"
               loop
-              @mouseenter="playVideo(index)"
-              @mouseleave="pauseVideo(index)"
+              
+             
             ></video>
             <span >{{item.city}}</span>
             <svgLove class="picList-like"></svgLove>
@@ -37,19 +38,27 @@
            @mouseenter="mouseenterFn(index, 'other')"
             @mouseleave="mouseleaveFn(index,'other')"
           >
-            <img :src="shanghai">    
-            <video 
+            <LCarousel 
+              v-show="toShowOtherIndex === index" 
+              class="carousel"
+              :list="cityPicList"
+              :height="'200px'"
+            ></LCarousel>
+            <img v-show="toShowOtherIndex !== index" :src="shanghai">    
+            <!-- <video 
               v-show="toShowOtherIndex === index"
               ref="otherVideoRef"
               :src="beijingVideo" 
               type="video/mp4"
-              muted
+              controls
+              :muted="false"
               loop
               @mouseenter="playVideo(index,'other')"
               @mouseleave="pauseVideo(index,'other')"
-            ></video>     
+            ></video>      -->
+            
             <svgLove class="picList-like"></svgLove>
-            <div class="picList-bottom">
+            <div v-show="toShowOtherIndex !== index" class="picList-bottom">
               <span class="span-city">{{item.city}}</span>
               <svgLocation class="span-svg"></svgLocation>
               <span class="span-province">{{item.province}}</span>
@@ -72,6 +81,7 @@ import AMapLoader from "@amap/amap-jsapi-loader";
 import svgLove from '@/components/svg-icons/svg-love.vue'
 import svgLocation from '@/components/svg-icons/svg-location.vue'
 import video1 from "@/assets/video/beijing.mp4";
+import LCarousel from "@/components/common/L-Carousel.vue"
 import { useStore } from 'vuex'
 
 const beijingVideo = ref(video1);
@@ -80,8 +90,8 @@ const beijing = ref(require('@/assets/imgs/beijing.png') )
 const guangzhou = ref(require('@/assets/imgs/guangzhou.png') )
 const chengdu = ref(require('@/assets/imgs/chengdu.png') )
 const videoRef = ref(null)
-const otherVideoRef = ref(null)
 const store = useStore()
+
 const importantCityList = ref([
   {
     id: 1,
@@ -134,8 +144,20 @@ const otherCityList = ref([
     video: beijingVideo
   }
 ])
+const cityPicList = ref([
+  {
+    imgName: require('@/assets/imgs/shanghai.png')
+  },{
+    imgName:require('@/assets/imgs/beijing.png')
+  },{
+    imgName:require('@/assets/imgs/chengdu.png')
+  },{
+    imgName:require('@/assets/imgs/guangzhou.png')
+  }
+])
 const toShowIndex = ref(null)
 const toShowOtherIndex = ref(null)
+const isMuted = ref(true)
 // 地图容器的 DOM 元素
 let map = null
 
@@ -259,42 +281,28 @@ function addCityMarker(city, AMap, map) {
 
 const mouseenterFn = (i,type) =>{
   if(type === 'other'){
+  
     toShowOtherIndex.value = i
-  }else{
-    toShowIndex.value = i
-  }
-}
-const mouseleaveFn = () =>{
-  toShowIndex.value = null
-  toShowOtherIndex.value = null
-}
-// 播放视频
-const playVideo = (i,type) => {
-  if(type === 'other'){
-    if (otherVideoRef.value[i]) {
-      otherVideoRef.value[i].play();
-    }
 
   }else{
-    if (videoRef.value[i]) {
+    toShowIndex.value = i
+      if (videoRef.value[i]) {
       videoRef.value[i].play();
     }
   }
-};
-
-// 暂停视频
-const pauseVideo = (i,type) => {
-
-  if(type === 'other'){
-    if (otherVideoRef.value[i]) {
-      otherVideoRef.value[i].pause();
-    }
-  }else{
-    if (videoRef.value[i]) {
+}
+const mouseleaveFn = (i) =>{
+  toShowIndex.value = null
+  toShowOtherIndex.value = null
+  if (videoRef.value[i]) {
+   
       videoRef.value[i].pause();
+   
     }
-  }
-};
+
+}
+
+
 
 </script>
 
@@ -352,7 +360,7 @@ const pauseVideo = (i,type) => {
             position: absolute;
             top: 19px;
             right: 18px;
-            z-index: 999;
+            z-index: 1001;
           }
           .picList-bottom {
             
@@ -392,6 +400,40 @@ const pauseVideo = (i,type) => {
         }
         .otherCityLi{
           margin-top: 28px !important;
+
+          .carousel{
+            width: 328px;
+            // height: 200px;
+            border-radius: 16px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+
+            ::v-deep .el-carousel--horizontal, .el-carousel--vertical{
+              border-radius: 16px;
+
+              // &:hover{
+              //   button{
+              //     display: none;
+              //   }
+              // }
+            }
+            ::v-deep .el-carousel__arrow{
+              display: none
+            }
+            ::v-deep .el-carousel__indicators{
+              position: absolute;
+              left:56px;
+              bottom: 12px;
+            }
+            ::v-deep .el-carousel__button{
+              width: 8px;
+              height: 8px;
+              margin:0 8px;
+              border-radius: 50%;
+            }
+          }
         }
       }
     }
