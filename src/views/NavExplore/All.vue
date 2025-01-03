@@ -11,7 +11,8 @@
               marginTop: showMap && index > 1 ? '28px' : ''
             }"
             @mouseenter="mouseenterFn(index)"
-            @mouseleave="mouseleaveFn(index)" 
+            @mouseleave="mouseleaveFn(index)"
+            @click="clickToDetails(item)" 
           >
             <img :src="shanghai">
             <video 
@@ -45,18 +46,6 @@
               :height="'200px'"
             ></LCarousel>
             <img v-show="toShowOtherIndex !== index" :src="shanghai">    
-            <!-- <video 
-              v-show="toShowOtherIndex === index"
-              ref="otherVideoRef"
-              :src="beijingVideo" 
-              type="video/mp4"
-              controls
-              :muted="false"
-              loop
-              @mouseenter="playVideo(index,'other')"
-              @mouseleave="pauseVideo(index,'other')"
-            ></video>      -->
-            
             <svgLove class="picList-like"></svgLove>
             <div v-show="toShowOtherIndex !== index" class="picList-bottom">
               <span class="span-city">{{item.city}}</span>
@@ -77,13 +66,15 @@
 
 <script setup>
 import { ref,computed,watch,onMounted,onUnmounted } from 'vue';
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 import AMapLoader from "@amap/amap-jsapi-loader";
 import svgLove from '@/components/svg-icons/svg-love.vue'
 import svgLocation from '@/components/svg-icons/svg-location.vue'
 import video1 from "@/assets/video/beijing.mp4";
 import LCarousel from "@/components/common/L-Carousel.vue"
-import { useStore } from 'vuex'
 
+const router = useRouter()
 const beijingVideo = ref(video1);
 const shanghai = ref( require('@/assets/imgs/shanghai.png') );
 const beijing = ref(require('@/assets/imgs/beijing.png') )
@@ -301,15 +292,26 @@ const mouseleaveFn = (i) =>{
     }
 
 }
+// 查看城市详情
+const clickToDetails = (item)=>{
+  store.commit('all/setShowCityDetails', true)
 
+  router.push({
+  name: 'Details', 
+  params: {
+    cityName: item.city
+  },
+});
+}
 
 
 </script>
 
 <style lang="less" scoped>
 .All{
-    display: flex;
-    justify-content: space-between;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
     
     .main-pic{
       // width: 100%;

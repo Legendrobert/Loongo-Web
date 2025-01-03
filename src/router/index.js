@@ -2,13 +2,18 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 // 懒加载页面组件
 // const Itinerary = () => import('@/views/NavItinerary.vue');
+// Main 模块
 const Main = () => import('@/views/NavMain/index.vue');
-const All = () => import('@/views/NavMain/All.vue')
-const Eastern = () => import('@/views/NavMain/Eastern.vue')
-const WestSouth = () => import('@/views/NavMain/Western&Southern.vue')
-const Northern = () => import('@/views/NavMain/Northern.vue')
-const Central = () => import('@/views/NavMain/Central.vue')
-const Explore = () => import('@/views/NavExplore.vue');
+
+// Explore 模块
+const Explore = () => import('@/views/NavExplore/index.vue');
+const All = () => import('@/views/NavExplore/All.vue')
+const Eastern = () => import('@/views/NavExplore/Eastern.vue')
+const WestSouth = () => import('@/views/NavExplore/Western&Southern.vue')
+const Northern = () => import('@/views/NavExplore/Northern.vue')
+const Central = () => import('@/views/NavExplore/Central.vue')
+const Details = () => import('@/views/cityDetails/index.vue')
+
 // const Profile = () => import('@/views/NavProfile.vue');
 const NotFound = () => import('@/views/NotFound.vue');
 
@@ -24,20 +29,30 @@ const routes = [
   // },
   {
     path: '/',
-    redirect: '/main/all', // 访问 '/' 时重定向到 '/main/all'
-  },
-  {
-    path: '/Main',
     name: 'Main',
     component: Main,
-    meta: { title: 'Main Page' },
-    redirect: '/Main/All',
+    meta: { title: 'Main Page' }, // 可以定义一些额外的meta信息
+  },
+  {
+    path: '/Explore',
+    name: 'Explore',
+    component: Explore,
+    meta: { title: 'Explore Page' },
+    redirect: '/Explore/All',
     children: [
       {
         path: 'All',
         name: 'All',
         component: All,
-        meta: { title: 'All Page'}
+        meta: { title: 'All Page'},
+        children: [
+          {
+            path: 'Details/:cityName',
+            name: 'Details',
+            component: Details,
+            meta: { title: 'Details Page' }
+          }
+        ]
       },{
         path: 'Eastern',
         name: 'Eastern',
@@ -60,12 +75,6 @@ const routes = [
         meta: { title: 'Central Page'}
       }
     ]
-  },
-  {
-    path: '/Explore',
-    name: 'Explore',
-    component: Explore,
-    meta: { title: 'Explore Page' },
   },
   // {
   //   path: '/Profile',

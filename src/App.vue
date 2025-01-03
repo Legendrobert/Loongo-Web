@@ -52,14 +52,19 @@
     </div>
     <div class="header-right">
       <svgFlag></svgFlag>
-      <span>Add</span>
+      <span>Itinerary</span>
 
       <!-- <span class="header-right-title">Travel Plan</span>
       <span class="header-right-num">0</span> -->
     </div>
     </header>
     <main>
-      <router-view></router-view> 
+      <!-- 城市详情模块 -->
+      <div v-if="showCityDetails">
+        <cityDetails></cityDetails>
+      </div>
+      <!-- 一级导航下内容 -->
+      <router-view v-else></router-view>
     </main>
   </div>
 </template>
@@ -67,6 +72,8 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router'
+import { useStore } from 'vuex'
+import cityDetails from '@/views/cityDetails/index.vue'
 import svgExplore from '@/components/svg-icons/svg-explore.vue'
 import svgMain from '@/components/svg-icons/svg-main.vue'
 // import svgProfile from '@/components/svg-icons/svg-profile.vue'
@@ -74,9 +81,9 @@ import svgFlag from '@/components/svg-icons/svg-flag.vue'
 
 const router = useRouter()
 const route = useRoute()
-
+const store = useStore()
 const topLevelRoutes = router.options.routes.filter(route => !route.parent)
-
+const showCityDetails = ref(false)
 topLevelRoutes.forEach((item,index)=>{
   if(item.name === "notfound"){
     topLevelRoutes.splice(index,1)
@@ -87,31 +94,37 @@ topLevelRoutes.forEach((item,index)=>{
 const logo = ref( require('@/assets/imgs/logo.png') );
 const activeName = ref('Main') // 默认Main
 
-// 路由变化时更新activeName
-// watch(
-//   () => route.matched[0],
-//   (newName) => {
-//     console.log(newName,'-----')
-//     activeName.value = newName.name // 根据路由的 name 更新 activeName
-//   }
-// )
+
 watch(
-   () => route.matched[0],
-  (newName) => {
-    console.log(newName,'-----')
-    activeName.value = newName.name // 根据路由的 name 更新 activeName
+   [() => route.matched[0],() => store.state.all.showCityDetails,()=> route],
+  ([newMatched, newShowCityDetails,newRoute], [oldMatched, oldShowCityDetails,oldRoute]) => {
+   if(newMatched !== oldMatched){
+    activeName.value = newMatched.name // 根据路由的 name 更新 activeName
+   }
+  //  是否展示城市详情页模块
+    if(newShowCityDetails !== oldShowCityDetails){
+
+      showCityDetails.value = newShowCityDetails
+    }
+    // 路由地址是否为城市详情页模块
+    if(newRoute.name === 'Details' ){
+      showCityDetails.value = true
+      store.commit('all/setShowCityDetails', true)
+    }
+
+    
   }
 )
 
 
 // 选中的导航
 const isActive = (name) => {
-  console.log(name,activeName.value,'选中的导航')
+  
   return name === activeName.value
 }
 const updateActive = (val) => {
   activeName.value = val
-  console.log(val,router,'vallll')
+  console.log(val,'vallllll')
   router.push({ name: val })
 }
 
@@ -207,7 +220,7 @@ header {
     justify-content: space-between;
     box-sizing: border-box;
     padding: 0px 16px;
-    width: 86px;
+    // width: 86px;
     height: 40px;
     background: #fff;
     border-radius: 8px;
@@ -217,6 +230,7 @@ header {
 
     span{
       vertical-align: middle;
+      margin-left: 10px;
     }
     svg{
       vertical-align: middle;
