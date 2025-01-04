@@ -4,6 +4,7 @@ export default {
     },
     setShowCityDetails(state, value){
       state.showCityDetails = value;
+      
     }
   };
   

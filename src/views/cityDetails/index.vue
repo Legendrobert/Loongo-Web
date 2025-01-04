@@ -13,29 +13,41 @@
         </svgMap>
     </div>
     <div class="main">
-        
+        <Citys v-show="activeIndex === 0"></Citys>
+        <ThingToDo v-show="activeIndex === 1"></ThingToDo>
+        <Experts v-show="activeIndex === 2"></Experts>
+        <Relevant v-show="activeIndex === 3"></Relevant>
     </div>
   </div>
 </template>
 
 <script setup>
 import { useRouter, useRoute } from 'vue-router'
+import { useStore } from 'vuex'
 import { ref,computed } from 'vue';
 import toLeft from '@/components/svg-icons/svg-toLeft.vue'
 import svgMap from '@/components/svg-icons/svg-map.vue'
+import Citys from './citys.vue'
+import ThingToDo from './thingsToDo.vue'
+import Experts from './experts.vue'
+import Relevant from './relevant.vue'
 
 const route = useRoute()
+const router = useRouter()
 // const cityName = route.params.cityName
+const store = useStore()
 const cityName = computed(() => route.params.cityName)
 const activeIndex = ref(0)
 
-// 返回到主页
+// 返回到上一页
 const handleClickBack = ()=>{
-
+    router.go(-1)
+    store.commit('all/setShowCityDetails', false)
 }
 // 点击导航
 const activeClick = (i)=>{
     activeIndex.value = i
+
 }
 </script>
 
@@ -47,7 +59,7 @@ const activeClick = (i)=>{
         box-sizing: border-box;
         justify-content: space-between;
         align-items: center;
-        padding: 0 28px;
+        padding: 0 14px;
        
 
         .header-nav-middle{
@@ -58,8 +70,6 @@ const activeClick = (i)=>{
 
             li{
                 margin: 0 28px !important;
-                // padding-bottom: 4px !important;
-                // border-bottom: 2px solid transparent;
             }
         }
         .activeItem{
@@ -68,14 +78,21 @@ const activeClick = (i)=>{
             padding-bottom: 4px !important;
             border-bottom: 2px solid #FF401A !important;
         }
+        .header-nav-right{
+            &:hover{
+                path{
+                    stroke: #121212 !important;
+                }
+            }
+        }
     }
     .main{
         display: flex;
         height: calc(100vh - 247px);
         box-sizing: border-box;
-        padding: 40px 28px;
+        padding-top: 40px;
         overflow: scroll;
-        background:yellow;
+        
     }
 }
 </style>

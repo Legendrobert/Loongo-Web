@@ -38,6 +38,7 @@
             class="otherCityLi"
            @mouseenter="mouseenterFn(index, 'other')"
             @mouseleave="mouseleaveFn(index,'other')"
+            @click="clickToDetails(item)"
           >
             <LCarousel 
               v-show="toShowOtherIndex === index" 

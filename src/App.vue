@@ -98,20 +98,9 @@ const activeName = ref('Main') // 默认Main
 watch(
    [() => route.matched[0],() => store.state.all.showCityDetails,()=> route],
   ([newMatched, newShowCityDetails,newRoute], [oldMatched, oldShowCityDetails,oldRoute]) => {
-   if(newMatched !== oldMatched){
-    activeName.value = newMatched.name // 根据路由的 name 更新 activeName
-   }
-  //  是否展示城市详情页模块
-    if(newShowCityDetails !== oldShowCityDetails){
-
-      showCityDetails.value = newShowCityDetails
-    }
-    // 路由地址是否为城市详情页模块
-    if(newRoute.name === 'Details' ){
-      showCityDetails.value = true
-      store.commit('all/setShowCityDetails', true)
-    }
-
+    activeName.value = newMatched.name
+    showCityDetails.value = newShowCityDetails
+    console.log(newRoute,newShowCityDetails,'newRoute')
     
   }
 )
@@ -124,7 +113,7 @@ const isActive = (name) => {
 }
 const updateActive = (val) => {
   activeName.value = val
-  console.log(val,'vallllll')
+  store.commit('all/setShowCityDetails', false)
   router.push({ name: val })
 }
 
