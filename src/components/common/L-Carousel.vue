@@ -1,9 +1,8 @@
 <!-- 轮播图 -->
 <template>
   <div class="carousel block text-center">
-    <el-carousel :height="props.height">
-      <el-carousel-item v-for="(item,index) in props.list" :key="index">
-        <!-- <h3 class="small justify-center" text="2xl">{{ item }}</h3> -->
+    <el-carousel :height="props.height" @change="handleIndicatorClick">
+      <el-carousel-item v-for="(item,index) in props.list" :key="index" activeIndex='0'>
         <img :src="item.imgName" class="imgStyle"> 
       </el-carousel-item>
     </el-carousel>
@@ -11,7 +10,9 @@
  
 </template>
 <script setup>
-import { defineProps } from 'vue';
+import { ref, defineProps, defineEmits } from 'vue';
+
+const emits = defineEmits(["getCurrentIndex"])
 const props = defineProps({
   list: {
     type: Array,
@@ -22,7 +23,12 @@ const props = defineProps({
     default: "150px"
   }
 });
-
+const currentIndex = ref(0)
+const handleIndicatorClick = (index)=>{
+  currentIndex.value = index;
+  emits('getCurrentIndex', currentIndex.value)
+  
+}
 </script>
 <style scoped>
 
@@ -30,13 +36,7 @@ const props = defineProps({
     width: 100%;
     height: 100%;
 }
-/* .el-carousel__item h3 {
-  color: #475669;
-  opacity: 0.75;
-  line-height: 150px;
-  margin: 0;
-  text-align: center;
-} */
+
 .imgStyle{
     width: 100%;
     height: 100%;

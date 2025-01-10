@@ -107,13 +107,13 @@ watch(
 
 
 // 选中的导航
-const isActive = (name) => {
-  
+const isActive = (name) => { 
   return name === activeName.value
 }
 const updateActive = (val) => {
   activeName.value = val
   store.commit('all/setShowCityDetails', false)
+  store.commit('all/setShowMap', false)
   router.push({ name: val })
 }
 

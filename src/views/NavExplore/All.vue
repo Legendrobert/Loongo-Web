@@ -1,9 +1,9 @@
 <template>
   <div class="All">
    
-      <div class="main-pic" :style="{ width: showMap ? '684px' : '100%' }">
+      <div class="main-pic" :style="{ width: showMap ? '50%' : '100%' }">
         <!-- 第一排4个固定重点城市 -->
-        <ul class="picList" :style="{gridTemplateColumns:showMap ? 'repeat(2, 328px)' : 'repeat(4, 328px)'}">
+        <ul class="picList" :style="{gridTemplateColumns:showMap ? 'repeat(2, minmax(328px, 1fr))' : 'repeat(4, minmax(328px, 1fr))'}">
           <li 
             v-for="(item,index) in importantCityList" 
             :key="index"    
@@ -36,16 +36,24 @@
             v-for="(item,index) in otherCityList" 
             :key="index"
             class="otherCityLi"
-           @mouseenter="mouseenterFn(index, 'other')"
+            @mouseenter="mouseenterFn(index, 'other')"
             @mouseleave="mouseleaveFn(index,'other')"
             @click="clickToDetails(item)"
           >
             <LCarousel 
-              v-show="toShowOtherIndex === index" 
+              v-if="toShowOtherIndex === index" 
               class="carousel"
               :list="cityPicList"
               :height="'200px'"
+              @getCurrentIndex="getCurrentIndex"
             ></LCarousel>
+            <div
+              v-if="toShowOtherIndex === index && showPicBtn"
+              class="picBtn"
+              @click="clickToDetails(item)"
+            >
+              <svgToRight2></svgToRight2>
+            </div>
             <img v-show="toShowOtherIndex !== index" :src="shanghai">    
             <svgLove class="picList-like"></svgLove>
             <div v-show="toShowOtherIndex !== index" class="picList-bottom">
@@ -72,6 +80,7 @@ import { useRouter } from 'vue-router'
 import AMapLoader from "@amap/amap-jsapi-loader";
 import svgLove from '@/components/svg-icons/svg-love.vue'
 import svgLocation from '@/components/svg-icons/svg-location.vue'
+import svgToRight2 from '@/components/svg-icons/svg-toRight2.vue'
 import video1 from "@/assets/video/beijing.mp4";
 import LCarousel from "@/components/common/L-Carousel.vue"
 
@@ -150,6 +159,7 @@ const cityPicList = ref([
 const toShowIndex = ref(null)
 const toShowOtherIndex = ref(null)
 const isMuted = ref(true)
+const showPicBtn = ref(false)
 // 地图容器的 DOM 元素
 let map = null
 
@@ -163,13 +173,15 @@ watch(
   (newValue) => {
     if(newValue){
       getMap()
+      console.log('111')
     }else{
       map?.destroy();
+      console.log('2222')
     }
   },
-  {
-    immediate:true
-  }
+  // {
+  //   immediate:true
+  // }
 )
 const getMap = () => {
   AMapLoader.load({
@@ -304,7 +316,9 @@ const clickToDetails = (item)=>{
   },
 });
 }
-
+const getCurrentIndex = (value)=>{
+  showPicBtn.value = value > 0 ? true : false 
+}
 
 </script>
 
@@ -320,14 +334,20 @@ const clickToDetails = (item)=>{
       height: calc(100vh - 219px);
       overflow: scroll;
       .picList{
-        display: grid;
-        // grid-template-columns: repeat(4, 328px); /* 一行固定 4 列，每列宽度 328px */
+        // display: grid;
+        // // grid-template-columns: repeat(4, 328px); /* 一行固定 4 列，每列宽度 328px */
         
-        width: 100%;
-        justify-content: space-between;
+        // width: 100%;
+        // justify-content: space-between;
+        display: grid;
+    // grid-template-columns: repeat(4, minmax(328px, 1fr)); /* 最小宽度 328px，自适应屏幕 */
+    gap:clamp(10px, 1.7vw, 30px);
+  
+    box-sizing: border-box;
 
         li{
-          width: 328px;
+          // width: 328px;
+          width: 100%;
           height: 200px;
           position: relative;
           display: inline-flex; /* 将子元素布局为 flex */
@@ -337,12 +357,14 @@ const clickToDetails = (item)=>{
           flex-shrink: 0; /* 防止图片因容器宽度不足而缩小 */
 
           img{
-            width: 328px;
+            // width: 328px;
+            width: 100%;
             height: 200px;
             border-radius: 16px;
           }
           video{
-            width: 328px;
+            // width: 328px;
+            width: 100%;
             height: 200px;
             border-radius: 16px;
             position: absolute;
@@ -405,7 +427,8 @@ const clickToDetails = (item)=>{
           margin-top: 28px !important;
 
           .carousel{
-            width: 328px;
+            width: 100%;
+            // width: 328px;
             // height: 200px;
             border-radius: 16px;
             position: absolute;
@@ -415,12 +438,6 @@ const clickToDetails = (item)=>{
 
             ::v-deep .el-carousel--horizontal, .el-carousel--vertical{
               border-radius: 16px;
-
-              // &:hover{
-              //   button{
-              //     display: none;
-              //   }
-              // }
             }
             ::v-deep .el-carousel__arrow{
               display: none
@@ -437,6 +454,19 @@ const clickToDetails = (item)=>{
               border-radius: 50%;
             }
           }
+          .picBtn{
+            width: 32px;
+            height: 32px;
+            background: #fff;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1002;
+            position: absolute;
+            bottom: 13px;
+            right: 16px;
+          }
         }
       }
     }
@@ -444,6 +474,7 @@ const clickToDetails = (item)=>{
       width: 53%;
       height: calc(100vh - 219px);
       border-radius: 16px;
+      margin-left: 1.7vw
       
     }
   }

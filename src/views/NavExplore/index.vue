@@ -88,6 +88,8 @@ watch(
 
 const updateActive = (val) => {
   activeName.value = val
+  showMap.value = false
+  store.commit('all/setShowMap', false)
   router.push({ name: val })
 }
 // 选中的导航
