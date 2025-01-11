@@ -69,7 +69,6 @@ const getCurrentIndex = (value)=>{
     min-width: 328px;
     min-height: 192px;
     border-radius: 16px;
-    background: yellow;
     position: relative;
     display: inline-flex; /* 将子元素布局为 flex */
     align-items: center; /* 垂直居中 */

@@ -99,9 +99,7 @@ watch(
    [() => route.matched[0],() => store.state.all.showCityDetails,()=> route],
   ([newMatched, newShowCityDetails,newRoute], [oldMatched, oldShowCityDetails,oldRoute]) => {
     activeName.value = newMatched.name
-    showCityDetails.value = newShowCityDetails
-    console.log(newRoute,newShowCityDetails,'newRoute')
-    
+    showCityDetails.value = newShowCityDetails 
   }
 )
 

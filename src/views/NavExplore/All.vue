@@ -3,7 +3,13 @@
    
       <div class="main-pic" :style="{ width: showMap ? '50%' : '100%' }">
         <!-- 第一排4个固定重点城市 -->
-        <ul class="picList" :style="{gridTemplateColumns:showMap ? 'repeat(2, minmax(328px, 1fr))' : 'repeat(4, minmax(328px, 1fr))'}">
+        <ul 
+          class="picList" 
+          :style="{
+            gridTemplateColumns:showMap ? 'repeat(2, minmax(328px, 1fr))' : 'repeat(4, minmax(328px, 1fr))',
+            marginBottom: '1.7vh'
+          }"
+        >
           <li 
             v-for="(item,index) in importantCityList" 
             :key="index"    
@@ -31,7 +37,7 @@
           </li>
         </ul>
         <!-- 其他城市 -->
-        <ul class="picList" :style="{gridTemplateColumns:showMap ? 'repeat(2, 328px)' : 'repeat(4, 328px)'}">
+        <ul class="picList" :style="{gridTemplateColumns:showMap ? 'repeat(2, minmax(328px, 1fr))' : 'repeat(4, minmax(328px, 1fr))'}">
           <li 
             v-for="(item,index) in otherCityList" 
             :key="index"
@@ -424,7 +430,7 @@ const getCurrentIndex = (value)=>{
           }
         }
         .otherCityLi{
-          margin-top: 28px !important;
+          // margin-top: 28px !important;
 
           .carousel{
             width: 100%;
