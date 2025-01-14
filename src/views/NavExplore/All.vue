@@ -27,6 +27,7 @@
               :src="beijingVideo" 
               type="video/mp4"
               controls
+              controlsList="nodownload"
               :muted="isMuted"
               loop
               
@@ -377,6 +378,8 @@ const getCurrentIndex = (value)=>{
             top: 0;
             left: 0;
             z-index: 1000;
+
+            
           }
           span{
            
@@ -434,8 +437,7 @@ const getCurrentIndex = (value)=>{
 
           .carousel{
             width: 100%;
-            // width: 328px;
-            // height: 200px;
+           
             border-radius: 16px;
             position: absolute;
             top: 0;
@@ -482,6 +484,20 @@ const getCurrentIndex = (value)=>{
       border-radius: 16px;
       margin-left: 1.7vw
       
+    }
+    video::-webkit-media-controls-play-button{
+      display: none !important;
+    }
+   
+    /* 隐藏“全屏”按钮 */
+    video::-webkit-media-controls-fullscreen-button {
+      display: none !important;
+    }
+
+    /* 隐藏“播放时长” */
+    video::-webkit-media-controls-time-remaining-display,
+    video::-webkit-media-controls-current-time-display {
+      display: none !important;
     }
   }
 </style>

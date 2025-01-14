@@ -67,7 +67,7 @@ const getCurrentIndex = (value)=>{
 <style lang="less" scoped>
 .cityCard{
     min-width: 328px;
-    min-height: 192px;
+    height: 200px;
     border-radius: 16px;
     position: relative;
     display: inline-flex; /* 将子元素布局为 flex */
@@ -78,7 +78,7 @@ const getCurrentIndex = (value)=>{
 
     img{
         width: 100%;
-        height: 100%;
+        height: 200px;
         border-radius: 16px;
     }
     .cardLike{
@@ -161,7 +161,7 @@ const getCurrentIndex = (value)=>{
         align-items: center;
         z-index: 1002;
         position: absolute;
-        bottom: 0px;
+        bottom: 13px;
         right: 16px;
     }
 }

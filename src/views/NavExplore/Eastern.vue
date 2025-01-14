@@ -207,9 +207,10 @@ const clickToDetails = (item)=>{
 
   .picList{
     display: grid;
+    height: 200px;
     // grid-template-columns: repeat(4, minmax(328px, 1fr)); /* 最小宽度 328px，自适应屏幕 */
     gap:clamp(10px, 1.7vw, 30px);
-    // width: 100%; 
+
     box-sizing: border-box;
   }
   #main-map{
