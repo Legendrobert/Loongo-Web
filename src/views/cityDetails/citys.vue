@@ -226,7 +226,7 @@
                 <img :src="xihu">
                 <svgLove class="svgLove" :width="33" :height="28"></svgLove>
                 <div class="pic-details">
-                    <div class="city-name">Hangzhou</div>
+                    <div class="city-name" style="width: 45vw">Hangzhou</div>
                     <div class="city-others">
                         <div class="city-others-item">
                             <svgLocation class="svgLocation" :width="18" :height="18" :fill="'#fff'"></svgLocation>
@@ -242,7 +242,7 @@
                     <img :src="xihu">
                     <svgLove class="svgLove" :width="33" :height="28"></svgLove>
                     <div class="pic-details">
-                        <div class="city-name">TOP 10 places to visit in SH</div>
+                        <div class="city-name" style="width: 45vw">TOP 10 places to visit in SH</div>
                         <div class="city-others">
                             <div class="city-others-item">
                                 <svgLocation class="svgLocation" :width="18" :height="18" :fill="'#fff'"></svgLocation>
@@ -258,7 +258,7 @@
                         <img class="bottom-image" :src="xihu">
                         <svgLove class="svgLove" :width="33" :height="28"></svgLove>
                         <div class="pic-details">
-                        <div class="city-name">TOP 10 places to visit in SH</div>
+                        <div class="city-name" style="width: 20vw">TOP 10 places to visit in SH</div>
                         <div class="city-others">
                             <div class="city-others-item">
                                 <svgLocation class="svgLocation" :width="18" :height="18" :fill="'#fff'"></svgLocation>
@@ -273,7 +273,7 @@
                         <img class="bottom-image" :src="xihu">
                         <svgLove class="svgLove" :width="33" :height="28"></svgLove>
                         <div class="pic-details">
-                        <div class="city-name">TOP 10 places to visit in SH</div>
+                        <div class="city-name" style="width: 20vw">TOP 10 places to visit in SH</div>
                         <div class="city-others">
                             <div class="city-others-item">
                                 <svgLocation class="svgLocation" :width="18" :height="18" :fill="'#fff'"></svgLocation>
@@ -929,11 +929,12 @@ const restaurantsList = ref([
                     color: #FFFFFF;
 
                     .city-name{
-                        height:42px;
+                        // height:42px;
                         line-height: 42px;
                         font-size: 28px;
                         font-family: Bold;
                         margin-bottom: 20px;
+                        word-wrap: break-word;
                     }
                     .city-others{
                         width: 440px;
