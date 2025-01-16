@@ -167,7 +167,129 @@
         </div>
 
     </div>
-    
+    <!-- 分割线 -->
+    <div class="divider-horizontal"></div>
+    <!-- Social Media -->
+    <div class="socialMedia">
+        <div class="cardContainer-header">
+            <div>
+                <span>What </span>
+                <span style="color:#FF401A">Experts</span>
+                <span> Say in Social Media</span>
+                
+            </div>
+            <div class="cardContainer-header-right">
+                <roundToLeft></roundToLeft>
+                <roundToRight></roundToRight>
+            </div>
+        </div>
+        <div class="content">
+            <div class="content-card" v-for="i in 4" :key="i">
+                <svgPlay class="svgPlay"></svgPlay>
+                <img :src="vlog">
+                <video 
+                    ref="videoRef"
+                    :src="beijingVideo" 
+                    type="video/mp4"
+                    controls
+                    controlsList="nodownload"
+                    :muted="isMuted"
+                    loop           
+                >
+                </video>
+                <div class="content-card-bottom">
+                    <div class="title">TOP 10 places to visit in SH</div>
+                    <div class="name">Stef Hoffger</div>
+                    <div class="tags">
+                        <div>Chinese</div>
+                        <div>Cuisine</div>
+                    </div>
+                </div>
+            </div>
+
+            
+        </div>
+    </div>
+    <!-- 分割线 -->
+    <div class="divider-horizontal"></div>
+    <!-- Relevant Cities -->
+    <div class="relevantCities">
+        <div class="cardContainer-header">
+            <div>
+                <span style="color:#FF401A">Relevant </span>
+               
+                <span> Cities for You</span>  
+            </div>
+        </div>
+        <div class="picContainer">
+            <div class="picContainer-left">
+                <img :src="xihu">
+                <svgLove class="svgLove" :width="33" :height="28"></svgLove>
+                <div class="pic-details">
+                    <div class="city-name">Hangzhou</div>
+                    <div class="city-others">
+                        <div class="city-others-item">
+                            <svgLocation class="svgLocation" :width="18" :height="18" :fill="'#fff'"></svgLocation>
+                            <span>36km</span>
+                        </div>
+                        <div class="city-others-item">Xi Lake</div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="picContainer-right">
+                <div class="top-block">
+                    <img :src="xihu">
+                    <svgLove class="svgLove" :width="33" :height="28"></svgLove>
+                    <div class="pic-details">
+                        <div class="city-name">TOP 10 places to visit in SH</div>
+                        <div class="city-others">
+                            <div class="city-others-item">
+                                <svgLocation class="svgLocation" :width="18" :height="18" :fill="'#fff'"></svgLocation>
+                                <span>36km</span>
+                            </div>
+                            <div class="city-others-item">Xi Lake</div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="bottom-block">                 
+                    <div class="bottom-image">
+                        <img class="bottom-image" :src="xihu">
+                        <svgLove class="svgLove" :width="33" :height="28"></svgLove>
+                        <div class="pic-details">
+                        <div class="city-name">TOP 10 places to visit in SH</div>
+                        <div class="city-others">
+                            <div class="city-others-item">
+                                <svgLocation class="svgLocation" :width="18" :height="18" :fill="'#fff'"></svgLocation>
+                                <span>36km</span>
+                            </div>
+                            <div class="city-others-item">Xi Lake</div>
+
+                        </div>
+                    </div>
+                    </div>
+                    <div class="bottom-image">
+                        <img class="bottom-image" :src="xihu">
+                        <svgLove class="svgLove" :width="33" :height="28"></svgLove>
+                        <div class="pic-details">
+                        <div class="city-name">TOP 10 places to visit in SH</div>
+                        <div class="city-others">
+                            <div class="city-others-item">
+                                <svgLocation class="svgLocation" :width="18" :height="18" :fill="'#fff'"></svgLocation>
+                                <span>36km</span>
+                            </div>
+                            <div class="city-others-item">Xi Lake</div>
+
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
   </div>
 </template>
 
@@ -181,9 +303,15 @@ import roundToRight from '@/components/svg-icons/svg-roundToRight.vue'
 import svgTemperature from '@/components/svg-icons/svg-temperature.vue'
 import svgDate from '@/components/svg-icons/svg-date.vue'
 import svgStart from '@/components/svg-icons/svg-start.vue'
+import svgPlay from '@/components/svg-icons/svg-play.vue'
+import svgLove from '@/components/svg-icons/svg-love.vue'
+import svgLocation from '@/components/svg-icons/svg-location.vue'
+
 
 const route = useRoute()
 const mainPic = ref( require('@/assets/imgs/shanghai.png') );
+const vlog = ref( require('@/assets/imgs/vlog.png') );
+const xihu = ref( require('@/assets/imgs/xihu.png') );
 const shanghaiblack = ref( require('@/assets/imgs/shanghaiblack.png') );
 const restaurants = ref( require('@/assets/imgs/restaurants.png') );
 const hotel = ref( require('@/assets/imgs/hotel.png') );
@@ -191,6 +319,8 @@ const isMuted = ref(true)
 const beijingVideo = ref(video1);
 const detailsContent = ref('Shanghai is a luxurious playground for the well-heeled, with Michelin-star dining, high-end fashion houses, and over-the-top hotels. The Huangpu River splits the city into two districts: Pudong and Puxi. The Pudong skyline looks like it was ripped from the Jetsons; on the Puxi side, you can walk the Bund riverside district to get a taste of old Shanghai. The food scene is phenomenal.')
 const cityName = computed(() => route.params.cityName)
+ 
+
 const restaurantsList = ref([
   {
     imgList: [
@@ -268,7 +398,14 @@ const restaurantsList = ref([
             border-top-left-radius: 24px;
             border-bottom-left-radius: 24px;
         }
-
+        video::-webkit-media-controls-play-button{
+            display: none !important;
+        }
+        /* 隐藏“播放时长” */
+        video::-webkit-media-controls-time-remaining-display,
+        video::-webkit-media-controls-current-time-display {
+            display: none !important;
+        }
         .small-images {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -408,20 +545,7 @@ const restaurantsList = ref([
                 color: #FF401A;
             }
         }
-        .cardContainer-header{
-                height: 40px;
-                display: flex;
-                justify-content: space-between;
-                font-size: 32px;
-                color: #121212;
-                margin-bottom: 28px;
-
-                .cardContainer-header-right{
-                    width: 104px;
-                    display: flex;
-                    justify-content: space-between;
-                }
-            }
+        
         .cardContainer{
             margin-top: 60px;
 
@@ -637,14 +761,233 @@ const restaurantsList = ref([
             }
         }
     }
-    video::-webkit-media-controls-play-button{
-      display: none !important;
+    .socialMedia{
+        
+        .content{
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(325px, 1fr)); /* 最小宽度 328px，自适应屏幕 */
+            gap:clamp(10px, 1.7vw, 30px);
+            box-sizing: border-box;
+            margin-top: 52px;
+
+            .content-card{
+                position: relative;
+
+                .svgPlay{
+                    position: absolute;
+                    top: 30%;
+                    left: 50%;
+                    z-index: 1000;
+                }
+                img{
+                    width: 100%;
+                    height: 240px;
+                    border-radius: 24px;
+                    position: absolute;
+                    z-index: 999;
+                }
+                video{
+                    width: 100%;
+                    height: 240px;
+                    border-radius: 24px;
+                }
+                .content-card-bottom{
+                    margin-top: 16px;
+
+                    .title{
+                        height: 27px;
+                        line-height: 27px;
+                        font-size: 20px;
+                        font-family: Bold;
+                        color:#000;
+                    }
+                    .name{
+                        color: #000;
+                        margin: 16px 0;
+                        font-family: Regular;
+                        font-size: 16px;
+                    }
+                    .tags{
+                        display: flex;
+
+                        div{
+                            width: 78px;
+                            height: 30px;
+                            line-height: 30px;
+                            font-size: 16px;
+                            border-radius: 8px;
+                            font-family: Semibold;
+                            text-align: center;
+
+                            &:nth-child(1){
+                                color: #121212;
+                                background: #F3F3F3;
+                                margin-right: 16px;
+                            }
+                            &:nth-child(2){
+                                color: #FF401A;
+                                background: #FFEEE6;
+                            }
+                        }
+
+                    }
+
+                }
+            }
+            
+            video::-webkit-media-controls-play-button{
+                display: none !important;
+            }
+            video::-webkit-media-controls-time-remaining-display,
+            video::-webkit-media-controls-current-time-display {
+                display: none !important;
+            }
+        }
     }
-    /* 隐藏“播放时长” */
-    video::-webkit-media-controls-time-remaining-display,
-    video::-webkit-media-controls-current-time-display {
-      display: none !important;
+    .relevantCities{
+        
+        .picContainer {
+            display: grid;
+            grid-template-columns: 1fr 1fr; 
+            gap: clamp(10px, 1.7vw, 30px); /* 自适应间距 */
+            height: 480px;
+            margin-top: 52px;
+            overflow: hidden;
+
+            .picContainer-left {
+                position: relative;
+                height: 480px;
+
+                img{
+                    width: 100%;
+                    height: 480px;
+                    border-radius: 24px;
+                }
+                .svgLove{
+                    position: absolute;
+                    top: 20px;
+                    right: 20px;
+                }
+                
+            }
+        }
+        
+
+        .picContainer-right {
+            height: 100%;
+            display: grid;
+            grid-template-rows: 2fr 3fr; /* 上下分布，上部分2份高度，下部分3份高度 */
+            gap: clamp(10px, 1.7vw, 30px); /* 上下间距 */
+
+            .top-block {
+                height: 224px;
+                position: relative;
+
+                img{
+                    // background-color: #aaa; /* 占位背景色，可替换为图片 */
+                    // background-size: cover;
+                    // background-position: center;
+                    border-radius: 24px;
+                    width: 100%;
+                    height: 224px;
+                }
+                .svgLove{
+                    position: absolute;
+                    top: 20px;
+                    right: 20px;
+                }
+
+            }
+            .bottom-block {
+                display: grid;
+                grid-template-columns: 1fr 1fr; /* 左右两列等宽 */
+                gap: clamp(10px, 1.7vw, 30px); /* 左右间距 */
+
+                .bottom-image {
+                    height: 224px;
+                    position: relative;
+
+                    img{
+                        border-radius: 24px;
+                        width: 100%;
+                        height: 224px;
+                    }
+                    .svgLove{
+                        position: absolute;
+                        top: 20px;
+                        right: 20px;
+                    }
+
+                }
+            }
+        }
+        .pic-details{
+                    position: absolute;
+                    left: 20px;
+                    bottom: 20px;
+                    color: #FFFFFF;
+
+                    .city-name{
+                        height:42px;
+                        line-height: 42px;
+                        font-size: 28px;
+                        font-family: Bold;
+                        margin-bottom: 20px;
+                    }
+                    .city-others{
+                        width: 440px;
+                        display: flex;
+
+                        .city-others-item{
+                            width: 79px;
+                            height: 38px;
+                            line-height: 38px;
+                            border: 2px solid #B1B0B0;
+                            border-radius: 8px;
+                            font-size: 16px;
+                            font-family: Semibold;
+                            text-align: center;
+                            display: flex;
+                            box-sizing: border-box;
+                            padding: 0 8px;
+                            margin-right: 16px;
+
+                            .svgLocation{
+                                margin-right: 7px;
+                                margin-top: 3px;
+                            }
+                        }
+                    }
+                }
+        
+
+
+
+
     }
+    .cardContainer-header{
+        height: 40px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 32px;
+        color: #121212;
+        margin-bottom: 28px;
+
+        .cardContainer-header-right{
+            width: 104px;
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+    // video::-webkit-media-controls-play-button{
+    //   display: none !important;
+    // }
+    // /* 隐藏“播放时长” */
+    // video::-webkit-media-controls-time-remaining-display,
+    // video::-webkit-media-controls-current-time-display {
+    //   display: none !important;
+    // }
     // 隐藏进度条  此方法无效
     // video::webkit-media-controls-timeline{
     //     display: none !important;
