@@ -51,9 +51,8 @@
         </div> -->
     </div>
     <div class="header-right">
-      <svgFlag></svgFlag>
+      <svgUser></svgUser>
       <span>Itinerary</span>
-
       <!-- <span class="header-right-title">Travel Plan</span>
       <span class="header-right-num">0</span> -->
     </div>
@@ -78,6 +77,7 @@ import svgExplore from '@/components/svg-icons/svg-explore.vue'
 import svgMain from '@/components/svg-icons/svg-main.vue'
 // import svgProfile from '@/components/svg-icons/svg-profile.vue'
 import svgFlag from '@/components/svg-icons/svg-flag.vue'
+import svgUser from '@/components/svg-icons/svg-user.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -209,10 +209,11 @@ header {
     padding: 0px 16px;
     // width: 86px;
     height: 40px;
-    background: #fff;
+    // background: #fff;
+    background: linear-gradient(to right, #FF401A, #FFB094);
     border-radius: 8px;
     font-size: 16px;
-    color: #FF401A;
+    color: #fff;
     font-family: Regular;
 
     span{

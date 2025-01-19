@@ -1,19 +1,31 @@
 <template>
   <div class="citys">
-    <!-- 图片/视频 展示区 -->
-    <div class="pics">
+    <!-- 图片/视频 展示区 fullScreenPics-->
+    <div class="pics" :style="isFullScreen ? 'display: block;':'display: grid'">
         <div class="large-image">
-            <video          
+            <video      
               ref="videoRef"
               :src="beijingVideo" 
               type="video/mp4"
-              controls
+              autoplay
               controlsList="nodownload"
               :muted="isMuted"
               loop
+              :style="isFullScreen ? 'border-radius: 24px' : 'border-top-left-radius: 24px;border-bottom-left-radius: 24px'"
             ></video>
+            <svgSound class="svgSound"></svgSound>
+            <svgFullScreen 
+                v-if="!isFullScreen"
+                class="svgFullScreen" 
+                @click="handleFullScreen"
+            ></svgFullScreen>
+            <svgInitFullScreen 
+                v-else
+                class="svgInitFullScreen" 
+                @click="handleFullScreen"
+            ></svgInitFullScreen>
         </div>
-        <div class="small-images">
+        <div class="small-images" :style="isFullScreen ? 'display: none' : '' ">
             <div class="small-image">
                 <img :src="mainPic">
             </div>
@@ -25,7 +37,20 @@
             </div>
             <div class="small-image">
                 <img :src="mainPic">
-                <svgMore class="svgMore"></svgMore>
+                <svgMore 
+                    v-if="showSvgMore" 
+                    class="svgMore"
+                    @mouseenter="mouseEnterFn"
+                    @mouseleave="mouseLeaveFn"
+                    @click="clickSvgMoreFn"
+                ></svgMore>
+                <svgMoreWhite 
+                    v-else 
+                    class="svgMore"
+                    @mouseenter="mouseenterFn"
+                    @mouseleave="mouseLeaveFn"
+                    @click="clickSvgMoreFn"
+                ></svgMoreWhite>
             </div>
         </div>
     </div>
@@ -90,7 +115,10 @@
                     <div class="item-text">
                         <p>{{cityName}}</p>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ligula nulla, tempus</p>
-                        <el-button>Add</el-button>
+                        <el-button 
+                            :class="isAdded ? 'el-button-add' : ''" 
+                            @click="handleAdd"
+                        >Add</el-button>
                     </div>
                 </li>
             </ul>
@@ -165,7 +193,6 @@
                 </div>         
             </div>
         </div>
-
     </div>
     <!-- 分割线 -->
     <div class="divider-horizontal"></div>
@@ -289,15 +316,21 @@
         </div>
 
     </div>
-
+    <!-- 弹窗 -->
+    <LAlert 
+        v-if="isCloseAlert" 
+        class="alert"
+        @closeAlertFn="closeAlertFn"
+    ></LAlert>
   </div>
 </template>
 
 <script setup>
-import { ref,computed } from 'vue';
+import { ref,computed} from 'vue';
 import { useRouter, useRoute } from 'vue-router'
 import video1 from "@/assets/video/beijing.mp4";
 import svgMore from '@/components/svg-icons/svg-more.vue'
+import svgMoreWhite from '@/components/svg-icons/svg-moreWhite.vue'
 import roundToLeft from '@/components/svg-icons/svg-roundToLeft.vue'
 import roundToRight from '@/components/svg-icons/svg-roundToRight.vue'
 import svgTemperature from '@/components/svg-icons/svg-temperature.vue'
@@ -306,7 +339,10 @@ import svgStart from '@/components/svg-icons/svg-start.vue'
 import svgPlay from '@/components/svg-icons/svg-play.vue'
 import svgLove from '@/components/svg-icons/svg-love.vue'
 import svgLocation from '@/components/svg-icons/svg-location.vue'
-
+import svgSound from '@/components/svg-icons/svg-sound.vue'
+import svgFullScreen from '@/components/svg-icons/svg-fullScreen.vue'
+import svgInitFullScreen from '@/components/svg-icons/svg-initFullScreen.vue'
+import LAlert from "@/components/common/L-Alert.vue"
 
 const route = useRoute()
 const mainPic = ref( require('@/assets/imgs/shanghai.png') );
@@ -319,8 +355,6 @@ const isMuted = ref(true)
 const beijingVideo = ref(video1);
 const detailsContent = ref('Shanghai is a luxurious playground for the well-heeled, with Michelin-star dining, high-end fashion houses, and over-the-top hotels. The Huangpu River splits the city into two districts: Pudong and Puxi. The Pudong skyline looks like it was ripped from the Jetsons; on the Puxi side, you can walk the Bund riverside district to get a taste of old Shanghai. The food scene is phenomenal.')
 const cityName = computed(() => route.params.cityName)
- 
-
 const restaurantsList = ref([
   {
     imgList: [
@@ -372,6 +406,33 @@ const restaurantsList = ref([
     introduce: 'From ridiculous sales figures to margins and costs that just don’t add up.  You hear the investors pull the plans apart and wonder to yourself “how the hell can these guys get it so wrong?”'
   }
 ])
+const showSvgMore = ref(true)
+const isFullScreen = ref(false)
+const isAdded = ref(false)
+const isCloseAlert = ref(false)
+
+const mouseEnterFn = ()=>{
+    showSvgMore.value = false
+}
+const mouseLeaveFn = ()=>{
+ showSvgMore.value = true
+}
+// 点击更多，切换四张图片，上线为50张
+const clickSvgMoreFn = ()=>{
+
+}
+// 视频切换全屏模式
+const handleFullScreen = ()=>{
+    isFullScreen.value = !isFullScreen.value
+}
+// 添加事件
+const handleAdd = ()=>{
+    isAdded.value = !isAdded.value
+    isCloseAlert.value = true
+}
+const closeAlertFn = (val)=>{
+    isCloseAlert.value = val
+}
 </script>
 
 <style lang="less" scoped>
@@ -386,26 +447,45 @@ const restaurantsList = ref([
         margin-bottom: 40px;
 
         .large-image {
+            height: 420px;
             grid-column: 1 / 2;
             grid-row: 1 / 3;
+            position: relative;
 
+            video {
+                width: 100%;
+                height:420px;
+                object-fit: cover;
+                border-top-left-radius: 24px;
+                border-bottom-left-radius: 24px;
+            }
+            // video::-webkit-media-controls-play-button{
+            //     display: none !important;
+            // }
+            // /* 隐藏“播放时长” */
+            // video::-webkit-media-controls-time-remaining-display,
+            // video::-webkit-media-controls-current-time-display {
+            //     display: none !important;
+            // }
+
+            .svgSound{
+                position: absolute;
+                bottom: 20px;
+                left: 20px;
+            }
+            .svgFullScreen{
+                position: absolute;
+                bottom: 20px;
+                right: 20px;
+            }
+            .svgInitFullScreen{
+                position: absolute;
+                bottom: 20px;
+                right: 20px;
+            }
         }
 
-         .large-image video {
-            width: 100%;
-            height:420px;
-            object-fit: cover;
-            border-top-left-radius: 24px;
-            border-bottom-left-radius: 24px;
-        }
-        video::-webkit-media-controls-play-button{
-            display: none !important;
-        }
-        /* 隐藏“播放时长” */
-        video::-webkit-media-controls-time-remaining-display,
-        video::-webkit-media-controls-current-time-display {
-            display: none !important;
-        }
+        
         .small-images {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -416,6 +496,19 @@ const restaurantsList = ref([
             position: absolute;
             right: 20px;
             bottom: 20px;
+
+//             &:hover{
+
+//                 path{
+//                     fill: yellow;
+//   stroke: purple;
+//                     // stroke: #fff !important;
+//                     // fill: transparent !important;
+//                 }
+//             }
+           svg:hover path {
+    fill: #008095 !important;
+}
         }
 
         .small-image img {
@@ -570,6 +663,7 @@ const restaurantsList = ref([
                         background-color: #121212;
                         opacity: 0.7;
                     }
+                    
                     .item-text{
                         position: absolute;
                         bottom: 20px;
@@ -602,6 +696,11 @@ const restaurantsList = ref([
                             font-family: Semibold;
                             font-size: 20px;
                             color: #121212;
+                        }
+                        .el-button-add{
+                            background: transparent;;
+                            border: 2px solid #CCCCCC;
+                            color: #CCCCCC;
                         }
                     }
                 }
@@ -843,6 +942,10 @@ const restaurantsList = ref([
             video::-webkit-media-controls-current-time-display {
                 display: none !important;
             }
+            // // 隐藏全屏按钮
+            // video::-webkit-media-controls-fullscreen-button {
+            //     display: none !important;
+            // }
         }
     }
     .relevantCities{
@@ -941,7 +1044,7 @@ const restaurantsList = ref([
                         display: flex;
 
                         .city-others-item{
-                            width: 79px;
+                           
                             height: 38px;
                             line-height: 38px;
                             border: 2px solid #B1B0B0;
@@ -981,17 +1084,11 @@ const restaurantsList = ref([
             justify-content: space-between;
         }
     }
-    // video::-webkit-media-controls-play-button{
-    //   display: none !important;
-    // }
-    // /* 隐藏“播放时长” */
-    // video::-webkit-media-controls-time-remaining-display,
-    // video::-webkit-media-controls-current-time-display {
-    //   display: none !important;
-    // }
-    // 隐藏进度条  此方法无效
-    // video::webkit-media-controls-timeline{
-    //     display: none !important;
-    // }
+    .alert{
+        position: fixed;
+        top: 130px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
 }
 </style>
