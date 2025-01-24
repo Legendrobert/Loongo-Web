@@ -26,26 +26,24 @@
             ></svgInitFullScreen>
         </div>
         <div class="small-images" :style="isFullScreen ? 'display: none' : '' ">
-            <div class="small-image">
-                <img :src="mainPic">
-            </div>
-            <div class="small-image">
-                <img :src="mainPic">
-            </div>
-            <div class="small-image">
-                <img :src="mainPic">
-            </div>
-            <div class="small-image">
-                <img :src="mainPic">
+            <div 
+                class="small-image"
+                v-for="(item,index) in mainPicList"
+                :key="index"
+                @mouseenter="mouseenterImg(index)"
+                @mouseleave="mouseleaveImg(index)"
+            >
+         
+                <img :src="item.imgItem" >
                 <svgMore 
-                    v-if="showSvgMore" 
+                    v-if="showSvgMore && index === 3" 
                     class="svgMore"
                     @mouseenter="mouseEnterFn"
                     @mouseleave="mouseLeaveFn"
                     @click="clickSvgMoreFn"
                 ></svgMore>
                 <svgMoreWhite 
-                    v-else 
+                    v-if="!showSvgMore && index === 3" 
                     class="svgMore"
                     @mouseenter="mouseenterFn"
                     @mouseleave="mouseLeaveFn"
@@ -55,7 +53,7 @@
         </div>
     </div>
       <!-- 城市详情区 -->
-    <div class="introduction">
+    <div class="introduction" :style="isFullScreen ? 'margin-top:40px' : 'margin-top:21px'">
         <div class="header">
             <div class="cityName">{{cityName}} City</div>
             <ul class="header-right">
@@ -117,7 +115,7 @@
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ligula nulla, tempus</p>
                         <el-button 
                             :class="isAdded ? 'el-button-add' : ''" 
-                            @click="handleAdd"
+                            @click="handleAdd(shanghaiblack)"
                         >Add</el-button>
                     </div>
                 </li>
@@ -320,6 +318,8 @@
     <LAlert 
         v-if="isCloseAlert" 
         class="alert"
+        :img="addCityData.img"
+        :text="addCityData.text"
         @closeAlertFn="closeAlertFn"
     ></LAlert>
   </div>
@@ -345,7 +345,6 @@ import svgInitFullScreen from '@/components/svg-icons/svg-initFullScreen.vue'
 import LAlert from "@/components/common/L-Alert.vue"
 
 const route = useRoute()
-const mainPic = ref( require('@/assets/imgs/shanghai.png') );
 const vlog = ref( require('@/assets/imgs/vlog.png') );
 const xihu = ref( require('@/assets/imgs/xihu.png') );
 const shanghaiblack = ref( require('@/assets/imgs/shanghaiblack.png') );
@@ -406,10 +405,32 @@ const restaurantsList = ref([
     introduce: 'From ridiculous sales figures to margins and costs that just don’t add up.  You hear the investors pull the plans apart and wonder to yourself “how the hell can these guys get it so wrong?”'
   }
 ])
+const mainPicList = ref(
+    [
+        {
+            id: 0,
+            imgItem: require('@/assets/imgs/shanghai.png')
+        },{
+            id: 1,
+            imgItem: require('@/assets/imgs/shanghai.png')
+        },{
+            id: 2,
+            imgItem: require('@/assets/imgs/shanghai.png')
+        },{
+            id: 3,
+            imgItem: require('@/assets/imgs/shanghai.png')
+        }
+    ])
 const showSvgMore = ref(true)
 const isFullScreen = ref(false)
 const isAdded = ref(false)
 const isCloseAlert = ref(false)
+const isAmplify = ref(false)
+const mouseOverImgId = ref(null)
+const addCityData = ref({
+    text: '',
+    img: ''
+})
 
 const mouseEnterFn = ()=>{
     showSvgMore.value = false
@@ -426,12 +447,82 @@ const handleFullScreen = ()=>{
     isFullScreen.value = !isFullScreen.value
 }
 // 添加事件
-const handleAdd = ()=>{
-    isAdded.value = !isAdded.value
-    isCloseAlert.value = true
+const handleAdd = (val)=>{
+   
+    setTimeout(()=>{
+        isAdded.value = !isAdded.value
+        isCloseAlert.value = true
+        addCityData.value.text = 'The Event added into Shanghai city successfully'
+        addCityData.value.img = val
+    },3000)
 }
 const closeAlertFn = (val)=>{
     isCloseAlert.value = val
+}
+// 点击图片，图片放大
+const mouseenterImg = (i) =>{
+    console.log('mouseOn')
+    isAmplify.value = true
+    mouseOverImgId.value = i
+
+    const imgElement = document.querySelectorAll('.small-image img')[i];
+    
+    if (imgElement && mouseOverImgId.value === i) {
+    
+         // 计算 scale 比例
+        const scaleX = 2.08;
+        const scaleY = 2.1;
+        imgElement.style.transition = 'transform  0.5s ease'
+        imgElement.style.position = 'relative';
+        imgElement.style.zIndex = '999';
+
+        imgElement.style.borderTopRightRadius = '12px';
+        imgElement.style.borderBottomRightRadius = '12px';
+     
+    
+        imgElement.style.transformOrigin = getTransformOrigin(i);
+        imgElement.style.transform = `scale(${scaleX}, ${scaleY})`;
+    }
+    
+}
+// 点击图片，图片缩小
+const mouseleaveImg = (i) =>{
+    
+    isAmplify.value = false
+   
+    const imgElement = document.querySelectorAll('.small-image img')[i];
+    if (imgElement && mouseOverImgId.value === i) {
+        imgElement.style.transition = 'transform 0.5s ease';      
+        
+        imgElement.style.position = 'relative';
+        imgElement.style.borderTopRightRadius = '0px';
+        imgElement.style.borderBottomRightRadius = '0px';
+      
+        mouseOverImgId.value = null
+       
+        
+        imgElement.style.transform = 'scale(1)'; // 恢复到原始大小
+        setTimeout(()=>{
+            imgElement.style.zIndex = '0';
+        },500)
+
+        if(i === 1){
+            imgElement.style.borderTopRightRadius = '24px';
+        }
+        if(i === 3){
+            imgElement.style.borderBottomRightRadius = '24px';
+        }
+    }
+    
+}
+const getTransformOrigin = (i)=> {
+    console.log(i,'00000000000')
+
+  // 根据索引返回不同的放大方向
+  if (i === 0) return 'left top'; // 左上
+  if (i === 1) return 'right top'; // 右上
+  if (i === 2) return 'left bottom'; // 左下
+  if (i === 3) return 'right bottom'; // 右下
 }
 </script>
 
@@ -444,7 +535,7 @@ const closeAlertFn = (val)=>{
         gap: 15px;
         width: 100%;
         height: auto;
-        margin-bottom: 40px;
+        // margin-bottom: 40px;
 
         .large-image {
             height: 420px;
@@ -496,36 +587,24 @@ const closeAlertFn = (val)=>{
             position: absolute;
             right: 20px;
             bottom: 20px;
-
-//             &:hover{
-
-//                 path{
-//                     fill: yellow;
-//   stroke: purple;
-//                     // stroke: #fff !important;
-//                     // fill: transparent !important;
-//                 }
-//             }
-           svg:hover path {
-    fill: #008095 !important;
-}
+           
         }
 
         .small-image img {
             width: 100%;
             height: 200px;
             object-fit: cover;
+           z-index: 0;
+           position: relative;
         }
         .small-image:nth-child(2) img{
             border-top-right-radius: 24px;
-            // border-bottom-right-radius: 24px;
         }
         .small-image:nth-child(4){
             position: relative;
+            z-index: 0;
         }
         .small-image:nth-child(4) img{
-            
-            // border-top-right-radius: 24px;
             border-bottom-right-radius: 24px;
         }
     }
@@ -1090,5 +1169,6 @@ const closeAlertFn = (val)=>{
         left: 50%;
         transform: translateX(-50%);
     }
+  
 }
 </style>

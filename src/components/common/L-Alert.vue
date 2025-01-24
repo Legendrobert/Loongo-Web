@@ -1,9 +1,9 @@
 <!-- alert -->
 <template>
   <div class="L-Alert">
-        <img :src="userImg" width="40" height="40">
-        <span class="text">The Event added into Shanghai city successfully</span>
-        <span class="red">view</span>
+        <img :src="props.img" width="40" height="40">
+        <span class="text">{{props.text}}</span>
+        <span class="red" @click="handleView">View</span>
         <svgClose 
             class="svgClose"
             @click="handleClose"
@@ -13,13 +13,23 @@
 
 <script setup>
 import { ref,defineProps } from 'vue';
-import userImg from "@/assets/imgs/userImg.png"
+// import userImg from "@/assets/imgs/userImg.png"
 import svgClose from "@/components/svg-icons/svg-close.vue"
 
 const emits = defineEmits(["closeAlertFn"])
 const props = defineProps({
-  
+  text: {
+    type: String,
+    default: ''
+  },
+  img: {
+    type: String,
+    default: ''
+  }
 });
+const handleView = () =>{
+    alert('跳转Itinerary')
+}
 const handleClose = () =>{
     emits('closeAlertFn', false)
 }
@@ -39,6 +49,7 @@ const handleClose = () =>{
     color: #F3F3F3;
     border-radius: 16px;
     font-size: 16px;
+    box-shadow: 0px 16px 32px rgba(168, 168, 168, 0.25);
     // text-align: center;
     
     img{
