@@ -10,22 +10,22 @@
         </ul> -->
          <div class="header-nav-middle">
             <a 
-                href="#section0"
+                href="#0"
                 :class="activeIndex === 0 ? 'activeItem' : ''" 
                 @click="activeClick(0)"
             >{{cityName}}</a>
             <a 
-                href="#section1"
+                href="#1"
                 :class="activeIndex === 1 ? 'activeItem' : ''" 
                 @click="activeClick(1)"
             >Things to do</a>
             <a 
-                href="#section2"
+                href="#2"
                 :class="activeIndex === 2 ? 'activeItem' : ''" 
                 @click="activeClick(2)"
             >Experts</a>
             <a 
-                href="#section3"
+                href="#3"
                 :class="activeIndex === 3 ? 'activeItem' : ''" 
                 @click="activeClick(3)"
             >Relevant</a>
@@ -38,7 +38,7 @@
         </svgMap>
     </div>
     <div class="main">
-        <Citys :activeId="activeId"></Citys>
+        <Citys :activeIndex="activeIndex"></Citys>
         <!-- <Citys v-show="activeIndex === 0"></Citys> -->
         <!-- <ThingToDo v-show="activeIndex === 1"></ThingToDo>
         <Experts v-show="activeIndex === 2"></Experts>
@@ -64,6 +64,7 @@ const router = useRouter()
 const store = useStore()
 const cityName = computed(() => route.params.cityName)
 const activeIndex = ref(0)
+// const activeId = ref('Introduction')
 
 
 // 返回到上一页
@@ -82,6 +83,7 @@ const handleShowMap = ()=>{
 </script>
 
 <style lang="less" scope>
+
 .navExplore{
     .header-nav{
         height: 103px;
@@ -95,16 +97,21 @@ const handleShowMap = ()=>{
         .header-nav-middle{
             display: flex;
             font-size: 20px;
-            color: #595959;
             font-family: Regular;
 
-            li{
+            // li{
+            //     margin: 0 28px !important;
+            // }
+            a{
                 margin: 0 28px !important;
+                color: #595959;
+                font-size: 20px;
+                font-family: Regular;
             }
         }
         .activeItem{
-            font-family: Semibold;
-            color: #121212;
+            font-family: Semibold !important;
+            color: #121212 !important;
             padding-bottom: 4px !important;
             border-bottom: 2px solid #FF401A !important;
         }
@@ -122,7 +129,7 @@ const handleShowMap = ()=>{
         box-sizing: border-box;
         padding-top: 40px;
         overflow: scroll;
-        
+        scroll-behavior: smooth; /* 平滑滚动 */
     }
 }
 </style>
