@@ -2,21 +2,47 @@
   <div class="navExplore">
     <div class="header-nav">
         <toLeft class="header-nav-left" @click="handleClickBack"></toLeft>
-        <ul class="header-nav-middle">
+        <!-- <ul class="header-nav-middle">
             <li :class="activeIndex === 0 ? 'activeItem' : ''" @click="activeClick(0)">{{cityName}}</li>
             <li :class="activeIndex === 1 ? 'activeItem' : ''" @click="activeClick(1)">Things to do</li>
             <li :class="activeIndex === 2 ? 'activeItem' : ''" @click="activeClick(2)">Experts</li>
             <li :class="activeIndex === 3 ? 'activeItem' : ''" @click="activeClick(3)">Relevant</li>
-        </ul>
-        <svgMap class="header-nav-right">
+        </ul> -->
+         <div class="header-nav-middle">
+            <a 
+                href="#section0"
+                :class="activeIndex === 0 ? 'activeItem' : ''" 
+                @click="activeClick(0)"
+            >{{cityName}}</a>
+            <a 
+                href="#section1"
+                :class="activeIndex === 1 ? 'activeItem' : ''" 
+                @click="activeClick(1)"
+            >Things to do</a>
+            <a 
+                href="#section2"
+                :class="activeIndex === 2 ? 'activeItem' : ''" 
+                @click="activeClick(2)"
+            >Experts</a>
+            <a 
+                href="#section3"
+                :class="activeIndex === 3 ? 'activeItem' : ''" 
+                @click="activeClick(3)"
+            >Relevant</a>
+        </div>
+        <svgMap 
+            class="header-nav-right" 
+            @click="handleShowMap"
+        >
             
         </svgMap>
     </div>
     <div class="main">
-        <Citys v-show="activeIndex === 0"></Citys>
-        <ThingToDo v-show="activeIndex === 1"></ThingToDo>
+        <Citys :activeId="activeId"></Citys>
+        <!-- <Citys v-show="activeIndex === 0"></Citys> -->
+        <!-- <ThingToDo v-show="activeIndex === 1"></ThingToDo>
         <Experts v-show="activeIndex === 2"></Experts>
-        <Relevant v-show="activeIndex === 3"></Relevant>
+        <Relevant v-show="activeIndex === 3"></Relevant> -->
     </div>
   </div>
 </template>
@@ -28,9 +54,9 @@ import { ref,computed } from 'vue';
 import toLeft from '@/components/svg-icons/svg-toLeft.vue'
 import svgMap from '@/components/svg-icons/svg-map.vue'
 import Citys from './citys.vue'
-import ThingToDo from './thingsToDo.vue'
-import Experts from './experts.vue'
-import Relevant from './relevant.vue'
+// import ThingToDo from './thingsToDo.vue'
+// import Experts from './experts.vue'
+// import Relevant from './relevant.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -38,6 +64,7 @@ const router = useRouter()
 const store = useStore()
 const cityName = computed(() => route.params.cityName)
 const activeIndex = ref(0)
+
 
 // 返回到上一页
 const handleClickBack = ()=>{
@@ -47,7 +74,10 @@ const handleClickBack = ()=>{
 // 点击导航
 const activeClick = (i)=>{
     activeIndex.value = i
-
+}
+// 展示地图
+const handleShowMap = ()=>{
+    console.log('打开地图')
 }
 </script>
 

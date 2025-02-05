@@ -133,6 +133,9 @@ const updateActive = (val) => {
       padding: 0;
     }
   } 
+  a {
+    text-decoration: none;
+  }
 }
 
 body {

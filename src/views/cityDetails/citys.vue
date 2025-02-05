@@ -88,7 +88,7 @@
     <!-- 分割线 -->
     <div class="divider-horizontal"></div>
     <!-- things to do  -->
-    <div class="thingsToDo">
+    <div :id="props.activeId" class="thingsToDo">
         <div class="thingsToDo-header">
             <span>What </span>
             <span class="text-color-red">Things to do </span>
@@ -326,7 +326,7 @@
 </template>
 
 <script setup>
-import { ref,computed} from 'vue';
+import { ref,computed,defineProps} from 'vue';
 import { useRouter, useRoute } from 'vue-router'
 import video1 from "@/assets/video/beijing.mp4";
 import svgMore from '@/components/svg-icons/svg-more.vue'
@@ -431,6 +431,13 @@ const addCityData = ref({
     text: '',
     img: ''
 })
+// const emits = defineEmits(["closeAlertFn"])
+const props = defineProps({
+  activeId: {
+    type: Number,
+    default: 0
+  }
+});
 
 const mouseEnterFn = ()=>{
     showSvgMore.value = false
@@ -470,7 +477,7 @@ const mouseenterImg = (i) =>{
     if (imgElement && mouseOverImgId.value === i) {
     
          // 计算 scale 比例
-        const scaleX = 2.08;
+        const scaleX = 2.043;
         const scaleY = 2.1;
         imgElement.style.transition = 'transform  0.5s ease'
         imgElement.style.position = 'relative';
