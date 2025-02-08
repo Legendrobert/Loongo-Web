@@ -13,6 +13,7 @@ const WestSouth = () => import('@/views/NavExplore/Western&Southern.vue')
 const Northern = () => import('@/views/NavExplore/Northern.vue')
 const Central = () => import('@/views/NavExplore/Central.vue')
 const Details = () => import('@/views/cityDetails/index.vue')
+// const MapDetails = () => import('@/views/cityDetails/mapView/index.vue')
 
 // const Profile = () => import('@/views/NavProfile.vue');
 const NotFound = () => import('@/views/NotFound.vue');
@@ -52,6 +53,13 @@ const routes = [
             component: Details,
             meta: { title: 'Details Page' }
           }
+          // ,
+          // {
+          //   path: 'MapDetails/:cityName',
+          //   name: 'MapDetails',
+          //   component: MapDetails,
+          //   meta: { title: 'MapDetails Page' }
+          // }
         ]
       },{
         path: 'Eastern',

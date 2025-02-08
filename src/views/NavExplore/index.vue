@@ -112,7 +112,6 @@ const handleClickSearch = ()=>{
   }
 }
 const inputBlur = ()=>{
-  
   showSearchSvg.value = !showSearchSvg.value
 }
 </script>

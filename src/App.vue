@@ -60,7 +60,9 @@
     <main>
       <!-- 城市详情模块 -->
       <div v-if="showCityDetails">
-        <cityDetails></cityDetails>
+      
+        <cityMapDetails v-if="showMap"></cityMapDetails>
+        <cityDetails v-else></cityDetails>
       </div>
       <!-- 一级导航下内容 -->
       <router-view v-else></router-view>
@@ -73,6 +75,7 @@ import { ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import cityDetails from '@/views/cityDetails/index.vue'
+import cityMapDetails from '@/views/cityDetails/mapView/index.vue'
 import svgExplore from '@/components/svg-icons/svg-explore.vue'
 import svgMain from '@/components/svg-icons/svg-main.vue'
 // import svgProfile from '@/components/svg-icons/svg-profile.vue'
@@ -84,6 +87,7 @@ const route = useRoute()
 const store = useStore()
 const topLevelRoutes = router.options.routes.filter(route => !route.parent)
 const showCityDetails = ref(false)
+const showMap = ref(false)
 topLevelRoutes.forEach((item,index)=>{
   if(item.name === "notfound"){
     topLevelRoutes.splice(index,1)
@@ -96,10 +100,19 @@ const activeName = ref('Main') // 默认Main
 
 
 watch(
-   [() => route.matched[0],() => store.state.all.showCityDetails,()=> route],
-  ([newMatched, newShowCityDetails,newRoute], [oldMatched, oldShowCityDetails,oldRoute]) => {
+   [
+    () => route.matched[0],
+    () => store.state.all.showCityDetails,
+    ()=> route,
+    ()=> store.state.all.showMapCityDetails
+  ],
+  (
+    [newMatched, newShowCityDetails,newRoute,newShowMapCityDetails], 
+    [oldMatched, oldShowCityDetails,oldRoute,oldShowMapCityDetails]
+  ) => {
     activeName.value = newMatched.name
-    showCityDetails.value = newShowCityDetails 
+    showCityDetails.value = newShowCityDetails,
+    showMap.value = newShowMapCityDetails
   }
 )
 

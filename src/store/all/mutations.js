@@ -5,6 +5,9 @@ export default {
     setShowCityDetails(state, value){
       state.showCityDetails = value;
       
-    }
+    },
+    setShowMapCityDetails(state, value){
+      state.showMapCityDetails = value;
+    },
   };
   

@@ -180,10 +180,8 @@ watch(
   (newValue) => {
     if(newValue){
       getMap()
-      console.log('111')
     }else{
       map?.destroy();
-      console.log('2222')
     }
   },
   // {
@@ -245,7 +243,7 @@ const getMap = () => {
 };
 
 // 添加城市地标和自定义圆形图标
-function addCityMarker(city, AMap, map) {
+const addCityMarker = (city, AMap, map)=> {
   // 自定义地标图标为圆形照片 + 边框
   const marker = new AMap.Marker({
     position: city.position, // 城市经纬度
@@ -483,7 +481,7 @@ const getCurrentIndex = (value)=>{
       height: calc(100vh - 219px);
       border-radius: 16px;
       margin-left: 1.7vw
-      
+
     }
     video::-webkit-media-controls-play-button{
       display: none !important;

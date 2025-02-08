@@ -2,12 +2,6 @@
   <div class="navExplore">
     <div class="header-nav">
         <toLeft class="header-nav-left" @click="handleClickBack"></toLeft>
-        <!-- <ul class="header-nav-middle">
-            <li :class="activeIndex === 0 ? 'activeItem' : ''" @click="activeClick(0)">{{cityName}}</li>
-            <li :class="activeIndex === 1 ? 'activeItem' : ''" @click="activeClick(1)">Things to do</li>
-            <li :class="activeIndex === 2 ? 'activeItem' : ''" @click="activeClick(2)">Experts</li>
-            <li :class="activeIndex === 3 ? 'activeItem' : ''" @click="activeClick(3)">Relevant</li>
-        </ul> -->
          <div class="header-nav-middle">
             <a 
                 href="#0"
@@ -71,14 +65,16 @@ const activeIndex = ref(0)
 const handleClickBack = ()=>{
     router.go(-1)
     store.commit('all/setShowCityDetails', false)
+   
 }
 // 点击导航
 const activeClick = (i)=>{
     activeIndex.value = i
 }
-// 展示地图
+// 展示地图（切换到地图模式的详情页面）
 const handleShowMap = ()=>{
     console.log('打开地图')
+    store.commit('all/setShowMapCityDetails', true)
 }
 </script>
 
