@@ -1,5 +1,5 @@
 <template>
-  <div class="navExplore">
+  <div class="nav">
     <div class="header-nav">
         <toLeft class="header-nav-left" @click="handleClickBack"></toLeft>
          <div class="header-nav-middle">
@@ -80,7 +80,7 @@ const handleShowMap = ()=>{
 
 <style lang="less" scope>
 
-.navExplore{
+.nav{
     .header-nav{
         height: 103px;
         display: flex;

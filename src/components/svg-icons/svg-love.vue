@@ -23,7 +23,7 @@ const props = defineProps({
   },
   fillColor: {
     type: String,
-    default: '#fff' // 默认颜色
+    default: '#B1B0B0' // 默认颜色
   }
 });
 </script>

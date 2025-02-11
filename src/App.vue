@@ -19,24 +19,25 @@
         </div> -->
         <div 
           :class="{
-            'active': isActive('Main'),
-            'header-middle-item': true
-          }"
-          style="margin-right:40px"
-          @click="updateActive('Main')"
-        >
-          <svgMain class="svg" ></svgMain>
-          <span class="exploeText">Main</span>
-        </div>
-        <div 
-          :class="{
             'active': isActive('Explore'),
             'header-middle-item': true
           }"
+          style="margin-right:40px"
           @click="updateActive('Explore')"
         >
-            <svgExplore class="svg"></svgExplore>
-            <span class="exploeText">Explore</span>      
+          <svgExplore class="svg"></svgExplore>
+          <span class="exploeText">Explore</span>
+        </div>
+        <div 
+          :class="{
+            'active': isActive('Destination'),
+            'header-middle-item': true
+          }"
+          @click="updateActive('Destination')"
+        >
+            
+            <svgDestination class="svg" ></svgDestination>
+            <span class="exploeText">Destination</span>      
         </div>
         <!-- <div
           :class="{
@@ -77,7 +78,7 @@ import { useStore } from 'vuex'
 import cityDetails from '@/views/cityDetails/index.vue'
 import cityMapDetails from '@/views/cityDetails/mapView/index.vue'
 import svgExplore from '@/components/svg-icons/svg-explore.vue'
-import svgMain from '@/components/svg-icons/svg-main.vue'
+import svgDestination from '@/components/svg-icons/svg-destination.vue'
 // import svgProfile from '@/components/svg-icons/svg-profile.vue'
 import svgFlag from '@/components/svg-icons/svg-flag.vue'
 import svgUser from '@/components/svg-icons/svg-user.vue'
@@ -122,6 +123,7 @@ const isActive = (name) => {
   return name === activeName.value
 }
 const updateActive = (val) => {
+  console.log(val,'val')
   activeName.value = val
   store.commit('all/setShowCityDetails', false)
   store.commit('all/setShowMap', false)

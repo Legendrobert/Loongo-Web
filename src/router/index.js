@@ -2,16 +2,16 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 // 懒加载页面组件
 // const Itinerary = () => import('@/views/NavItinerary.vue');
-// Main 模块
-const Main = () => import('@/views/NavMain/index.vue');
-
 // Explore 模块
 const Explore = () => import('@/views/NavExplore/index.vue');
-const All = () => import('@/views/NavExplore/All.vue')
-const Eastern = () => import('@/views/NavExplore/Eastern.vue')
-const WestSouth = () => import('@/views/NavExplore/Western&Southern.vue')
-const Northern = () => import('@/views/NavExplore/Northern.vue')
-const Central = () => import('@/views/NavExplore/Central.vue')
+
+// Destination 模块
+const Destination = () => import('@/views/NavDestination/index.vue');
+const All = () => import('@/views/NavDestination/All.vue')
+const Eastern = () => import('@/views/NavDestination/Eastern.vue')
+const WestSouth = () => import('@/views/NavDestination/Western&Southern.vue')
+const Northern = () => import('@/views/NavDestination/Northern.vue')
+const Central = () => import('@/views/NavDestination/Central.vue')
 const Details = () => import('@/views/cityDetails/index.vue')
 // const MapDetails = () => import('@/views/cityDetails/mapView/index.vue')
 
@@ -30,16 +30,16 @@ const routes = [
   // },
   {
     path: '/',
-    name: 'Main',
-    component: Main,
-    meta: { title: 'Main Page' }, // 可以定义一些额外的meta信息
-  },
-  {
-    path: '/Explore',
     name: 'Explore',
     component: Explore,
-    meta: { title: 'Explore Page' },
-    redirect: '/Explore/All',
+    meta: { title: 'Explore Page' }, // 可以定义一些额外的meta信息
+  },
+  {
+    path: '/Destination',
+    name: 'Destination',
+    component: Destination,
+    meta: { title: 'Destination Page' },
+    redirect: '/Destination/All',
     children: [
       {
         path: 'All',

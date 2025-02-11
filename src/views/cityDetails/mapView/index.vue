@@ -51,35 +51,46 @@
     </div>
     <div class="main">      
         <ul class="main-content">
+            
             <li 
-                class="contentItem"
                 v-for="(item, index) in lists" 
                 :key="index"
+                :class="activeId === item.id ? 'contentItem activeClass': 'contentItem'"
+                @click="clickActionFn(item)"
             >
                 <LCarousel 
                     class="carousel"
                     :list="item.picList"
                     :height="'165px'"
+                    :autoplay="false"
                 ></LCarousel>
                 <div class="detail">
                     <div class="nameMsg">
-                        <span>{{item.name}}</span>
-                        <svgLove :fillColor="'#B1B0B0'"></svgLove>
+                        <span>{{item.name}}</span> 
+                      
+                        <svgRedLove 
+                            v-if="isCollect"
+                            @click="clickCollectFn"
+                        ></svgRedLove>
+                        <svgLove 
+                            v-else
+                            @click="clickCollectFn"
+                        ></svgLove>
                     </div>
                     <div class="addressMsg">
-                        <svgLocation :width="16" :height="16"></svgLocation>
+                        <svgLocation2></svgLocation2>
                         <span>{{item.address}}</span>
                     </div>
                     <div class="workTimeMsg">
                         <svgDate :width="16" :height="16"></svgDate>
                         <span>{{item.workTime}}</span>
                     </div>
-                    <ul class="tagsMsg">
-                        <li 
+                    <div class="tagsMsg">
+                        <div 
                             v-for="(v, i) in item.tags" 
                             :key="i"
-                        >{{v}}</li>
-                    </ul>
+                        >{{v}}</div>
+                    </div>
                     <div class="scoreMsg">
                         <div class="scoreMsg-left">{{item.price}}</div>
                         <div class="scoreMsg-right">
@@ -106,7 +117,10 @@ import svgRestaurants from '@/components/svg-icons/svg-restaurants.vue'
 import svgHotels from '@/components/svg-icons/svg-hotels.vue'
 import toLeft from '@/components/svg-icons/svg-toLeft.vue'
 import svgLove from '@/components/svg-icons/svg-love.vue'
-import svgLocation from '@/components/svg-icons/svg-location.vue'
+import svgRedLove from '@/components/svg-icons/svg-redLove.vue'
+
+// import svgLocation from '@/components/svg-icons/svg-location.vue'
+import svgLocation2 from '@/components/svg-icons/svg-location2.vue'
 import svgDate from '@/components/svg-icons/svg-date.vue'
 import svgGood from '@/components/svg-icons/svg-good.vue'
 import AMapLoader from "@amap/amap-jsapi-loader";
@@ -122,6 +136,8 @@ const searchInput = ref('')
 const showSearchSvg = ref(true)
 const inputRef = ref()
 const store = useStore()
+const activeId = ref(0)
+const isCollect = ref(false)
 const lists = ref([
     {
         id:0,
@@ -142,11 +158,11 @@ const lists = ref([
         address: 'No. 393, Xuhui District',
         workTime: 'Monday to Sunday, 8:00 - 17:00',
         tags: ['Ancient Building','Landmarks','Sightseeing'],
-        price: '免费',
+        price: 'free',
         score: '4.8',
         numberOfPeople: '544'
     },{
-        id:0,
+        id:1,
         picList: [ 
             {
                 imgName: require('@/assets/imgs/shanghai.png')
@@ -164,11 +180,11 @@ const lists = ref([
         address: 'No. 393, Xuhui District',
         workTime: 'Monday to Sunday, 8:00 - 17:00',
         tags: ['Ancient Building','Landmarks','Sightseeing'],
-        price: '免费',
+        price: 'free',
         score: '4.8',
         numberOfPeople: '544'
     },{
-        id:0,
+        id:2,
         picList: [ 
             {
                 imgName: require('@/assets/imgs/shanghai.png')
@@ -186,11 +202,11 @@ const lists = ref([
         address: 'No. 393, Xuhui District',
         workTime: 'Monday to Sunday, 8:00 - 17:00',
         tags: ['Ancient Building','Landmarks','Sightseeing'],
-        price: '免费',
+        price: 'free',
         score: '4.8',
         numberOfPeople: '544'
     },{
-        id:0,
+        id:3,
         picList: [ 
             {
                 imgName: require('@/assets/imgs/shanghai.png')
@@ -208,11 +224,11 @@ const lists = ref([
         address: 'No. 393, Xuhui District',
         workTime: 'Monday to Sunday, 8:00 - 17:00',
         tags: ['Ancient Building','Landmarks','Sightseeing'],
-        price: '免费',
+        price: 'free',
         score: '4.8',
         numberOfPeople: '544'
     },{
-        id:0,
+        id:4,
         picList: [ 
             {
                 imgName: require('@/assets/imgs/shanghai.png')
@@ -230,7 +246,7 @@ const lists = ref([
         address: 'No. 393, Xuhui District',
         workTime: 'Monday to Sunday, 8:00 - 17:00',
         tags: ['Ancient Building','Landmarks','Sightseeing'],
-        price: '免费',
+        price: 'free',
         score: '4.8',
         numberOfPeople: '544'
     },
@@ -239,6 +255,14 @@ const lists = ref([
 onMounted(() => {
   getMap()
 });
+// 选择某条信息
+const clickActionFn = (item)=>{
+    activeId.value = item.id
+}
+// 收藏
+const clickCollectFn = ()=>{
+    isCollect.value = !isCollect.value
+}
 const getMap = () => {
   AMapLoader.load({
     key: "ada7e22879bce64dfcbc6f2b70d7f7af", // Web端开发者Key
@@ -344,6 +368,10 @@ const inputBlur = ()=>{
 
 <style lang="less" scoped>
 .mapView{
+    height: calc(100vh - 136px);
+   
+    
+
     .header-nav{
         height: 103px;
         display: flex;
@@ -355,6 +383,7 @@ const inputBlur = ()=>{
         .activeItem{
             background: #121212;
             color: #fff !important;
+            font-family: Semibold !important;
         }
 
         .header-nav-left{
@@ -367,15 +396,13 @@ const inputBlur = ()=>{
                 display: flex;
                 text-align: center;
                 justify-content: center;
-                // width: 118px;
-                
                 height: 43px;
                 line-height: 43px;
                 margin-right: 24px !important;
                 color: #B1B0B0;
                 border-radius: 12px;
                 font-size: 20px;
-                font-family: Semibold;
+                font-family: Regular;
 
                 span{
                     margin-left: 8px;
@@ -395,7 +422,7 @@ const inputBlur = ()=>{
     }
     .main{
         display: flex;
-        height: calc(100vh - 219px);
+        height: calc(100vh - 239px);
         overflow: scroll;
 
         .main-content{
@@ -403,16 +430,28 @@ const inputBlur = ()=>{
             height: 100%;
             overflow-y: scroll;
             
+            .activeClass{
+                border: 2px solid #FF401A !important;
+            }
+            li:not(:last-child) {
+                margin-bottom: 20px !important;
+            }
+            
             .contentItem{
                 display: flex;
                 width: 100%;
                 height: 205px;
                 border-radius: 24px;
+                
                 border: 2px solid #F3F3F3;
                 background: #FFFFFF;
                 box-sizing: border-box;
                 padding: 20px !important;
-                margin-bottom: 20px !important;
+                // margin-bottom: 20px !important;
+
+                &:hover{
+                    box-shadow: 0px 20px 40px 0px rgba(143, 143, 143, 0.25);
+                }
 
                 .carousel{
                     width: 37%;
@@ -446,7 +485,13 @@ const inputBlur = ()=>{
                         line-height: 27px;
                         color: #121212;
                         font-family: Bold;
-                        font-size: 20px;                       
+                        font-size: 20px;     
+                        
+//                         ::v-deep path{
+//                             // color: #FF401A !important;
+//                             fill: red !important;  /* 填充变红 */
+//   stroke: red !important; /* 边框变红 */
+//                         }
                     }
                     .addressMsg{
                         display: flex;
@@ -462,7 +507,7 @@ const inputBlur = ()=>{
                             vertical-align: middle;                        
                         }
                         ::v-deep svg{
-                            margin-top: 2px !important;
+                            margin-top: 3px !important;
                         }
                     }
                     .workTimeMsg{
@@ -532,6 +577,7 @@ const inputBlur = ()=>{
             height: 100%;
             border-radius: 16px;
             margin-left: 10px;
+            
         }
     }
 }

@@ -1,7 +1,8 @@
+
 <!-- 轮播图 -->
 <template>
   <div class="carousel block text-center">
-    <el-carousel :height="props.height" @change="handleIndicatorClick">
+    <el-carousel :height="props.height" :autoplay="autoplay" @change="handleIndicatorClick">
       <el-carousel-item v-for="(item,index) in props.list" :key="index" activeIndex='0'>
         <img :src="item.imgName" class="imgStyle"> 
       </el-carousel-item>
@@ -21,6 +22,10 @@ const props = defineProps({
   height: {
     type: [String, Number],
     default: "150px"
+  },
+  autoplay:{
+    type: Boolean,
+    default: true
   }
 });
 const currentIndex = ref(0)
