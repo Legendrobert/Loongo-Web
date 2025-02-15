@@ -51,9 +51,23 @@
             <span class="exploeText">Profile</span> 
         </div> -->
     </div>
-    <div class="header-right">
-      <svgUser></svgUser>
-      <span>Itinerary</span>
+    <div 
+      class="header-right"
+      @click="toItineraryClick"
+    >
+      <div 
+        v-if="showItineraryView"
+        class="BackHomeBtn"
+      >Back Home</div>
+      <div 
+        v-else  
+        class="ItineraryBtn"
+      >
+        <svgUser></svgUser>
+        <span>Itinerary</span>
+      </div>
+      
+
       <!-- <span class="header-right-title">Travel Plan</span>
       <span class="header-right-num">0</span> -->
     </div>
@@ -89,6 +103,7 @@ const store = useStore()
 const topLevelRoutes = router.options.routes.filter(route => !route.parent)
 const showCityDetails = ref(false)
 const showMap = ref(false)
+const showItineraryView = ref(false)
 topLevelRoutes.forEach((item,index)=>{
   if(item.name === "notfound"){
     topLevelRoutes.splice(index,1)
@@ -114,6 +129,12 @@ watch(
     activeName.value = newMatched.name
     showCityDetails.value = newShowCityDetails,
     showMap.value = newShowMapCityDetails
+    // 如果当前页面为Itinerary，头部按钮为Back Home
+    if(route.matched[0].name = "Itinerary"){
+      showItineraryView.value = true
+    }else{
+      showItineraryView.value = false
+    }
   }
 )
 
@@ -123,13 +144,19 @@ const isActive = (name) => {
   return name === activeName.value
 }
 const updateActive = (val) => {
-  console.log(val,'val')
   activeName.value = val
   store.commit('all/setShowCityDetails', false)
   store.commit('all/setShowMap', false)
   router.push({ name: val })
 }
-
+// 跳转到Itinerary页面
+const toItineraryClick = () => {
+  showCityDetails.value = false
+  store.commit('all/setShowCityDetails', false)
+  store.commit('all/setShowMap', false)
+  router.push({ name: 'Itinerary' })
+  // showItineraryView.value = true
+}
 </script>
 
 <style lang="less">
@@ -220,28 +247,42 @@ header {
     }
   }
   .header-right {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-sizing: border-box;
-    padding: 0px 16px;
-    // width: 86px;
-    height: 40px;
-    // background: #fff;
-    background: linear-gradient(to right, #FF401A, #FFB094);
-    border-radius: 8px;
-    font-size: 16px;
-    color: #fff;
-    font-family: Regular;
+    
+   
 
-    span{
-      vertical-align: middle;
-      margin-left: 10px;
+    .ItineraryBtn{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-sizing: border-box;
+      padding: 0px 16px;
+      height: 40px;
+      border-radius: 8px;
+      font-size: 16px;
+      color: #fff;
+      font-family: Regular;
+      background: linear-gradient(to right, #FF401A, #FFB094);
+      span{
+        vertical-align: middle;
+        margin-left: 10px;
+      }
+      svg{
+        vertical-align: middle;
+        padding-bottom: 2px;
+      }
     }
-    svg{
-      vertical-align: middle;
-      padding-bottom: 2px;
+    .BackHomeBtn{
+      text-align: center;
+      width: 109px;
+      height: 40px;
+      line-height: 40px;
+      border-radius: 8px;
+      font-size: 16px;
+      color: #FF401A;
+      font-family: Regular;
+      background: #fff;
     }
+   
   }
 }
 main {

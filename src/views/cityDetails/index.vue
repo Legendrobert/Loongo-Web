@@ -73,7 +73,7 @@ const activeClick = (i)=>{
 }
 // 展示地图（切换到地图模式的详情页面）
 const handleShowMap = ()=>{
-    console.log('打开地图')
+    
     store.commit('all/setShowMapCityDetails', true)
 }
 </script>

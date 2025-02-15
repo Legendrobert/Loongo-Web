@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 // 懒加载页面组件
-// const Itinerary = () => import('@/views/NavItinerary.vue');
+const Itinerary = () => import('@/views/Itinerary/index.vue');
 // Explore 模块
 const Explore = () => import('@/views/NavExplore/index.vue');
 
@@ -22,17 +22,11 @@ const NotFound = () => import('@/views/NotFound.vue');
 
 // 定义路由
 const routes = [
-  // {
-  //   path: '/',
-  //   name: 'Itinerary',
-  //   component: Itinerary,
-  //   meta: { title: 'Itinerary Page' }, // 可以定义一些额外的meta信息
-  // },
   {
     path: '/',
     name: 'Explore',
     component: Explore,
-    meta: { title: 'Explore Page' }, // 可以定义一些额外的meta信息
+    meta: { title: 'Explore Page' }, 
   },
   {
     path: '/Destination',
@@ -83,6 +77,12 @@ const routes = [
         meta: { title: 'Central Page'}
       }
     ]
+  },
+  {
+    path: '/Itinerary',
+    name: 'Itinerary',
+    component: Itinerary,
+    meta: { title: 'Itinerary Page' }, // 可以定义一些额外的meta信息
   },
   // {
   //   path: '/Profile',

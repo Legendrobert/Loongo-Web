@@ -1,3 +1,7 @@
+<!--
+ * 该页面暂时废用
+-->
+
 <template>
   <div class="Itinerary">
     <div class="header">Plan a New China Trip </div>

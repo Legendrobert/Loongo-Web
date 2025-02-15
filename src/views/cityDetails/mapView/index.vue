@@ -273,8 +273,9 @@ const getMap = () => {
       // 初始化地图
       const map = new AMap.Map("main-map", {
         viewMode: "3D", // 3D地图模式
-        zoom: 4, // 地图级别，适合显示全国
-        center: [104.195397, 35.86166], // 设置中国中心点
+        // zoom: 4, // 地图级别，适合显示全国
+        zoom: 15,
+        center: [121.438278,31.20443], // 设置中国中心点
       });
 
       // 添加常用控件
@@ -286,8 +287,8 @@ const getMap = () => {
       // 城市地标数据
       const cities = [
         {
-          name: "北京",
-          position: [116.407396, 39.9042],
+          name: "Wukang Mansion",
+          position: [121.438278,31.20443],
           photo: beijing.value, // 替换为实际图片路径
         }
       ];
