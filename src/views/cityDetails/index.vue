@@ -81,6 +81,8 @@ const handleShowMap = ()=>{
 <style lang="less" scope>
 
 .nav{
+    box-sizing: border-box;
+    padding: 28px;
     .header-nav{
         height: 103px;
         display: flex;

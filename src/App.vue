@@ -288,8 +288,8 @@ header {
 main {
   height: calc(100vh - 88px);
   background-color: #fff;
-  box-sizing: border-box;
-  padding: 28px;
+  // box-sizing: border-box;
+  // padding: 28px;
   border-radius: 24px 24px 0 0 ;
   overflow: hidden;
 }

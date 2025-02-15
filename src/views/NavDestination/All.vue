@@ -329,9 +329,11 @@ const getCurrentIndex = (value)=>{
 
 <style lang="less" scoped>
 .All{
+  
   width: 100%;
   display: flex;
   justify-content: space-between;
+  
     
     .main-pic{
       // width: 100%;

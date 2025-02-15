@@ -370,7 +370,8 @@ const inputBlur = ()=>{
 <style lang="less" scoped>
 .mapView{
     height: calc(100vh - 136px);
-   
+   box-sizing: border-box;
+  padding: 28px;
     
 
     .header-nav{

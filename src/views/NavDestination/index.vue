@@ -118,7 +118,9 @@ const inputBlur = ()=>{
 
 <style lang="less" scope>
 .NavMain{
-
+  box-sizing: border-box;
+  padding: 28px;
+  
   .header-nav{
     height: 47px;
     display: flex;

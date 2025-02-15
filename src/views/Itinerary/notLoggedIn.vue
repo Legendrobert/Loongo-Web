@@ -1,6 +1,6 @@
 
 <template>
-  <div class="loggedIn">
+  <div class="notLoggedIn">
     <div class="loggedIn-left">       
         <img :src="NoUserFound" width="240" height="240"> 
         <div class="content">
@@ -8,7 +8,12 @@
             <p class="tips">Oops, you haven’t added any city you like...</p>
         </div>
     </div>
-    <div class="loggedIn-right">
+    <div 
+        class="loggedIn-right"
+        :style="isMouseOver ? 'background:#660300':'background:#FFEEE6'"
+        @mouseover="handleMouseOver"
+        @mouseleave="handleMouseLeave"
+    >
         <div class="pics">
             <img 
                 v-for="(item,index) in picList" 
@@ -21,16 +26,26 @@
         <div class="add">
             <el-button 
                 type="primary" 
-                :icon="Add" 
+                :icon="Plus" 
                 class="addBtn"
+                :style="isMouseOver ? 'color:#660300; background:#fff':'color:#FFF; background:#FF401A'"
+                @click="handleAdd"
             />
+            <div 
+                class="tipsBtn"
+                :style="isMouseOver ? 'color: #fff' :'color: #FF401A' "
+            >Add more cities</div>
         </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, defineEmits } from 'vue';
+import {
+  Plus
+} from '@element-plus/icons-vue'
+
 
 const NoUserFound = ref( require('@/assets/imgs/noUserFound.png') );
 
@@ -47,15 +62,36 @@ const picList = ref(
             imgName: require('@/assets/imgs/guangzhou.png')
         }
     ])
+const isMouseOver = ref(false)
+const emits = defineEmits(["isUserFn"])
+const handleMouseOver = ()=>{
+    isMouseOver.value = true
+}
+const handleMouseLeave = ()=>{
+    isMouseOver.value = false
+}
+// 添加更多城市
+const handleAdd = ()=>{
+    let isLogin = false
+    if(isLogin){
+        // 非注册用户
+        // emits('isUserFn', false)
+    }else{
+        // 注册用户
+        emits('isUserFn', true)
+    }
+}
 </script>
 
 <style lang="less" scoped>
-.loggedIn{
+.notLoggedIn{
     display: flex;
     justify-content: space-between;
+    
     width: 100%;
-    padding: 52px;
+    
     box-sizing: border-box;
+    padding: 80px;
     height: calc(100vh - 144px);
     
 
@@ -128,13 +164,23 @@ const picList = ref(
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            background: yellow;
 
             .addBtn{
                 width: 80px;
                 height: 80px;
                 background: #FF401A;
                 border-radius: 18px;
+                font-size: 24px;
+                border: none;
+
+            }
+            .tipsBtn{
+                color:#FF401A;
+                font-family: Bold;
+                font-size: 40px;
+                height: 60px;
+                line-height: 60px;
+                margin-top: 50px;
             }
         }
     }
