@@ -58,12 +58,17 @@
                 :class="activeId === item.id ? 'contentItem activeClass': 'contentItem'"
                 @click="clickActionFn(item)"
             >
-                <LCarousel 
-                    class="carousel"
-                    :list="item.picList"
-                    :height="'165px'"
-                    :autoplay="false"
-                ></LCarousel>
+                <div class="image-wrapper">
+                    <LCarousel 
+                        class="carousel"
+                        :list="item.picList"
+                        :height="'165px'"
+                        :autoplay="false"
+                    ></LCarousel>
+                    <div class="overlay"></div>
+                </div>
+                
+                
                 <div class="detail">
                     <div class="nameMsg">
                         <span>{{item.name}}</span> 
@@ -89,6 +94,7 @@
                         <div 
                             v-for="(v, i) in item.tags" 
                             :key="i"
+                            class="tagItem"
                         >{{v}}</div>
                     </div>
                     <div class="scoreMsg">
@@ -453,28 +459,52 @@ const inputBlur = ()=>{
 
                 &:hover{
                     box-shadow: 0px 20px 40px 0px rgba(143, 143, 143, 0.25);
+                    border: none;
                 }
 
-                .carousel{
+                .image-wrapper{
+                    position: relative;
                     width: 37%;
                     border-radius: 16px;
 
-                    ::v-deep .el-carousel--horizontal, .el-carousel--vertical{
-                        border-radius: 16px;
-                    }
-                    ::v-deep .el-carousel__arrow{
-                        display: none
-                    }
-                    ::v-deep .el-carousel__indicators{
+                    .carousel{
                         position: absolute;
-                        left:50%;
-                        bottom: 12px;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        border-radius: 16px;
+                        // background-color: rgba(0, 0, 0,1);
+
+
+                        ::v-deep .el-carousel--horizontal, .el-carousel--vertical{
+                            border-radius: 16px;
+                        }
+                        ::v-deep .el-carousel__arrow{
+                            display: none
+                        }
+                        ::v-deep .el-carousel__indicators{
+                            position: absolute;
+                            left:50%;
+                            bottom: 12px;
+                        }
+                        ::v-deep .el-carousel__button{
+                            width: 8px;
+                            height: 8px;
+                            margin:0 8px;
+                            border-radius: 50%;
+                        }
                     }
-                    ::v-deep .el-carousel__button{
-                        width: 8px;
-                        height: 8px;
-                        margin:0 8px;
-                        border-radius: 50%;
+                    .overlay{
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background-color: #000; /* 黑色遮罩 */
+                        opacity: 0.2; /* 透明度 20% */
+                        pointer-events: none; /* 确保鼠标事件不干扰图片 */
+                        z-index: 999;
+                        border-radius: 16px;
                     }
                 }
                 .detail{
@@ -531,7 +561,7 @@ const inputBlur = ()=>{
                         margin: 12px 0 !important;
                         display: flex;
 
-                        li{
+                        .tagItem{
                             height: 20px;
                             border-radius: 8px;
                             padding: 4px 8px !important;

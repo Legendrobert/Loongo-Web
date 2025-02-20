@@ -5,7 +5,7 @@
         <img :src="logo">
         <span class='ProjectName'>LoonGo</span>
       </div>
-      <div class="header-middle">
+      <div v-show="showNav" class="header-middle">
         <!-- <div 
           :class="{
             'active': isActive('Itinerary'),
@@ -53,15 +53,17 @@
     </div>
     <div 
       class="header-right"
-      @click="toItineraryClick"
+      
     >
       <div 
         v-if="showItineraryView"
         class="BackHomeBtn"
-      >Back Home</div>
+        @click="backHomeClick"
+      >Back</div>
       <div 
         v-else  
         class="ItineraryBtn"
+        @click="toItineraryClick"
       >
         <svgUser></svgUser>
         <span>Itinerary</span>
@@ -101,6 +103,7 @@ const router = useRouter()
 const route = useRoute()
 const store = useStore()
 const topLevelRoutes = router.options.routes.filter(route => !route.parent)
+const showNav = ref(true)
 const showCityDetails = ref(false)
 const showMap = ref(false)
 const showItineraryView = ref(false)
@@ -129,11 +132,18 @@ watch(
     activeName.value = newMatched.name
     showCityDetails.value = newShowCityDetails,
     showMap.value = newShowMapCityDetails
+   
     // 如果当前页面为Itinerary，头部按钮为Back Home
-    if(route.matched[0].name = "Itinerary"){
+    if(route.name === "Itinerary"){
+      
       showItineraryView.value = true
     }else{
       showItineraryView.value = false
+ 
+    }
+    if(route.name === 'Details'){
+      showCityDetails.value = true
+    
     }
   }
 )
@@ -151,11 +161,26 @@ const updateActive = (val) => {
 }
 // 跳转到Itinerary页面
 const toItineraryClick = () => {
+  console.log('000')
+  showNav.value = false
   showCityDetails.value = false
   store.commit('all/setShowCityDetails', false)
   store.commit('all/setShowMap', false)
   router.push({ name: 'Itinerary' })
-  // showItineraryView.value = true
+  showItineraryView.value = true
+
+}
+// 返回到上一页
+const backHomeClick = ()=>{
+  
+
+  // if(route.name === 'Details'){
+  //   showCityDetails.value = true
+   
+  // }
+  router.go(-1)
+  showNav.value = true
+  
 }
 </script>
 

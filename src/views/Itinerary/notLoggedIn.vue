@@ -10,7 +10,7 @@
     </div>
     <div 
         class="loggedIn-right"
-        :style="isMouseOver ? 'background:#660300':'background:#FFEEE6'"
+        :style="isMouseOver ? 'background:#660300;box-shadow: 0px 20px 40px rgba(143, 143, 143, 0.25)':'background:#FFEEE6'"
         @mouseover="handleMouseOver"
         @mouseleave="handleMouseLeave"
     >
@@ -19,8 +19,8 @@
                 v-for="(item,index) in picList" 
                 :key="index" 
                 :src="item.imgName" 
-                width="40%" 
-                height="243"
+                width="245" 
+                height="245"
             >          
         </div>
         <div class="add">

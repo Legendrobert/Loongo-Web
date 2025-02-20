@@ -17,7 +17,7 @@
         <div class="cards-add">
             <div class="pics">
                 <img 
-                    v-for="(item,index) in picList" 
+                    v-for="(item,index) in cardPicList" 
                     :key="index" 
                     :src="item.imgName" 
                     width="86" 
@@ -44,7 +44,15 @@
             <SvgMagic></SvgMagic>
             <span>switch</span>
         </div>
-
+        <ul class="cityPicList">
+            <li 
+                class="picItem"
+                v-for="(item,index) in picList"
+                :key="index"
+            >
+                <img :src="item.imgName">
+            </li>
+        </ul>
     </div>
   </div>
 </template>
@@ -65,8 +73,18 @@ const picList = ref(
         },
         {
             imgName: require('@/assets/imgs/guangzhou.png')
+        },
+        {
+            imgName: require('@/assets/imgs/guangzhou.png')
+        },
+        {
+            imgName: require('@/assets/imgs/guangzhou.png')
+        },
+        {
+            imgName: require('@/assets/imgs/guangzhou.png')
         }
     ])
+const cardPicList = picList.value.splice(0,3)
 // 添加更多城市
 const handleAdd = ()=>{
 
@@ -221,7 +239,6 @@ const handleAdd = ()=>{
         flex-direction: column;
 
         .otherLike-text{
-            
             width: 214px;
             height: 36px;
             line-height: 36px;
@@ -247,11 +264,26 @@ const handleAdd = ()=>{
             text-align: center;
             background-image: linear-gradient(to right, #FF401A 0%, #FFC61A 80%);
             color: #fff; 
+            margin-bottom: 28px;
+            
 
             ::v-deep svg{
                 margin-top:13px;
             }
 
+        }
+        .cityPicList{
+            display: flex;
+            gap: 28px;
+
+            .picItem{
+
+                img{
+                    width:240px;
+                    height: 240px;
+                    border-radius: 16px;
+                }
+            }
         }
     }
 }
