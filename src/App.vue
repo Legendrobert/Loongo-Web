@@ -67,6 +67,7 @@
       >
         <svgUser></svgUser>
         <span>Itinerary</span>
+       
       </div>
       
 
@@ -88,7 +89,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch,nextTick } from 'vue';
 import { useRouter, useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import cityDetails from '@/views/cityDetails/index.vue'
@@ -120,30 +121,33 @@ const activeName = ref('Main') // 默认Main
 
 watch(
    [
-    () => route.matched[0],
+    
     () => store.state.all.showCityDetails,
     ()=> route,
-    ()=> store.state.all.showMapCityDetails
+    ()=> store.state.all.showMapCityDetails,
+    ()=> route.name
   ],
   (
-    [newMatched, newShowCityDetails,newRoute,newShowMapCityDetails], 
-    [oldMatched, oldShowCityDetails,oldRoute,oldShowMapCityDetails]
+    [newShowCityDetails,newRoute,newShowMapCityDetails,newName], 
+    [oldMatched, oldShowCityDetails,oldRoute,oldShowMapCityDetails,oldName]
   ) => {
-    activeName.value = newMatched.name
+
+    activeName.value = route.matched[0].name
+    
     showCityDetails.value = newShowCityDetails,
     showMap.value = newShowMapCityDetails
    
     // 如果当前页面为Itinerary，头部按钮为Back Home
-    if(route.name === "Itinerary"){
+    if(newRoute.name === "Itinerary"){
       
       showItineraryView.value = true
     }else{
       showItineraryView.value = false
  
     }
-    if(route.name === 'Details'){
-      showCityDetails.value = true
     
+    if(newRoute.name === 'Details'){
+      showCityDetails.value = true
     }
   }
 )
@@ -180,6 +184,12 @@ const backHomeClick = ()=>{
   // }
   router.go(-1)
   showNav.value = true
+  if(route.name === 'Details'){
+      showCityDetails.value = true
+    }
+    // else{
+    //   showCityDetails.value = false
+    // }
   
 }
 </script>

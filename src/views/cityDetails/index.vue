@@ -63,7 +63,11 @@ const activeIndex = ref(0)
 
 // 返回到上一页
 const handleClickBack = ()=>{
-    router.go(-1)
+    // router.go(-1)
+    router.push({
+        // name: 'All',
+        path: '/Destination/All'
+    })
     store.commit('all/setShowCityDetails', false)
    
 }
