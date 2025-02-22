@@ -42,14 +42,14 @@
 
 <script setup>
 import { ref, defineEmits } from 'vue';
+import { useRouter, useRoute } from 'vue-router'
 import {
   Plus
 } from '@element-plus/icons-vue'
 
-
+const router = useRouter()
+const route = useRoute()
 const NoUserFound = ref( require('@/assets/imgs/noUserFound.png') );
-
-
 const picList = ref(
     [
         {
@@ -74,11 +74,12 @@ const handleMouseLeave = ()=>{
 const handleAdd = ()=>{
     let isLogin = false
     if(isLogin){
-        // 非注册用户
+        // 非注册用户,跳转登录页面
         // emits('isUserFn', false)
+        router.push({ name: 'Login' })
     }else{
         // 注册用户
-        emits('isUserFn', true)
+        emits('isUserFn', isLogin)
     }
 }
 </script>

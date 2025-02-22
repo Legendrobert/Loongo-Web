@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
+
+// 登录组件
+const Login = () => import('@/views/login.vue')
 // 懒加载页面组件
 const Itinerary = () => import('@/views/Itinerary/index.vue');
 // Explore 模块
@@ -90,6 +93,12 @@ const routes = [
   //   component: Profile,
   //   meta: { title: 'Profile Page' },
   // },
+  {
+    path: '/Login',
+    name: 'Login',
+    component: Login,
+    meta: { title: 'Login Page' },
+  },
   {
     path: '/:catchAll(.*)', // 404页面
     name: 'notfound',

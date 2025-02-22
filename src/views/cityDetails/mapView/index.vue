@@ -144,6 +144,7 @@ const inputRef = ref()
 const store = useStore()
 const activeId = ref(0)
 const isCollect = ref(false)
+
 const lists = ref([
     {
         id:0,
@@ -257,7 +258,14 @@ const lists = ref([
         numberOfPeople: '544'
     },
 ])
+const infoContent = ref('')
 
+infoContent.value = `<img width="312" height="160" src="${beijing.value}"/>
+             <div class="mapAlertContent">
+                <p>An iconic building today located at a 5-way junction. It was Shanghai’s first apartment building with verandahs. Used to house business people from foreign firms and then actors and actresses from the China film industry.</p>
+                <div id="add-button" class="add">Add</div>
+             </div>
+             `    
 onMounted(() => {
   getMap()
 });
@@ -303,6 +311,8 @@ const getMap = () => {
       cities.forEach((city) => {
         addCityMarker(city, AMap, map);
       });
+
+        
     })
     .catch((e) => {
       console.log(e);
@@ -329,26 +339,28 @@ const addCityMarker = (city, AMap, map)=> {
       "></div>
     `, // 自定义HTML内容
   });
-
   // 创建信息窗口（InfoWindow）
   const infoWindow = new AMap.InfoWindow({
-    content: `<div style="font-size:14px;">
-                <b>${city.name}</b>
-                <p>这是${city.name}的简介内容</p>
-              </div>`, // 信息窗口的内容
+    content:infoContent.value, // 信息窗口的内容
     offset: new AMap.Pixel(0, -30), // 偏移位置
   });
-
   // 鼠标悬停显示信息窗口
   marker.on("mouseover", () => {
     infoWindow.open(map, city.position);
-  });
 
+    setTimeout(() => {
+      const addButton = document.getElementById('add-button');
+      if (addButton) {
+        addButton.addEventListener('click', () => addClick(addButton)); // 绑定点击事件
+      }
+    }, 200); // 延迟 200ms 确保 InfoWindow 渲染完成
+  });
   // 鼠标移出关闭信息窗口
   marker.on("mouseout", () => {
     infoWindow.close();
   });
 }
+
 // 导航点击事件
 const clickNavItem = (val)=>{
     activeNavValue.value = val
@@ -371,15 +383,24 @@ const handleClickSearch = ()=>{
 const inputBlur = ()=>{
   showSearchSvg.value = !showSearchSvg.value
 }
+
+// 添加地标
+const addClick = (button) => {
+
+
+  button.style.backgroundColor = '#B1B0B0';
+  button.style.color = '#FFFFFF';
+  button.innerHTML = 'Added'
+}
+
 </script>
 
 <style lang="less" scoped>
 .mapView{
     height: calc(100vh - 136px);
-   box-sizing: border-box;
-  padding: 28px;
+    box-sizing: border-box;
+    padding: 28px;
     
-
     .header-nav{
         height: 103px;
         display: flex;
@@ -610,7 +631,67 @@ const inputBlur = ()=>{
             border-radius: 16px;
             margin-left: 10px;
             
+            ::v-deep .amap-info-close{
+                display: none;
+            }
+            ::v-deep .amap-info-content{
+                width: 312px;
+                height: 371px;
+                background: #fff;
+                box-shadow: 0px 20px 40px rgba(143, 143, 143, 0.25);
+                border-radius: 16px;
+                padding: 0 !important;
+            }
+            ::v-deep .amap-info{
+                display: block !important;
+            }
+            ::v-deep .mapAlertContent{
+                width: 100%;
+                height: 211px;
+                padding: 16px;
+                box-sizing: border-box;
+                
+
+                img{
+                    
+                    border: none !important;
+                }
+                p{
+                    margin: 0;
+                    padding: 0;
+                    line-height: 20px;
+                    font-size: 14px;
+                    color: #595959;
+                    font-family: Regular;
+                }
+
+                .add{
+                    width: 280px;
+                    height:43px;
+                    border-radius: 12px;
+                    line-height:43px;
+                    text-align: center;
+                    background:#FF401A;
+                    font-size: 20px;
+                    color: #FFFFFF;
+                    font-family: Semibold;
+                    margin-top:16px;
+                }
+                // .added{
+                //     width: 280px;
+                //     height:43px;
+                //     border-radius: 12px;
+                //     line-height:43px;
+                //     text-align: center;
+                //     background:#B1B0B0;
+                //     font-size: 20px;
+                //     color: #FFFFFF;
+                //     font-family: Semibold;
+                //     margin-top:16px;
+                // }
+            }
         }
     }
+   
 }
 </style>

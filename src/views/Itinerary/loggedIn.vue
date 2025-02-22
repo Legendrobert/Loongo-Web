@@ -51,6 +51,10 @@
                 :key="index"
             >
                 <img :src="item.imgName">
+                <div class="cityName">
+                    <svgLocation class="svgStyle" :width="16" :height="16" :fill="'#ccc'"></svgLocation>
+                    <span>SICHUAN</span>
+                </div>
             </li>
         </ul>
     </div>
@@ -63,6 +67,7 @@ import {
   Plus
 } from '@element-plus/icons-vue'
 import SvgMagic from "@/components/svg-icons/svg-magic.vue"
+import svgLocation from '@/components/svg-icons/svg-location.vue'
 const picList = ref(
     [
         {
@@ -84,7 +89,18 @@ const picList = ref(
             imgName: require('@/assets/imgs/guangzhou.png')
         }
     ])
-const cardPicList = picList.value.splice(0,3)
+const cardPicList = ref(
+    [
+        {
+            imgName: require('@/assets/imgs/beijing.png')
+        },
+        {
+            imgName: require('@/assets/imgs/chengdu.png')
+        },
+        {
+            imgName: require('@/assets/imgs/guangzhou.png')
+        }
+    ])
 // 添加更多城市
 const handleAdd = ()=>{
 
@@ -277,11 +293,25 @@ const handleAdd = ()=>{
             gap: 28px;
 
             .picItem{
+                position: relative;
 
                 img{
                     width:240px;
                     height: 240px;
                     border-radius: 16px;
+                }
+                .cityName{
+                    position: absolute;
+                    top: 16px;
+                    left: 16px;
+                    display: flex;
+                    font-size: 14px;
+                    color: #CCCCCC;
+
+                    .svgStyle{
+                        margin-top: 2px;
+                        margin-right: 8px;
+                    }
                 }
             }
         }

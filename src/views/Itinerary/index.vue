@@ -1,5 +1,6 @@
 <template>
   <div class="Itinerary">
+   
     <LoggedIn v-if="isUser"></LoggedIn>
     <NotLoggedIn v-else @isUserFn="isUserFn"></NotLoggedIn>
   </div>
