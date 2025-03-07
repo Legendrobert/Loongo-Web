@@ -24,13 +24,13 @@
             >          
         </div>
         <div class="add">
-            <el-button 
-                type="primary" 
-                :icon="Plus" 
+            <div 
                 class="addBtn"
                 :style="isMouseOver ? 'color:#660300; background:#fff':'color:#FFF; background:#FF401A'"
                 @click="handleAdd"
-            />
+            >
+                <svgPlus :fillColor="isMouseOver ? '#660300' : '#fff'"></svgPlus>
+            </div>
             <div 
                 class="tipsBtn"
                 :style="isMouseOver ? 'color: #fff' :'color: #FF401A' "
@@ -46,7 +46,7 @@ import { useRouter, useRoute } from 'vue-router'
 import {
   Plus
 } from '@element-plus/icons-vue'
-
+import svgPlus from '@/components/svg-icons/svg-plus.vue'
 const router = useRouter()
 const route = useRoute()
 const NoUserFound = ref( require('@/assets/imgs/noUserFound.png') );
@@ -173,7 +173,8 @@ const handleAdd = ()=>{
                 border-radius: 18px;
                 font-size: 24px;
                 border: none;
-
+                text-align: center;
+                line-height: 80px;
             }
             .tipsBtn{
                 color:#FF401A;

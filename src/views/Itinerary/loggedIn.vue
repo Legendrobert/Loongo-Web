@@ -25,12 +25,13 @@
                 >          
             </div>
             <div class="add">
-                <el-button 
-                    type="primary" 
-                    :icon="Plus" 
+                <div
+                    
                     class="addBtn"
                     @click="handleAdd"
-                />
+                >#660300
+                    <svgPlus :width="10" :height="10"></svgPlus>
+                </div>
                 <div 
                     class="tipsBtn"
                 >Add more cities</div>
@@ -68,6 +69,7 @@ import {
 } from '@element-plus/icons-vue'
 import SvgMagic from "@/components/svg-icons/svg-magic.vue"
 import svgLocation from '@/components/svg-icons/svg-location.vue'
+import svgPlus from '@/components/svg-icons/svg-plus.vue'
 const picList = ref(
     [
         {
@@ -187,7 +189,7 @@ const handleAdd = ()=>{
             width: 200px;
             height: 240px;
             background: #FFEEE6;
-            border-radius: 16px;
+            border-radius: 8px;
 
             .pics{
                 height: 50%;
@@ -231,6 +233,8 @@ const handleAdd = ()=>{
                     font-size: 10px;
                     color: #fff;
                     border: none;
+                    text-align: center;
+                    line-height: 24px;
 
                 }
                 .tipsBtn{
