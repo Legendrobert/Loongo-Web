@@ -78,7 +78,6 @@
     <main>
       <!-- 城市详情模块 -->
       <div v-if="showCityDetails">
-      
         <cityMapDetails v-if="showMap"></cityMapDetails>
         <cityDetails v-else></cityDetails>
       </div>
@@ -138,8 +137,7 @@ watch(
     showMap.value = newShowMapCityDetails
    
     // 如果当前页面为Itinerary，头部按钮为Back Home
-    if(newRoute.name === "Itinerary"){
-      
+    if(newRoute.matched[0].name === "Itinerary"){     
       showItineraryView.value = true
     }else{
       showItineraryView.value = false
@@ -149,6 +147,12 @@ watch(
     if(newRoute.name === 'Details'){
       showCityDetails.value = true
     }
+    if(route.matched[0].name === 'Explore' || route.matched[0].name === 'Destination'){
+      showNav.value = true
+    }else{
+      showNav.value = false
+    }
+    
   }
 )
 
@@ -165,8 +169,8 @@ const updateActive = (val) => {
 }
 // 跳转到Itinerary页面
 const toItineraryClick = () => {
-  console.log('000')
-  showNav.value = false
+
+  // showNav.value = false
   showCityDetails.value = false
   store.commit('all/setShowCityDetails', false)
   store.commit('all/setShowMap', false)
@@ -176,20 +180,13 @@ const toItineraryClick = () => {
 }
 // 返回到上一页
 const backHomeClick = ()=>{
-  
-
-  // if(route.name === 'Details'){
-  //   showCityDetails.value = true
-   
-  // }
+ 
   router.go(-1)
-  showNav.value = true
+  // showNav.value = true
   if(route.name === 'Details'){
       showCityDetails.value = true
     }
-    // else{
-    //   showCityDetails.value = false
-    // }
+   
   
 }
 </script>

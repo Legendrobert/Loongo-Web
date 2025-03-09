@@ -1,9 +1,10 @@
 <!-- alert -->
 <template>
-  <div class="L-Alert">
-        <img :src="props.img" width="40" height="40">
+  <div  class="L-Alert">
+        <div v-if="props.name" class="name">{{props.name}}</div>
+        <img v-else :src="props.img" width="40" height="40">
         <span class="text">{{props.text}}</span>
-        <span class="red" @click="handleView">View</span>
+        <span v-if="props.isShowView" class="red" @click="handleView">View</span>
         <svgClose 
             class="svgClose"
             @click="handleClose"
@@ -25,6 +26,14 @@ const props = defineProps({
   img: {
     type: String,
     default: ''
+  },
+  name: {
+    type: String,
+    default: ''
+  },
+  isShowView:{
+    type: String,
+    default: true
   }
 });
 const handleView = () =>{
@@ -50,15 +59,29 @@ const handleClose = () =>{
     border-radius: 16px;
     font-size: 16px;
     box-shadow: 0px 16px 32px rgba(168, 168, 168, 0.25);
+    transition: transform 0.5s ease, opacity 0.5s ease;
     // text-align: center;
     
     img{
         border-radius: 50%;
         border: 1px solid #FFFFFF;
     }
+    .name{
+      width: 40px;
+      height: 40px;
+      background: #F9F9F9;
+      color: #000000;
+      font-size: 16px;
+      font-family: Semibold;
+      line-height: 40px;
+      text-align: center;
+      border-radius: 50%;
+    }
     .text{
         margin: 0 16px;
         font-family: Regular;
+        color: #fff;
+        font-size: 16px;
         // vertical-align: middle;
     }
     .red{
@@ -72,5 +95,7 @@ const handleClose = () =>{
         // vertical-align: middle;
         margin-top: 8px;
     }
+
+    
 }
 </style>

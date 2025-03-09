@@ -4,7 +4,7 @@
         <img :src="relax" width="152" height="135">
         <p class="texts">Come and check your unique itinerary!</p>
         <p class="notes">Also explore more interesting contents with the magic of AI</p>
-        <div class="signInGoogle">
+        <div class="signInGoogle" @click="toLoginClick">
             <svgGoogle class="svg"></svgGoogle>
             <span>Sign in with Google</span>
         </div>
@@ -25,7 +25,7 @@
             <div v-for="(item, index) in cardPicList" :key="'original-' + index" class=" carousel-item">
                 <img :src="item.imgName"  />
                 <div class="province">
-                    <svgLocation class="svgStyle" :fill="'#ccc'" :width="16" :height="16"></svgLocation>
+                    <svgLocation class="svgStyle" :fill="'#FFF'" :width="16" :height="16"></svgLocation>
                     <span>SICHUAN</span>
                 </div>           
                 <span class="city">chengdu</span> 
@@ -34,7 +34,7 @@
             <div v-for="(item, index) in cardPicList" :key="'copy-' + index" class="cardItem carousel-item">
                 <img :src="item.imgName" />
                 <div class="province">
-                    <svgLocation class="svgStyle" :fill="'#ccc'" :width="16" :height="16"></svgLocation>
+                    <svgLocation class="svgStyle" :fill="'#FFF'" :width="16" :height="16"></svgLocation>
                     <span>SICHUAN</span>
                 </div>           
                 <span class="city">chengdu</span> 
@@ -45,14 +45,15 @@
 </template>
 
 <script setup>
-import { ref, reactive,onMounted, onUnmounted,computed,nextTick } from 'vue';
-
-
+import { ref, reactive, onMounted, onUnmounted, computed, nextTick } from 'vue';
+import { useRouter, useRoute } from 'vue-router'
 import svgLocation from '@/components/svg-icons/svg-location.vue'
 import svgGoogle from "@/components/svg-icons/svg-google.vue"
 import svgTwitter from "@/components/svg-icons/svg-twitter.vue"
 import svgApple from "@/components/svg-icons/svg-apple.vue"
 const relax = ref( require('@/assets/imgs/relax.png') );
+const router = useRouter()
+const route = useRoute()
 
 // Vue 3 中的响应式数据
 const currentIndex = ref(1);
@@ -100,7 +101,12 @@ const startAutoScroll = () => {
 
     isTransitioning.value = true;
     // 每次增加图片高度 + 间隔
-    const itemHeight = carouselInner.value.children[currentIndex.value].offsetHeight;
+    let itemHeight = null
+   
+    if(carouselInner.value){
+        itemHeight = carouselInner.value.children[currentIndex.value].offsetHeight;
+    }
+    
     const itemMargin = 28; // 图片间隔35px
     scrollHeight.value += itemHeight + itemMargin;
 
@@ -134,7 +140,13 @@ const updateContainerHeight = () => {
   
   });
 };
-
+// 点击登录
+ const toLoginClick= () =>{
+    if(true){
+        router.push({name: 'LoggedIn'})
+    }
+    
+ }
 // 组件挂载后执行
 onMounted(() => {
   updateContainerHeight();
@@ -266,7 +278,7 @@ onMounted(() => {
                 left: 16px;
                 top: 16px;
                 display: flex;
-                color: #ccc;
+                color: #F3F3F3;
                 font-size: 14px;
 
                 .svgStyle{
@@ -311,34 +323,10 @@ h3 {
   }
 }
 
-// .carousel-container {
-//   width: 240px;  /* 每张图片的宽度 */
-//   height: 655px;  /* 容器高度：图片高度 + 间隔的部分，目的是能看到上一张图片的底部和下一张图片的顶部 */
-//   overflow: hidden;
-//   position: relative;
-//   margin: 0 auto;
-//   background: #000;
-// }
+.carousel-item {
+  position: relative;
+}
 
-// .carousel-inner {
-//   display: flex;
-//   flex-direction: column;  /* 垂直排列 */
-// }
 
-// .carousel-item {
-//   width: 240px;
-//   height: 240px;  /* 每张图片的高度 */
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   margin-bottom: 35px;  /* 图片间隔35px */
-// }
-
-// .carousel-item img {
-//   width: 240px;
-//   height: 240px; 
-//   object-fit: cover;
-  
-// }
 }
 </style>

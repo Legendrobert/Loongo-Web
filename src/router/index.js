@@ -5,6 +5,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 const Login = () => import('@/views/login.vue')
 // 懒加载页面组件
 const Itinerary = () => import('@/views/Itinerary/index.vue');
+const LoggedIn = () => import('@/views/Itinerary/loggedIn.vue');
+const NotLoggedIn = () => import('@/views/Itinerary/notLoggedIn.vue');
 // Explore 模块
 const Explore = () => import('@/views/NavExplore/index.vue');
 
@@ -27,6 +29,12 @@ const NotFound = () => import('@/views/NotFound.vue');
 const routes = [
   {
     path: '/',
+    name: 'Login',
+    component: Login,
+    meta: { title: 'Login Page' },
+  },
+  {
+    path: '/Explore',
     name: 'Explore',
     component: Explore,
     meta: { title: 'Explore Page' }, 
@@ -85,7 +93,21 @@ const routes = [
     path: '/Itinerary',
     name: 'Itinerary',
     component: Itinerary,
+    redirect: '/Itinerary/LoggedIn',
     meta: { title: 'Itinerary Page' }, // 可以定义一些额外的meta信息
+    children: [
+      {
+        path: 'LoggedIn',
+        name: 'LoggedIn',
+        component: LoggedIn,
+        meta: { title: 'LoggedIn Page' }
+      },{       
+        path: 'NotLoggedIn',
+        name: 'NotLoggedIn',
+        component: NotLoggedIn,
+        meta: { title: 'NotLoggedIn Page' }
+      }
+    ]
   },
   // {
   //   path: '/Profile',
@@ -93,12 +115,7 @@ const routes = [
   //   component: Profile,
   //   meta: { title: 'Profile Page' },
   // },
-  {
-    path: '/Login',
-    name: 'Login',
-    component: Login,
-    meta: { title: 'Login Page' },
-  },
+  
   {
     path: '/:catchAll(.*)', // 404页面
     name: 'notfound',
