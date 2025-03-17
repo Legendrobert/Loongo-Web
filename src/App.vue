@@ -170,13 +170,17 @@ const updateActive = (val) => {
 // 跳转到Itinerary页面
 const toItineraryClick = () => {
 
-  // showNav.value = false
-  showCityDetails.value = false
-  store.commit('all/setShowCityDetails', false)
-  store.commit('all/setShowMap', false)
-  router.push({ name: 'Itinerary' })
-  showItineraryView.value = true
-
+  if(false){
+    // 如果为注册用户
+    showCityDetails.value = false
+    store.commit('all/setShowCityDetails', false)
+    store.commit('all/setShowMap', false)
+    router.push({ name: 'Itinerary' })
+    showItineraryView.value = true
+  }else{
+    // 非注册用户
+    router.push({ name: 'NotLoggedIn' })
+  }
 }
 // 返回到上一页
 const backHomeClick = ()=>{

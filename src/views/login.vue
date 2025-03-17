@@ -20,9 +20,9 @@
         </div>
 
     </div>
-    <div class="right carousel-container" ref="carouselContainer">
+    <div class="right carousel-container">
         <div class="cardItem carousel-inner" :style="carouselStyle" ref="carouselInner">
-            <div v-for="(item, index) in cardPicList" :key="'original-' + index" class=" carousel-item">
+            <div v-for="(item, index) in cardPicList" :key="'original-' + index" class="carousel-item">
                 <img :src="item.imgName"  />
                 <div class="province">
                     <svgLocation class="svgStyle" :fill="'#FFF'" :width="16" :height="16"></svgLocation>
@@ -31,7 +31,7 @@
                 <span class="city">chengdu</span> 
             </div>
         
-            <div v-for="(item, index) in cardPicList" :key="'copy-' + index" class="cardItem carousel-item">
+            <div v-for="(item, index) in cardPicList" :key="'copy-' + index" class=" carousel-item">
                 <img :src="item.imgName" />
                 <div class="province">
                     <svgLocation class="svgStyle" :fill="'#FFF'" :width="16" :height="16"></svgLocation>
@@ -56,7 +56,8 @@ const router = useRouter()
 const route = useRoute()
 
 // Vue 3 中的响应式数据
-const currentIndex = ref(1);
+const requestId = ref(null)
+const speed = ref(1.5); // 调整滚动速度（值越大滚动越快）
 const scrollHeight = ref(205);
 const isTransitioning = ref(false);
 const cardPicList = reactive(
@@ -82,7 +83,6 @@ const cardPicList = reactive(
     ])
 
 // 引用 DOM 元素
-const carouselContainer = ref(null);
 const carouselInner = ref(null);
 
 // 计算属性来动态设置轮播容器的样式
@@ -93,65 +93,42 @@ const carouselStyle = computed(() => {
   };
 });
 
-// 处理自动滚动的方法
+// 启动平滑滚动
 const startAutoScroll = () => {
-  setInterval(() => {
-    if (isTransitioning.value) return;
+  const step = () => {
+    scrollHeight.value += speed.value;
 
+    // 获取单个 item 的高度 + 间隔
+    const itemHeight = carouselInner.value?.children[0]?.offsetHeight || 0;
+    const itemMargin = 28;
+    const totalHeight = (itemHeight + itemMargin) * cardPicList.length;
 
-    isTransitioning.value = true;
-    // 每次增加图片高度 + 间隔
-    let itemHeight = null
-   
-    if(carouselInner.value){
-        itemHeight = carouselInner.value.children[currentIndex.value].offsetHeight;
+    // 滚动到底部时，立即回到顶部，形成无缝循环
+    if (scrollHeight.value >= totalHeight) {
+      scrollHeight.value = 0;
     }
-    
-    const itemMargin = 28; // 图片间隔35px
-    scrollHeight.value += itemHeight + itemMargin;
 
-    // 更新当前图片索引
-    currentIndex.value = (currentIndex.value + 1) % cardPicList.length;
-
-    // 当滚动到复制图片时，立即将滚动高度重置为 0，这样不会看到过渡
-    if (currentIndex.value === 1) {
-      setTimeout(() => {
-        scrollHeight.value = 205;
-        isTransitioning.value = false;
-      }, 500); // 等待动画过渡完成后再重置
-    } else {
-      setTimeout(() => {
-        isTransitioning.value = false;
-      }, 500); // 等待动画过渡完成后恢复
-    }
-  }, 3000); // 每3秒自动滚动
+    requestId.value = requestAnimationFrame(step);
+  };
+  requestId.value = requestAnimationFrame(step);
 };
 
-// 计算容器高度
-const updateContainerHeight = () => {
-  nextTick(() => {
-    // 确保容器高度设置为图片的高度，减去部分图片底部
-    const firstItemHeight = carouselInner.value?.children[0]?.offsetHeight || 0;
-    if (firstItemHeight) {
-     
-      carouselInner.value.style.height = `${firstItemHeight}px`; // 显示一张完整的图片和部分间隔
-      
-    }
-  
-  });
-};
 // 点击登录
  const toLoginClick= () =>{
     if(true){
         router.push({name: 'LoggedIn'})
-    }
-    
+    }  
  }
-// 组件挂载后执行
+
+
+// 组件挂载后启动滚动
 onMounted(() => {
-  updateContainerHeight();
-  startAutoScroll();
+  nextTick(() => {
+    startAutoScroll();
+  });
 });
+
+
 </script>
 
 <style lang="less" scoped>
@@ -252,16 +229,9 @@ onMounted(() => {
         position: relative;
        
         .cardItem{
-            // position: relative;
-            // transition: transform 1s ease-in-out;
             width: 240px;
-            height: 240px !important;
-            // display: flex;
-            // position: absolute;
-            // top: 0;
-            // left: 0;
+            height: 240px !important;          
             display: flex;
-            // justify-content: center;
             align-items: center;
             flex-direction: column;
             gap: 28px;
@@ -270,7 +240,6 @@ onMounted(() => {
                 border-radius: 16px;
                 width: 240px;
                 height: 240px;
-                // background: red;
             }
 
             .province{
