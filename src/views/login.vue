@@ -20,8 +20,8 @@
         </div>
 
     </div>
-    <div class="right carousel-container">
-        <div class="cardItem carousel-inner" :style="carouselStyle" ref="carouselInner">
+    <div class="right">
+        <div class="cardItem" :style="carouselStyle" ref="carouselInner">
             <div v-for="(item, index) in cardPicList" :key="'original-' + index" class="carousel-item">
                 <img :src="item.imgName"  />
                 <div class="province">
@@ -119,8 +119,6 @@ const startAutoScroll = () => {
         router.push({name: 'LoggedIn'})
     }  
  }
-
-
 // 组件挂载后启动滚动
 onMounted(() => {
   nextTick(() => {

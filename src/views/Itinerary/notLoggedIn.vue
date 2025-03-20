@@ -72,15 +72,17 @@ const handleMouseLeave = ()=>{
 }
 // 添加更多城市
 const handleAdd = ()=>{
-    let isLogin = false
-    if(isLogin){
-        // 非注册用户,跳转登录页面
-        // emits('isUserFn', false)
-        router.push({ name: 'Login' })
-    }else{
-        // 注册用户
-        emits('isUserFn', isLogin)
-    }
+    // let isLogin = false
+    // if(isLogin){
+    //     // 非注册用户,跳转登录页面
+    //     // emits('isUserFn', false)
+    //     router.push({ name: 'Login' })
+    // }else{
+    //     // 注册用户
+    //     emits('isUserFn', isLogin)
+    // }
+
+    router.push({name: 'Destination'})
 }
 </script>
 
@@ -93,7 +95,7 @@ const handleAdd = ()=>{
     
     box-sizing: border-box;
     padding: 80px;
-    height: calc(100vh - 144px);
+    height: calc(100vh - 88px);
     
 
     .loggedIn-left{

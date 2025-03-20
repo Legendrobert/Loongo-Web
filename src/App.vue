@@ -170,7 +170,7 @@ const updateActive = (val) => {
 // 跳转到Itinerary页面
 const toItineraryClick = () => {
 
-  if(false){
+  if(true){
     // 如果为注册用户
     showCityDetails.value = false
     store.commit('all/setShowCityDetails', false)
