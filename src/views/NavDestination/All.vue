@@ -336,16 +336,10 @@ const getCurrentIndex = (value)=>{
   
     
     .main-pic{
-      // width: 100%;
-      // padding-right: 20px;
+     
       height: calc(100vh - 219px);
       overflow: scroll;
       .picList{
-        // display: grid;
-        // // grid-template-columns: repeat(4, 328px); /* 一行固定 4 列，每列宽度 328px */
-        
-        // width: 100%;
-        // justify-content: space-between;
         display: grid;
     // grid-template-columns: repeat(4, minmax(328px, 1fr)); /* 最小宽度 328px，自适应屏幕 */
     gap:clamp(10px, 1.7vw, 30px);
