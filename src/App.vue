@@ -197,6 +197,7 @@ const backHomeClick = ()=>{
 
 <style lang="less">
 /* 全局样式 */
+
 #app {
   cursor: default;
   background: #F7F7F7;

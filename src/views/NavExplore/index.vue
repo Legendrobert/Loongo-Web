@@ -12,8 +12,37 @@
       <div class="chinaTrip-left">
         <div class="title">
           <span>What</span>
-          <div class="selectPart">
-            <el-dropdown>
+          <!-- <div class="selectPart"> -->
+            <el-select
+              v-model="selectValue"
+              class="selectPart"
+              placeholder="Select a country"
+            >
+              <template #prefix>
+                <img :src="America" width="24" height="24">
+                <!-- <component :is="selectValue" class="svgIcon"/> -->
+                <!-- <svgAmerican class="svgIcon"></svgAmerican> -->
+              </template>
+              <el-option 
+                v-for="(item,index) in list"
+                :key="index"
+                :label="item.country" 
+                :value="item.id"
+                style="
+                  display:flex;
+                  height:40px;
+                  font-family:Regular;
+                  fontSize:14px;
+                  color:#000;
+                  gap:8px;"
+              >
+                <!-- <component :is="item.component" style="margin-top:5px;"/> -->
+                <img :src="item.img" width="24" height="24" style="margin-top:5px;">
+                <span>{{ item.country }}</span>
+                  
+                </el-option>
+            </el-select>
+            <!-- <el-dropdown>
               <span class="el-dropdown-link">
                 <svgAmerican class="svgIcon"></svgAmerican>
                 <el-icon class="el-icon--right">
@@ -29,8 +58,8 @@
                   <el-dropdown-item divided>Action 5</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
-            </el-dropdown>
-          </div>
+            </el-dropdown> -->
+          <!-- </div> -->
           <span>like for China trip</span>
         </div>
         <ul class="rank">
@@ -66,7 +95,7 @@
           </li>
         </ul>
       </div>
-      <div class="chinaTrip-right">
+      <div class="chinaTrip-right" @click="clickDetail">
         <img 
           :src="greatWall" 
           width="517" 
@@ -114,16 +143,29 @@
           </div>
         </div>
         <ul class="picList">
-          <li v-for="index in 5" :key="index" class="picItem">
+          <li 
+            v-for="index in 5" 
+            :key="index" 
+            class="picItem" 
+            @mouseenter="picMouseEnter(index)"
+            @mouseleave="picMouseLeave(index)"
+          >
             <img :src="greatWall" width="400" height="398">
             <div class="item-top">
               <div class="item-top-left">
                 <svgHot :fillColor="'#fff'"></svgHot>
                 <span>5678</span>
               </div>
-              <svgShare :fillColor="'#121212'" class="item-top-right"></svgShare>
+              <svgShare 
+                :fillColor="isHoverIndex === index ? '#FF401A' : '#121212'" 
+                :width="isHoverIndex === index ? '48' : '32'" 
+                :height="isHoverIndex === index ? '48' : '32'" 
+                :class="isHoverIndex === index ? 'item-top-right-48 item-top-right':'item-top-right'"
+              ></svgShare>
             </div>
-            <div class="item-bottom">4-DAY TOUR OF THE GREAT WALL</div>
+            <div v-if="isHoverIndex === index" class="hoverStyle item-bottom">{{hoverPicText}}</div>
+            <div v-else class="item-bottom">4-DAY TOUR OF THE GREAT WALL</div>
+            
           </li>          
         </ul>
       </div>
@@ -168,26 +210,132 @@
         <svgToDown class="toDown"></svgToDown>
       </div>
     </div>
+    <!-- china trip 弹窗 -->
+    <el-dialog 
+      v-model="showChinaTripDetail"
+      class="dialog"
+      width="1017px"
+      center
+      align-center
+    >
+      <template #header>
+            <img :src="logo" width="40" height="40">
+        </template>
+      <div class="dialog-content">
+        <el-carousel 
+          height="480px"
+          class="carouselList"
+          :autoplay="false"
+        >
+          <el-carousel-item 
+            v-for="(item,index) in cityPicList" 
+            :key="index">
+            <img :src="item.imgName">
+          </el-carousel-item>
+        </el-carousel>
+        <div class="carouselText">
+          <div 
+            id="fullText"
+            class="title"
+            @mouseenter="mouseEnterFn"
+            @mouseleave="mouseLeaveFn"
+          >{{carouselText}}</div>
+          <div class="hot">
+            <div class="hotItem">
+              <svgLocation :width="16" :height="16" :fill="'#595959'"></svgLocation>
+              <span>Shanghai</span>
+            </div>
+            <div class="hotItem">
+              <svgClock :width="16" :height="16" :fill="'#595959'"></svgClock>
+              <span>1 Day</span>
+            </div>
+            <div class="hotItem">
+              <svgHot :width="16" :height="16" :fill="'#595959'"></svgHot>
+              <span>5678</span>
+            </div>
+          </div>
+          <div class="blockContent">{{blockContentText}}</div>
+          <div class="menuBlock">
+            <div 
+              ref="navContainer" 
+              class="menuHead"
+              @mouseenter="handleMouseEnter"
+              @mouseleave="handleMouseLeave"            
+            >
+              <!-- 左按钮 -->
+              <svgToLeft 
+                v-if="showArrowsLeft"
+                class="arrow-btn svgLeft"
+                @click="scrollLeft"
+              ></svgToLeft>
+              <!-- 可滚动区域 -->
+              <div 
+                class="nav-wrapper" 
+                ref="scrollWrapper"
+              >
+                <ul>
+                  <li 
+                    v-for="index in 7" 
+                    :key="index"
+                    :class="activeIndex === index ? 'isActiveMenu nav-item' : 'nav-item'"
+                    @click="clickMenuItem(index)"
+                  >header{{index}}</li>
+                </ul>
+              </div>
+              <!-- 右按钮-->
+              <svgToRight1 
+                v-if="showArrowsRight"
+                class="arrow-btn svgRight"
+                @click="scrollRight"
+              ></svgToRight1>
+            </div>
+            <div>{{menuItemText}}</div>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, reactive, nextTick,computed } from 'vue';
 import { ArrowDown } from '@element-plus/icons-vue'
-import svgAmerican from '@/components/svg-icons/svg-american.vue'
+import svgToLeft from '@/components/svg-icons/svg-toLeft.vue'
+import svgToRight1 from '@/components/svg-icons/svg-toRight.vue'
+import svgLocation from '@/components/svg-icons/svg-location.vue'
 import svgRankUp from '@/components/svg-icons/svg-rankUp.vue'
 import svgRankDown from '@/components/svg-icons/svg-rankDown.vue'
 import svgShare from '@/components/svg-icons/svg-share.vue'
 import svgHot from '@/components/svg-icons/svg-hot.vue'
+import svgClock from '@/components/svg-icons/svg-clock.vue'
 import svgToRight from '@/components/svg-icons/svg-toRight2.vue'
 import svgToDown from '@/components/svg-icons/svg-toDown.vue'
-// import LCarousel from "@/components/common/L-Carousel.vue"
 
+const logo = ref( require('@/assets/imgs/logo.png') );
+const Russia = ref( require('@/assets/imgs/Russia.png') );
+const America = ref( require('@/assets/imgs/America.png') );
 const greatWall = ref( require('@/assets/imgs/greatWall.png') );
 const hotAirBalloon = ref( require('@/assets/imgs/hotAirBalloon.png') );
 const text = ref('Shanghai is a luxurious playground for the well-heeled, with Michelin-star dining, high-end fashion houses, and over-the-top hotels. The Huangpu River splits the city...')
 const introduceContent = ref('Shanghai is a luxurious playground for the well-heeled, with Michelin-star dining, high-end fashion houses, and over-the-top hotels. The Huangpu River splits the city into two districts: Pudong and Puxi.')
 const specialTourList = reactive(['Landscape','Hiking','City Walk'])
+const list = reactive([
+  { 
+    img: Russia,
+    country: 'United States',
+    id: 0
+  },
+  { 
+    img: Russia,
+    country: 'United States',
+    id: 1
+  },
+  { 
+    img: America,
+    country: 'United States',
+    id: 2
+  },
+]);
 const cityPicList = reactive([
   {
     imgName: require('@/assets/imgs/greatWall.png')
@@ -198,10 +346,129 @@ const cityPicList = reactive([
   }
 ])
 const typeActiveIndex = ref(1)
+const selectValue = ref('')
+const isHoverIndex = ref(-1)
+const hoverPicText = ref('“ Wonderful sightseeing, you will love it immediately, highly recommendations as the first CN travel! ”')
+const blockContentText = ref('Shanghai is a luxurious playground for the well-heeled, with Michelin-star dining, high-end fashion houses, and over-the-top hotels. The Huangpu River splits the city into two districts: Pudong and Puxi.')
+const menuItemText = ref('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
+const fullText = ref('Exquisite Jewelry Shopping within 10 days') // 标题全部内容
+const carouselText = ref('Exquisite Jewelry Shopping within 10 days')
+const showChinaTripDetail = ref(true)
+const activeIndex = ref(1)
+// const showArrows = ref(false);// 是否显示左右箭头（鼠标移入时显示）
+const showArrowsRight = ref(false)
+const showArrowsLeft = ref(false)
+
+// refs
+const navContainer = ref(null);  // 外层容器
+const scrollWrapper = ref(null); // 可滚动容器
+
+// 组件挂载后，检测内容是否超出
+onMounted(() => {
+  nextTick(() => {
+    checkOverflow();
+  });
+});
 
 // 点击type按钮
 const typeClick = (i)=>{
   typeActiveIndex.value = i
+}
+const picMouseEnter = (index) => {
+  isHoverIndex.value = index
+}
+const picMouseLeave = (index) =>{
+  isHoverIndex.value = -1
+}
+// 点击china trip 内容卡片
+const clickDetail = ()=>{
+  showChinaTripDetail.value = true
+}
+// 点击弹窗中menu
+const clickMenuItem = (i)=>{
+  activeIndex.value = i
+  menuItemText.value += i
+}
+// 鼠标悬停在弹窗右侧标题
+const mouseEnterFn = () =>{
+  let container = document.getElementById("fullText");
+  let fullText = container.innerText;
+  let visibleText = ""; // 可见部分
+  let hiddenText = ""; // 超出的部分
+
+  if (container.scrollWidth > container.clientWidth) {
+    let ratio = container.clientWidth / container.scrollWidth;
+    let visibleLength = Math.floor(fullText.length * ratio);
+    visibleText = fullText.substring(0, visibleLength);
+    hiddenText = fullText.substring(visibleLength-8);
+    carouselText.value = hiddenText
+  }
+}
+// 鼠标离开弹窗右侧标题
+const mouseLeaveFn = () =>{
+  carouselText.value = fullText.value
+}
+// 当内容超出 500px 时，才需要滚动
+const checkOverflow = ()=> {
+  if (!scrollWrapper.value) return;
+}
+
+// 鼠标移入容器：如果确实超出，则显示箭头
+const handleMouseEnter = ()=> {
+  if (scrollWrapper.value.scrollWidth > scrollWrapper.value.clientWidth) {
+    if(scrollWrapper.value.scrollLeft > 0){
+      showArrowsLeft.value = true
+    }
+    if(scrollWrapper.value.scrollLeft === 0){
+      showArrowsRight.value = true
+    }
+    const maxScroll = scrollWrapper.value.scrollWidth - scrollWrapper.value.clientWidth;
+    if(scrollWrapper.value.scrollLeft < maxScroll && scrollWrapper.value.scrollLeft > 0){
+      showArrowsLeft.value = true
+      showArrowsRight.value = true
+    }
+  }
+}
+
+// 鼠标移出容器：隐藏箭头
+const handleMouseLeave = ()=> {
+    showArrowsLeft.value = false
+    showArrowsRight.value = false
+}
+
+// 点击向左移动
+const scrollLeft = () =>{
+  if (!scrollWrapper.value) return;
+  const wrapper = scrollWrapper.value;
+  const items = wrapper.querySelectorAll('.nav-item')
+   wrapper.scrollLeft -= Math.floor(wrapper.scrollWidth/items.length)+2
+  showArrowsRight.value = true
+  // 防止滚过头
+  if (wrapper.scrollLeft < 0) {
+    wrapper.scrollLeft = 0;
+  }
+  if(wrapper.scrollLeft === 0){ 
+    showArrowsLeft.value = false
+  }
+}
+// 点击向右移动
+const scrollRight = () => {
+  if (!scrollWrapper.value) return;
+  const wrapper = scrollWrapper.value;
+  const items = wrapper.querySelectorAll('.nav-item')
+
+  // 同理，每次移动一个导航项
+  wrapper.scrollLeft += Math.floor(wrapper.scrollWidth/items.length)+2;
+  showArrowsLeft.value = true
+  // 防止滚过头
+  const maxScroll = wrapper.scrollWidth - wrapper.clientWidth; 
+  if (wrapper.scrollLeft > maxScroll) {   
+    wrapper.scrollLeft = maxScroll;
+  }
+  if(wrapper.scrollLeft === maxScroll){
+    showArrowsRight.value = false
+    
+  }
 }
 </script>
 
@@ -262,27 +529,29 @@ const typeClick = (i)=>{
          .selectPart{
             width: 80px;
             height: 48px;
-            background: #fff;
-            border: 2px solid #F9F9F9;
-            border-radius: 100px;
 
-            .el-dropdown{
-              width: 100%;
-            }
-            .el-dropdown-link{
-              width: 100%;
+            
+            ::v-deep .el-select__wrapper {
+              width: 80px;
               height: 48px;
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              padding: 0 10px;
+              background: #fff;
+              box-shadow: none;
+              border: 2px solid #F9F9F9;
+              border-radius: 100px;
 
-              .el-icon svg{
-                color: #121212;
+              &:hover{
+                box-shadow: 0 8px 16px rgba(131, 131, 131, 0.1);
               }
-
+            }
+            ::v-deep .el-select__caret{
+              color: #121212;
+            }
+            ::v-deep .el-select__selection{
+              flex: 0;
+              margin-right:3px;
             }
           }
+        
       }
       .rank{
         
@@ -530,6 +799,10 @@ const typeClick = (i)=>{
                 box-sizing: border-box;
                 gap: 4px;
               }
+              .item-top-right-48{
+                width: 48px !important;
+                height: 48px !important;
+              }
               .item-top-right{
                 width: 32px;
                 height: 32px;
@@ -548,6 +821,18 @@ const typeClick = (i)=>{
               width: -webkit-fill-available;
               margin: 24px;
             }  
+            .hoverStyle{
+              width: 352px;
+              height: 84px;
+              line-height: 20px;
+              font-size: 14px;
+              font-family: Seminold;
+              background: #F3F3F34D;
+              border-radius: 12px;
+              padding: 8px;
+              box-sizing: border-box;
+             
+            }
           }
         }
       }
@@ -690,25 +975,149 @@ const typeClick = (i)=>{
     }
   }
 }
-// ::v-deep .el-carousel--horizontal, .el-carousel--vertical{
-//               border-radius: 16px;
-//             }
-//             ::v-deep .el-carousel__arrow{
-//               display: none
-//             }
-//             ::v-deep .el-carousel__indicators{
-//               position: absolute;
-//               // left:56px;
-//               bottom: 0px;
-//             }
-//             ::v-deep .el-carousel__button{
-//               width: 8px;
-//               height: 8px;
-//               margin:0 8px;
-//               border-radius: 50%;
-//               background: #F3F3F3;
-//             }
-//             :deep(.el-carousel__indicator.is-active .el-carousel__button) {
-//               background-color: #121212 !important;  /* 选中颜色 */
-//             }
+.dialog{
+
+  .dialog-content{
+    display: flex;
+    justify-content: space-between;
+    height: 480px;
+    overflow-y: scroll;
+
+    .carouselList{
+      width: 400px;
+      border-radius: 16px;
+
+      ::v-deep .el-carousel--horizontal, .el-carousel--vertical{
+          border-radius: 24px;
+      }
+      ::v-deep .el-carousel__arrow{
+          display: none
+      }
+      ::v-deep .el-carousel__button{
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #fff;
+        margin: 24px 8px;
+
+      }
+    }
+    .carouselText{
+      width: 500px;
+      height: 480px;
+      overflow-y: scroll;
+
+      .title{
+        width: 500px;
+        height: 42px;
+        line-height: 42px;
+        color: #121212;
+        font-size: 28px;
+        font-family: Bold;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+      }
+      .hot{
+        height: 20px;
+        line-height: 20px;
+        margin: 16px 0;
+        gap: 40px;
+        color: #595959;
+        font-size: 14px;
+        font-family: Regular;
+        display: flex;
+
+        .hotItem{
+          display: flex;
+          gap: 4px;
+
+          ::v-deep svg{
+            margin-top: 2px;
+            
+          }
+        }
+      }
+      .blockContent{
+        height: 84px;
+        line-height: 20px;
+        background: #F3F3F3;
+        color: #595959;
+        font-family: Regular;
+        font-size: 14px;
+        border-radius: 8px;
+        padding: 12px;
+        box-sizing: border-box;
+        overflow:hidden;
+        
+      }
+      .menuBlock{
+        
+        .menuHead{
+          display: flex;
+          margin: 24px 0 !important;
+          width: 500px;
+          height: 27px;
+          line-height: 27px;
+          position: relative;
+          
+          .arrow-btn{
+            transform: translateY(0%);
+            position: absolute;
+            margin-top:2px;
+          }
+          .svgLeft{
+            left: 0;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.6));
+          }
+          .svgRight{
+            right: 0;
+            width: 20px;
+            height: 20px;
+            text-align: right;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 1));
+          }
+          .nav-wrapper{
+            width: 100%;
+            overflow: hidden;
+
+            ul{
+              display: flex;
+              gap: 24px;
+              font-family: Semibold;
+              font-size: 20px;
+              color: #ccc;
+            }
+          }
+        }
+        .isActiveMenu{
+          color: #121212;
+        }
+        
+      }
+    }
+  }
+}
+::v-deep .el-dialog{
+  border-radius: 24px !important;
+  padding: 40px !important;
+  box-sizing: border-box;
+
+  
+}
+::v-deep .el-dialog__header.show-close{
+  padding: 0 !important;
+  height: 40px;
+  margin-bottom: 40px;
+}
+::v-deep .el-dialog__headerbtn{
+  right: 21px;
+  top: 36px;
+}
+::v-deep .el-dialog__headerbtn .el-dialog__close{
+  color: #121212;
+}
+
 </style>
