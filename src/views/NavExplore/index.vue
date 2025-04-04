@@ -142,32 +142,42 @@
             <img :src="hotAirBalloon" width="120" height="120">
           </div>
         </div>
-        <ul class="picList">
-          <li 
-            v-for="index in 5" 
-            :key="index" 
-            class="picItem" 
-            @mouseenter="picMouseEnter(index)"
-            @mouseleave="picMouseLeave(index)"
+        <!-- 横向滚动轮播图 -->
+        <div 
+          class="carousel-container"
+          ref="carouselContainer" 
+          
+        >       
+          <ul 
+            class="picList" 
+            ref="carousel"
           >
-            <img :src="greatWall" width="305" height="398">
-            <div class="item-top">
-              <div class="item-top-left">
-                <svgHot :fillColor="'#fff'"></svgHot>
-                <span>5678</span>
+            <li 
+              v-for="index in 5" 
+              :key="index" 
+              class="picItem" 
+              @mouseenter="picMouseEnter(index)"
+              @mouseleave="picMouseLeave(index)"
+            >
+              <img :src="greatWall" width="305" height="398">
+              <div class="item-top">
+                <div class="item-top-left">
+                  <svgHot :fillColor="'#fff'"></svgHot>
+                  <span>5678</span>
+                </div>
+                <svgShare 
+                  :fillColor="isHoverIndex === index ? '#FF401A' : '#121212'" 
+                  :width="isHoverIndex === index ? '48' : '32'" 
+                  :height="isHoverIndex === index ? '48' : '32'" 
+                  :class="isHoverIndex === index ? 'item-top-right-48 item-top-right':'item-top-right'"
+                ></svgShare>
               </div>
-              <svgShare 
-                :fillColor="isHoverIndex === index ? '#FF401A' : '#121212'" 
-                :width="isHoverIndex === index ? '48' : '32'" 
-                :height="isHoverIndex === index ? '48' : '32'" 
-                :class="isHoverIndex === index ? 'item-top-right-48 item-top-right':'item-top-right'"
-              ></svgShare>
-            </div>
-            <div v-if="isHoverIndex === index" class="hoverStyle item-bottom">{{hoverPicText}}</div>
-            <div v-else class="item-bottom">4-DAY TOUR OF THE GREAT WALL</div>
-            
-          </li>          
-        </ul>
+              <div v-if="isHoverIndex === index" class="hoverStyle item-bottom">{{hoverPicText}}</div>
+              <div v-else class="item-bottom">4-DAY TOUR OF THE GREAT WALL</div>
+              
+            </li>          
+          </ul>
+        </div>
       </div>
       
     </div>
@@ -298,7 +308,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive, nextTick,computed } from 'vue';
+import { ref, onMounted, onUnmounted,reactive, nextTick,computed } from 'vue';
 import { ArrowDown } from '@element-plus/icons-vue'
 import svgToLeft from '@/components/svg-icons/svg-toLeft.vue'
 import svgToRight1 from '@/components/svg-icons/svg-toRight.vue'
@@ -355,21 +365,25 @@ const fullText = ref('Exquisite Jewelry Shopping within 10 days') // 标题全�
 const carouselText = ref('Exquisite Jewelry Shopping within 10 days')
 const showChinaTripDetail = ref(false)
 const activeIndex = ref(1)
-// const showArrows = ref(false);// 是否显示左右箭头（鼠标移入时显示）
 const showArrowsRight = ref(false)
 const showArrowsLeft = ref(false)
 
 // refs
 const navContainer = ref(null);  // 外层容器
 const scrollWrapper = ref(null); // 可滚动容器
+const carouselContainer = ref(null); // 鼠标滚动事件的外层容器
+const carousel = ref(null); //鼠标滚动事件的可滚动容器
 
 // 组件挂载后，检测内容是否超出
 onMounted(() => {
   nextTick(() => {
     checkOverflow();
   });
+  window.addEventListener("wheel", handleGlobalWheel, { passive: false });
 });
-
+onUnmounted(() => {
+  window.removeEventListener("wheel", handleGlobalWheel);
+});
 // 点击type按钮
 const typeClick = (i)=>{
   typeActiveIndex.value = i
@@ -467,6 +481,41 @@ const scrollRight = () => {
   }
   if(wrapper.scrollLeft === maxScroll){
     showArrowsRight.value = false
+    
+  }
+}
+// 全局监听wheel事件
+const handleGlobalWheel = (e) => {
+  // 获取轮播区域在视口中的位置
+  const rect = carouselContainer.value.getBoundingClientRect();
+  const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+  const carouselCenterY = rect.top + rect.height / 2;
+  const viewportCenterY = viewportHeight / 2;
+  const toleranceY = 100;// 可容忍的误差范围（比如 ±100px）
+
+  // 判断轮播区域是否在视口中（可见部分至少超过 50px）
+  if (Math.abs(carouselCenterY - viewportCenterY) <= toleranceY) {
+    
+    // 获取当前水平滚动位置和可滚动范围
+    const currentScrollLeft = carouselContainer.value.scrollLeft;
+    const maxScrollLeft = carouselContainer.value.scrollWidth - carouselContainer.value.clientWidth;
+    console.log(e.deltaY,currentScrollLeft,maxScrollLeft,'111')
+    // 如果鼠标滚轮向下（deltaY > 0）且未滚到右边缘，则拦截
+    if (e.deltaY > 0 && currentScrollLeft < maxScrollLeft-1) {
+      e.preventDefault();
+      // 将垂直滚动距离转换为横向滚动
+      carouselContainer.value.scrollLeft += e.deltaY;
+      console.log(carouselContainer.value.scrollLeft,e.deltaY,'222')
+    }
+    // 如果鼠标滚轮向上（deltaY < 0）且未滚到左边缘，则拦截
+    else if (e.deltaY < 0 && currentScrollLeft > 1) {
+      e.preventDefault();
+      carouselContainer.value.scrollLeft += e.deltaY;
+      console.log('333')
+    }else{
+      // 否则，不拦截（允许页面垂直滚动）
+    console.log('4444')
+    }
     
   }
 }
@@ -675,7 +724,7 @@ const scrollRight = () => {
     .specialTour-show{
         gap: 28px;
         display: flex;
-
+        
         .morePic{
           position: relative;
           width: 320px;
@@ -737,101 +786,108 @@ const scrollRight = () => {
             }
           }
         }
-        .picList{         
+        .carousel-container{
           width: calc(100vw - 412px);
           height: 460px;
           overflow-x: scroll;
-          display: flex;
-          gap: 28px;
-          
 
-          &::-webkit-scrollbar{
-            height: 8px;
-            margin-top: 50px;
-            margin-right: 64px;
-            background: #F3F3F3;
-            border-radius: 4px;
-
-          }
-          &::-webkit-scrollbar-thumb {
-            background: #121212;
-            border-radius: 4px;
-          }
-          
-
-          .picItem{
-            border-radius: 24px;
-            position: relative;
-            display: inline-block;
+          .picList{         
             display: flex;
+            gap: 28px;
             
-            img{
-              border-radius: 24px;
 
-                &::after {
-                content: "";
+            &::-webkit-scrollbar{
+              height: 8px;
+              margin-top: 50px;
+              margin-right: 64px;
+              background: #F3F3F3;
+              border-radius: 4px;
+
+            }
+            &::-webkit-scrollbar-thumb {
+              background: #121212;
+              border-radius: 4px;
+            }
+            
+
+            .picItem{
+              width: 305px;
+              height: 398px;
+              border-radius: 24px;
+              position: relative;
+              display: inline-block;
+              display: flex;
+              
+              img{
+                border-radius: 24px;
+
+                  &::after {
+                  content: "";
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  width: 100%;
+                  height: 100%;
+                  background: #121212; /* 半透明黑色 */
+                  opacity: 0.8; /* 20% 透明度 */
+                }
+              }
+              .item-top{
                 position: absolute;
                 top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: #121212; /* 半透明黑色 */
-                opacity: 0.8; /* 20% 透明度 */
-              }
-            }
-            .item-top{
-              position: absolute;
-              top: 0;
-              width: -webkit-fill-available;
-              margin: 24px;
-              display: flex;
-              justify-content: space-between;
-
-              .item-top-left{
-                height: 38px;
+                width: -webkit-fill-available;
+                margin: 24px;
                 display: flex;
-                color: #FFFFFF;
                 justify-content: space-between;
-                align-items: center;
-                background: rgba(18, 18, 18, 0.8);
-                border-radius: 100px;
-                padding: 0 12px;
-                box-sizing: border-box;
-                gap: 4px;
+
+                .item-top-left{
+                  height: 38px;
+                  display: flex;
+                  color: #FFFFFF;
+                  justify-content: space-between;
+                  align-items: center;
+                  background: rgba(18, 18, 18, 0.8);
+                  border-radius: 100px;
+                  padding: 0 12px;
+                  box-sizing: border-box;
+                  gap: 4px;
+                }
+                .item-top-right-48{
+                  width: 48px !important;
+                  height: 48px !important;
+                }
+                .item-top-right{
+                  width: 32px;
+                  height: 32px;
+                  background: #fff;
+                  border-radius: 50%;
+                }
+              }   
+              .item-bottom{
+                position: absolute;
+                bottom: 0px;
+                width: 100%;
+                // width: 352px;
+                color: #FFFFFF;
+                font-family: Bold;
+                font-size: 24px;
+                line-height: 42px;
+                width: -webkit-fill-available;
+                margin: 24px;
+               
+              }  
+              .hoverStyle{
+                // width: 352px;
+                // width: 100%;
+                // height: 84px;
+                line-height: 20px;
+                font-size: 14px;
+                font-family: Seminold;
+                background: #F3F3F34D;
+                border-radius: 12px;
+                padding: 8px;
+                box-sizing: border-box;              
               }
-              .item-top-right-48{
-                width: 48px !important;
-                height: 48px !important;
-              }
-              .item-top-right{
-                width: 32px;
-                height: 32px;
-                background: #fff;
-                border-radius: 50%;
-              }
-            }   
-            .item-bottom{
-              position: absolute;
-              bottom: 54px;
-              width: 352px;
-              color: #FFFFFF;
-              font-family: Bold;
-              font-size: 28px;
-              line-height: 42px;
-              width: -webkit-fill-available;
-              margin: 24px;
-            }  
-            .hoverStyle{
-              width: 352px;
-              height: 84px;
-              line-height: 20px;
-              font-size: 14px;
-              font-family: Seminold;
-              background: #F3F3F34D;
-              border-radius: 12px;
-              padding: 8px;
-              box-sizing: border-box;
-             
             }
           }
         }
