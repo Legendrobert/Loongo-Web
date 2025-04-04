@@ -150,7 +150,7 @@
             @mouseenter="picMouseEnter(index)"
             @mouseleave="picMouseLeave(index)"
           >
-            <img :src="greatWall" width="400" height="398">
+            <img :src="greatWall" width="305" height="398">
             <div class="item-top">
               <div class="item-top-left">
                 <svgHot :fillColor="'#fff'"></svgHot>
@@ -353,7 +353,7 @@ const blockContentText = ref('Shanghai is a luxurious playground for the well-he
 const menuItemText = ref('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
 const fullText = ref('Exquisite Jewelry Shopping within 10 days') // 标题全部内容
 const carouselText = ref('Exquisite Jewelry Shopping within 10 days')
-const showChinaTripDetail = ref(true)
+const showChinaTripDetail = ref(false)
 const activeIndex = ref(1)
 // const showArrows = ref(false);// 是否显示左右箭头（鼠标移入时显示）
 const showArrowsRight = ref(false)
@@ -633,7 +633,7 @@ const scrollRight = () => {
     }
   }
   .specialTour{
-    padding: 88px 0 88px 64px;
+    padding: 88px 64px;
     background: #fff;
 
     .specialTour-top{
@@ -932,7 +932,7 @@ const scrollRight = () => {
   }
   .footer{
     width: 100%;
-    
+    overflow: hidden;
     background: #121212;
     // margin-top: 88px;
     padding: 64px 0;
