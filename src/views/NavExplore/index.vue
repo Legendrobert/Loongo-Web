@@ -1,5 +1,5 @@
 <template>
-  <div class="navExplore">
+  <div class="navExplore" ref="exploreContainer">
     <div class="header">
       <div class="header-title">
         <span>Where Next</span>
@@ -320,7 +320,10 @@ import svgHot from '@/components/svg-icons/svg-hot.vue'
 import svgClock from '@/components/svg-icons/svg-clock.vue'
 import svgToRight from '@/components/svg-icons/svg-toRight2.vue'
 import svgToDown from '@/components/svg-icons/svg-toDown.vue'
+import { useRouter, useRoute } from 'vue-router'
 
+const router = useRouter()
+const route = useRoute()
 const logo = ref( require('@/assets/imgs/logo.png') );
 const Russia = ref( require('@/assets/imgs/Russia.png') );
 const America = ref( require('@/assets/imgs/America.png') );
@@ -367,12 +370,14 @@ const showChinaTripDetail = ref(false)
 const activeIndex = ref(1)
 const showArrowsRight = ref(false)
 const showArrowsLeft = ref(false)
+const isJumpingToDestination = ref(false) // 拖动到底部是否跳转到Destination
 
 // refs
 const navContainer = ref(null);  // 外层容器
 const scrollWrapper = ref(null); // 可滚动容器
 const carouselContainer = ref(null); // 鼠标滚动事件的外层容器
 const carousel = ref(null); //鼠标滚动事件的可滚动容器
+const exploreContainer = ref(null) // explore 页面
 
 // 组件挂载后，检测内容是否超出
 onMounted(() => {
@@ -380,9 +385,15 @@ onMounted(() => {
     checkOverflow();
   });
   window.addEventListener("wheel", handleGlobalWheel, { passive: false });
+  if (exploreContainer.value) {
+    exploreContainer.value.addEventListener('scroll', handleExploreToDestinationScroll);
+  }
 });
 onUnmounted(() => {
   window.removeEventListener("wheel", handleGlobalWheel);
+  if (exploreContainer.value) {
+    exploreContainer.value.removeEventListener('scroll', handleExploreToDestinationScroll);
+  }
 });
 // 点击type按钮
 const typeClick = (i)=>{
@@ -519,6 +530,29 @@ const handleGlobalWheel = (e) => {
     
   }
 }
+
+
+const handleExploreToDestinationScroll = () => {
+  if (!exploreContainer.value || isJumpingToDestination.value) return;
+
+  const el = exploreContainer.value;
+  const scrollBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+
+  if (scrollBottom <= 1) {
+    // 到底部了，准备跳转
+    isJumpingToDestination.value = true;
+
+    // 先平滑滚到底再跳
+    el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+
+    // 跳转到 Destination
+    setTimeout(() => {
+      isJumpingToDestination.value = false;
+      router.push('/Destination'); 
+    }, 1000); 
+  }
+};
+
 </script>
 
 <style lang="less" scoped>
