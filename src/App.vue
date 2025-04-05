@@ -220,6 +220,10 @@ const backHomeClick = ()=>{
 body {
   margin: 0;
   font-family: Semibold;
+  ::v-deep .el-popper.is-pure{
+              box-shadow: none !important;
+              border: none;
+            }
 }
 
 header {
@@ -330,4 +334,5 @@ main {
   border-radius: 24px 24px 0 0 ;
   overflow: hidden;
 }
+
 </style>

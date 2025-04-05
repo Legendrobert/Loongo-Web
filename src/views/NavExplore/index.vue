@@ -12,54 +12,26 @@
       <div class="chinaTrip-left">
         <div class="title">
           <span>What</span>
-          <!-- <div class="selectPart"> -->
             <el-select
               v-model="selectValue"
+              :teleported="false"
               class="selectPart"
               placeholder="Select a country"
             >
               <template #prefix>
                 <img :src="America" width="24" height="24">
-                <!-- <component :is="selectValue" class="svgIcon"/> -->
-                <!-- <svgAmerican class="svgIcon"></svgAmerican> -->
               </template>
               <el-option 
                 v-for="(item,index) in list"
                 :key="index"
                 :label="item.country" 
                 :value="item.id"
-                style="
-                  display:flex;
-                  height:40px;
-                  font-family:Regular;
-                  fontSize:14px;
-                  color:#000;
-                  gap:8px;"
               >
-                <!-- <component :is="item.component" style="margin-top:5px;"/> -->
                 <img :src="item.img" width="24" height="24" style="margin-top:5px;">
                 <span>{{ item.country }}</span>
                   
                 </el-option>
             </el-select>
-            <!-- <el-dropdown>
-              <span class="el-dropdown-link">
-                <svgAmerican class="svgIcon"></svgAmerican>
-                <el-icon class="el-icon--right">
-                  <arrow-down />
-                </el-icon>
-              </span>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item>Action 1</el-dropdown-item>
-                  <el-dropdown-item>Action 2</el-dropdown-item>
-                  <el-dropdown-item>Action 3</el-dropdown-item>
-                  <el-dropdown-item disabled>Action 4</el-dropdown-item>
-                  <el-dropdown-item divided>Action 5</el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown> -->
-          <!-- </div> -->
           <span>like for China trip</span>
         </div>
         <ul class="rank">
@@ -612,6 +584,11 @@ const handleExploreToDestinationScroll = () => {
          .selectPart{
             width: 80px;
             height: 48px;
+            margin-top: 7px;
+
+            img{
+              margin:0px !important;
+            }
 
             
             ::v-deep .el-select__wrapper {
@@ -628,13 +605,37 @@ const handleExploreToDestinationScroll = () => {
             }
             ::v-deep .el-select__caret{
               color: #121212;
+              
             }
             ::v-deep .el-select__selection{
               flex: 0;
               margin-right:3px;
             }
+            
           }
-        
+        ::v-deep .el-popper.is-pure{
+          box-shadow: 0 8px 16px 0 rgba(131, 131, 131, 0.1);
+          border: none;
+          border-radius: 8px;
+          padding: 12px;
+          gap: 8px;
+        }
+        ::v-deep .el-select-dropdown__item{
+          display:flex;
+          height:40px;
+          line-height: 24px;
+          font-family:Regular;
+          font-size:14px;
+          color:#000;
+          padding: 8px !important;
+          gap:8px;
+        }
+        ::v-deep .is-hovering{
+          font-family: Seminold;
+          background: #121212;
+          color:#fff;
+          border-radius: 4px;
+        }
       }
       .rank{
         
