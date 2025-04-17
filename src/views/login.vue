@@ -46,6 +46,7 @@
 
 <script setup>
 import { ref, reactive, onMounted, onUnmounted, computed, nextTick } from 'vue';
+import request from '@/utils/request'
 import { useRouter, useRoute } from 'vue-router'
 import svgLocation from '@/components/svg-icons/svg-location.vue'
 import svgGoogle from "@/components/svg-icons/svg-google.vue"
@@ -123,6 +124,7 @@ const startAutoScroll = () => {
 onMounted(() => {
   nextTick(() => {
     startAutoScroll();
+    const res = request.get('/your/api')
   });
 });
 

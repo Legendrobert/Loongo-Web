@@ -3,7 +3,12 @@
     <div class="header">
       <div class="header-title">
         <span>Where Next</span>
-        <img :src="greatWall" width="120" height="90">
+        <img 
+          :src="headImg" 
+          width="120" 
+          height="90"
+          class="transition-image"
+        >
         <span>?</span>
       </div>
       <div class="tips">for the terrific and memorable China trip</div>
@@ -77,7 +82,7 @@
         <div class="content">
           <div class="content-top">
             <div class="content-top-hot">
-              <svgHot></svgHot>
+              <svgHot :fill="'#121212'"></svgHot>
               <span>5675</span>
             </div>
             <div class="sharePart">
@@ -300,10 +305,21 @@ const logo = ref( require('@/assets/imgs/logo.png') );
 const Russia = ref( require('@/assets/imgs/Russia.png') );
 const America = ref( require('@/assets/imgs/America.png') );
 const greatWall = ref( require('@/assets/imgs/greatWall.png') );
+const beijing = ref(require('@/assets/imgs/beijing.png'));
+const chengdu = ref(require('@/assets/imgs/chengdu.png'))
 const hotAirBalloon = ref( require('@/assets/imgs/hotAirBalloon.png') );
 const text = ref('Shanghai is a luxurious playground for the well-heeled, with Michelin-star dining, high-end fashion houses, and over-the-top hotels. The Huangpu River splits the city...')
 const introduceContent = ref('Shanghai is a luxurious playground for the well-heeled, with Michelin-star dining, high-end fashion houses, and over-the-top hotels. The Huangpu River splits the city into two districts: Pudong and Puxi.')
 const specialTourList = reactive(['Landscape','Hiking','City Walk'])
+const headPicList = reactive([
+  {
+    img: greatWall
+  },{
+    img: beijing
+  },{
+    img: chengdu
+  }
+])
 const list = reactive([
   { 
     img: Russia,
@@ -339,6 +355,7 @@ const menuItemText = ref('Lorem ipsum dolor sit amet, consectetur adipiscing eli
 const fullText = ref('Exquisite Jewelry Shopping within 10 days') // 标题全部内容
 const carouselText = ref('Exquisite Jewelry Shopping within 10 days')
 const showChinaTripDetail = ref(false)
+const headImg = ref(null)
 const activeIndex = ref(1)
 const showArrowsRight = ref(false)
 const showArrowsLeft = ref(false)
@@ -353,6 +370,19 @@ const exploreContainer = ref(null) // explore 页面
 
 // 组件挂载后，检测内容是否超出
 onMounted(() => {
+  let headPicListIndex = 0;
+  
+  const changeImage = () => {
+    const img = document.querySelector('.transition-image');
+    // img.style.animation = 'none';
+    // img.offsetHeight; // 触发重绘
+    // img.style.animation = null;
+    
+    headImg.value = headPicList[headPicListIndex].img;
+    headPicListIndex = (headPicListIndex + 1) % headPicList.length;
+  };
+
+  setInterval(changeImage, 2000);
   nextTick(() => {
     checkOverflow();
   });
@@ -545,12 +575,17 @@ const handleExploreToDestinationScroll = () => {
       color: #121212;
       height: 109px;
       line-height: 109px;
+      span{
+        font-family: Bold;
+      }
+      
 
       img{
         border-radius: 16px;
         transform: rotate(-15deg);
         margin: 0 30px;
         box-shadow: 0px 16px 32px 0px rgba(196, 196, 196, 0.5);
+        transition: all 0.8s ease;
       }
     }
     .tips{
@@ -1209,6 +1244,37 @@ const handleExploreToDestinationScroll = () => {
 }
 ::v-deep .el-dialog__headerbtn .el-dialog__close{
   color: #121212;
+}
+
+.header-title img {
+  border-radius: 16px;
+  transform: rotate(-15deg);
+  margin: 0 30px;
+  box-shadow: 0px 16px 32px 0px rgba(196, 196, 196, 0.5);
+  transition: all 0.8s ease;
+}
+
+.header-title img:hover {
+  transform: rotate(-15deg) scale(1.05);
+}
+
+@keyframes imageFade {
+  0% {
+    opacity: 1;
+    transform: rotate(-15deg) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: rotate(-15deg) scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(-15deg) scale(1);
+  }
+}
+
+.transition-image {
+  animation: imageFade 2s infinite;
 }
 
 </style>
