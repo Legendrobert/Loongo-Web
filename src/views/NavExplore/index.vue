@@ -8,6 +8,7 @@
           width="120" 
           height="90"
           class="transition-image"
+          @click="clickHeadImg"
         >
         <span>?</span>
       </div>
@@ -349,7 +350,7 @@ const cityPicList = reactive([
 const typeActiveIndex = ref(1)
 const selectValue = ref('')
 const isHoverIndex = ref(-1)
-const hoverPicText = ref('“ Wonderful sightseeing, you will love it immediately, highly recommendations as the first CN travel! ”')
+const hoverPicText = ref('" Wonderful sightseeing, you will love it immediately, highly recommendations as the first CN travel! "')
 const blockContentText = ref('Shanghai is a luxurious playground for the well-heeled, with Michelin-star dining, high-end fashion houses, and over-the-top hotels. The Huangpu River splits the city into two districts: Pudong and Puxi.')
 const menuItemText = ref('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
 const fullText = ref('Exquisite Jewelry Shopping within 10 days') // 标题全部内容
@@ -397,6 +398,15 @@ onUnmounted(() => {
     exploreContainer.value.removeEventListener('scroll', handleExploreToDestinationScroll);
   }
 });
+// 点击图片跳转到相应城市详情页
+const clickHeadImg = () => {
+  router.push({
+    name: 'Details',
+    params: {
+      cityName: 'SHANGHAI'
+    }
+  });
+}
 // 点击type按钮
 const typeClick = (i)=>{
   typeActiveIndex.value = i
@@ -533,7 +543,7 @@ const handleGlobalWheel = (e) => {
   }
 }
 
-
+// 鼠标滚动
 const handleExploreToDestinationScroll = () => {
   if (!exploreContainer.value || isJumpingToDestination.value) return;
 
