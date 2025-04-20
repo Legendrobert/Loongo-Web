@@ -162,7 +162,7 @@
     <div class="bestTravel">
         <div class="title">Best Travel in China</div>
         <div class="carousel">
-          <img :src="greatWall" width="100%" :height="600"> 
+          <img :src="currentMainImage" width="100%" :height="600"> 
           <div class="introduce">
             <div class="introduce-title">The Long Journey</div>
             <div class="introduce-content">{{introduceContent}}</div>
@@ -172,13 +172,24 @@
             </div>
           </div>
           <ul class="picList">
-            <li class="picItem" v-for="(item,index) in cityPicList" :key="index">
+            <li 
+              class="picItem" 
+              v-for="(item,index) in cityPicList" 
+              :key="index"
+              @mouseenter="handlePicItemHover(index)"
+          
+            >
               <img :src="item.imgName" :width="186" :height="160">
             </li>
           </ul>
         </div>
         <div class="button">
-          <div v-for="(item,i) in 3" :key="i" :class="i === 0 ? 'buttonItem active' : 'buttonItem'" ></div>
+          <div 
+            v-for="(item,i) in 3" 
+            :key="i" 
+            :class="i === currentButtonIndex ? 'buttonItem active' : 'buttonItem'" 
+            @mouseenter="handleButtonItemHover(i)"
+          ></div>
         </div>
 
       </div>
@@ -361,6 +372,8 @@ const activeIndex = ref(1)
 const showArrowsRight = ref(false)
 const showArrowsLeft = ref(false)
 const isJumpingToDestination = ref(false) // 拖动到底部是否跳转到Destination
+const currentMainImage = ref(greatWall) // 添加主图片的响应式变量
+const currentButtonIndex = ref(0)
 
 // refs
 const navContainer = ref(null);  // 外层容器
@@ -564,6 +577,17 @@ const handleExploreToDestinationScroll = () => {
     }, 1000); 
   }
 };
+
+// 添加鼠标移入事件处理函数
+const handlePicItemHover = (index) => {
+  currentMainImage.value = cityPicList[index].imgName
+}
+
+// 鼠标移入轮播图按钮时
+const handleButtonItemHover = (i) =>{
+  currentButtonIndex.value = i
+  currentMainImage.value = cityPicList[i].imgName
+}
 
 </script>
 
