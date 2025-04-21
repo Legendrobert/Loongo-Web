@@ -94,7 +94,6 @@
           <div class="content-text">{{text}}</div>
         </div>
       </div>
-      <div></div>
     </div>
     <div class="specialTour">
       <div class="specialTour-top">
@@ -194,16 +193,26 @@
 
       </div>
     <div class="footer">
-      <ul class="pics first">
-        <li v-for="(item,i) in 6" :key="i">
-          <img :src="greatWall" width="240" height="240">
-        </li>
-      </ul>
-      <ul class="pics second">
-        <li v-for="(item,i) in 6" :key="i">
-          <img :src="greatWall" width="240" height="240">
-        </li>
-      </ul>
+      <div class="pics-container">
+        <ul class="pics first" ref="firstPics">
+          <li v-for="(item,i) in 6" :key="i">
+            <img :src="greatWall" width="240" height="240">
+          </li>
+          <li v-for="(item,i) in 6" :key="i + 6">
+            <img :src="greatWall" width="240" height="240">
+          </li>
+        </ul>
+      </div>
+      <div class="pics-container">
+        <ul class="pics second" ref="secondPics">
+          <li v-for="(item,i) in 6" :key="i">
+            <img :src="greatWall" width="240" height="240">
+          </li>
+          <li v-for="(item,i) in 6" :key="i + 6">
+            <img :src="greatWall" width="240" height="240">
+          </li>
+        </ul>
+      </div>
       <div class="text">
         <div>Top recommendations for you</div>
         <svgToDown class="toDown"></svgToDown>
@@ -381,6 +390,8 @@ const scrollWrapper = ref(null); // 可滚动容器
 const carouselContainer = ref(null); // 鼠标滚动事件的外层容器
 const carousel = ref(null); //鼠标滚动事件的可滚动容器
 const exploreContainer = ref(null) // explore 页面
+const firstPics = ref(null)
+const secondPics = ref(null)
 
 // 组件挂载后，检测内容是否超出
 onMounted(() => {
@@ -1094,27 +1105,36 @@ const handleButtonItemHover = (i) =>{
     width: 100%;
     overflow: hidden;
     background: #121212;
-    // margin-top: 88px;
     padding: 64px 0;
     box-sizing: border-box;
 
-    .pics{
+    .pics-container {
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .pics {
       display: flex;
       gap: 40px;
-
-      img{
+      width: max-content;
+      
+      img {
         border-radius: 24px;
       }
-      
     }
-    .first{
+    
+    .first {
       margin-bottom: 40px !important;
       position: relative;
       left: -80px;
+      animation: carouselLeft 50s linear infinite;
     }
-    .second{
+    
+    .second {
       position: relative;
       left: -120px;
+      animation: carouselRight 50s linear infinite;
     }
     .text{
       width: 100%;
@@ -1124,7 +1144,6 @@ const handleButtonItemHover = (i) =>{
       font-size: 56px;
       font-family: Bold;
       color: #fff;
-      // height: 76px;
       line-height: 76px;
       margin-top: 64px;
 
@@ -1309,6 +1328,24 @@ const handleButtonItemHover = (i) =>{
 
 .transition-image {
   animation: imageFade 2s infinite;
+}
+
+@keyframes carouselLeft {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes carouselRight {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
 </style>
