@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 
 // 登录组件
-const Login = () => import('@/views/login.vue')
+const Login = () => import('@/views/login/index.vue')
 // 懒加载页面组件
 const Itinerary = () => import('@/views/Itinerary/index.vue');
 const LoggedIn = () => import('@/views/Itinerary/loggedIn.vue');

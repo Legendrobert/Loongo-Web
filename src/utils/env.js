@@ -1,11 +1,10 @@
-
 // 获取当前环境变量
 const isDev = () => {
-    return import.meta.env.MODE === 'https://loongo-appbackend.onrender.com/Loongo';
-  };
-   
-const isProd = () => {
-return import.meta.env.MODE === 'production';
+    return process.env.NODE_ENV === 'development';
 };
-   
-  export { isDev, isProd };
+
+const isProd = () => {
+    return process.env.NODE_ENV === 'production';
+};
+
+export { isDev, isProd };

@@ -4,21 +4,47 @@
         <img :src="relax" width="152" height="135">
         <p class="texts">Come and check your unique itinerary!</p>
         <p class="notes">Also explore more interesting contents with the magic of AI</p>
-        <div class="signInGoogle" @click="toLoginClick">
-            <svgGoogle class="svg"></svgGoogle>
-            <span>Sign in with Google</span>
+        <!-- 自定义登陆 -->       
+        <div class="signInSelf"
+            v-if="showSignInSelf">
+            <el-form 
+                ref="ruleFormRef"
+                :model="ruleForm"
+                status-icon
+                :rules="rules"
+                label-width="auto"
+                class="demo-ruleForm"
+            >
+                <el-form-item label="Username" prop="username">
+                    <el-input v-model="ruleForm.username" type="text" autocomplete="off" />
+                </el-form-item>
+                <el-form-item label="Password" prop="password">
+                    <el-input v-model="ruleForm.password" type="password" autocomplete="off" />
+                </el-form-item>
+                <el-form-item label="Email" prop="email">
+                    <el-input v-model="ruleForm.email" type="email" autocomplete="off" />
+                </el-form-item>  
+            </el-form>
+            <div class="register" @click="toLoginClick">Register</div>
         </div>
-        <div class="signInOthers">
-            <div class="buttonStyle">
-                <svgTwitter class="svg"></svgTwitter>
-                <span>Sign in with X</span>
+        <!-- 第三方登录 -->
+        <div v-else>
+            <div class="signInGoogle" @click="toLoginClick">
+                <svgGoogle class="svg"></svgGoogle>
+                <span>Sign in with Google</span>
             </div>
-            <div class="buttonStyle">
-                <svgApple class="svg"></svgApple>
-                <span>Sign in with Apple</span>
+            <div class="signInOthers">
+                <div class="buttonStyle">
+                    <svgTwitter class="svg"></svgTwitter>
+                    <span>Sign in with X</span>
+                </div>
+                <div class="buttonStyle">
+                    <svgApple class="svg"></svgApple>
+                    <span>Sign in with Apple</span>
+                </div>
             </div>
         </div>
-
+        
     </div>
     <div class="right">
         <div class="cardItem" :style="carouselStyle" ref="carouselInner">
@@ -52,15 +78,74 @@ import svgLocation from '@/components/svg-icons/svg-location.vue'
 import svgGoogle from "@/components/svg-icons/svg-google.vue"
 import svgTwitter from "@/components/svg-icons/svg-twitter.vue"
 import svgApple from "@/components/svg-icons/svg-apple.vue"
+import { useStore } from 'vuex'
+import { Message } from 'element-plus'
 const relax = ref( require('@/assets/imgs/relax.png') );
 const router = useRouter()
 const route = useRoute()
+const store = useStore()
 
 // Vue 3 中的响应式数据
+const showSignInSelf = ref(true)
+const ruleFormRef = ref(null)
+const ruleForm = reactive({
+    username: '',
+    email: '',
+    password: ''
+})
+
+// 验证用户名
+const validateUsername = (rule, value, callback) => {
+  if (value === '') {
+    callback(new Error('Please input the username'))
+  } else {
+    if (ruleForm.checkPass !== '') {
+      if (!ruleFormRef.value) return
+      ruleFormRef.value.validateField('checkPass')
+    }
+    callback()
+  }
+}
+
+// 验证密码
+const validatePassword = (rule, value, callback) => {
+  if (value === '') {
+    callback(new Error('Please input the password'))
+  } else {
+    if (ruleForm.checkPass !== '') {
+      if (!ruleFormRef.value) return
+      ruleFormRef.value.validateField('checkPass')
+    }
+    callback()
+  }
+}
+
+// 验证邮箱
+const validateEmail = (rule, value, callback) => {
+  if (value === '') {
+    callback(new Error('Please input the email address'))
+  } else {
+    // 邮箱格式正则表达式
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    if (!emailRegex.test(value)) {
+      callback(new Error('Please input a valid email address'))
+    } else {
+      callback()
+    }
+  }
+}
+
+const rules = reactive({
+    username: [{ validator: validateUsername, trigger: 'blur' }],
+    password: [{ validator: validatePassword, trigger: 'blur' }],
+    email: [{ validator: validateEmail, trigger: 'blur' }],
+})
+
 const requestId = ref(null)
 const speed = ref(1.5); // 调整滚动速度（值越大滚动越快）
 const scrollHeight = ref(205);
 const isTransitioning = ref(false);
+const loading = ref(false)
 const cardPicList = reactive(
     [
         {
@@ -115,16 +200,45 @@ const startAutoScroll = () => {
 };
 
 // 点击登录
- const toLoginClick= () =>{
-    if(true){
-        router.push({name: 'LoggedIn'})
-    }  
- }
+const toLoginClick = async () => {
+    if (loading.value) return
+    
+    loading.value = true
+    try {
+        const response = await request.post('/auth/register', {
+            // 这里需要根据后端 API 文档补充具体的登录参数
+            username: 'shyan',
+            email: 'shyan@gmail.com',
+            password: '123456'
+            
+        });
+        
+        if (response.data.code === 200) {
+            // 登录成功，保存 token 和用户信息
+            store.commit('all/SET_TOKEN', response.data.data.token);
+            store.commit('all/SET_USER_INFO', response.data.data.userInfo);
+            store.commit('all/SET_LOGIN_STATUS', true);
+            
+            Message.success('登录成功');
+            // 跳转到已登录页面
+            router.push({ name: 'LoggedIn' });
+        } else {
+            Message.error(response.data.message || '登录失败');
+        }
+    } catch (error) {
+        console.error('登录错误:', error);
+        Message.error(error.response?.data?.message || '登录失败，请稍后重试');
+    } finally {
+        loading.value = false;
+    }
+}
+
 // 组件挂载后启动滚动
 onMounted(() => {
   nextTick(() => {
     startAutoScroll();
-    const res = request.get('/your/api')
+    // const res = request.get('/your/api')
+    console.log('/your/api')
   });
 });
 
@@ -133,6 +247,7 @@ onMounted(() => {
 
 <style lang="less" scoped>
 .login{
+    height: calc(100vh - 88px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -161,6 +276,31 @@ onMounted(() => {
             color: #B1B0B0;
             margin-top: 24px;
             padding: 0;
+        }
+        .signInSelf{
+            margin-top: 48px;
+            ::v-deep .el-input__wrapper{
+                border-radius: 16px;
+                border: 1px solid #CCCCCC;
+                height: 40px;
+                
+            }
+            ::v-deep .el-form-item__label {
+                line-height: 40px;
+                font-size: 16px;
+            }
+            .register{
+                width: 100%;
+                height: 50px;
+                border-radius: 16px;
+                background: #FF401A;
+                color: #fff;
+                line-height: 50px;
+                text-align: center;
+                font-size: 20px;
+                font-family: Bold;
+                margin-top: 24px;
+            }
         }
         .signInGoogle{
             display: flex;
